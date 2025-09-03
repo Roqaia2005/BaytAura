@@ -55,4 +55,9 @@ class TextStyles {
     fontSize: 24,
     fontWeight: FontWeight.bold,
   );
+  static final font12WhiteBold = GoogleFonts.inriaSans(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
 }
