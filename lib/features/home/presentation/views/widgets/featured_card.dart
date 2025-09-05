@@ -13,6 +13,7 @@ class FeaturedCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Container(
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -24,8 +25,7 @@ class FeaturedCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           color: Colors.white,
         ),
-        width: double.infinity,
-        height: 380.h,
+
         child: Column(
           children: [
             ClipRRect(
@@ -85,8 +85,7 @@ class FeaturedCard extends StatelessWidget {
 
                 children: [
                   Container(
-                    width: 40.w,
-                    height: 30.h,
+                    padding: EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(color: AppColors.darkBeige),
@@ -97,11 +96,11 @@ class FeaturedCard extends StatelessWidget {
                   ),
                   AppTextButton(
                     borderRadius: 8,
-                    buttonWidth: 60.w,
+                    buttonWidth: 50.w,
                     buttonHeight: 30.h,
                     backgroundColor: AppColors.blue,
                     buttonText: "view details",
-                    textStyle: TextStyles.font12WhiteBold,
+                    textStyle: TextStyles.font14WhiteBold,
                     onPressed: () {},
                   ),
                 ],

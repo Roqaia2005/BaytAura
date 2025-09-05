@@ -11,9 +11,12 @@ class AuthHeader extends StatelessWidget {
       children: [
         const AuthAppBar(),
         Text("Join Our Elite Community", style: TextStyles.font20BlueBold),
-        Text(
-          "Access Exclusive luxury properties and AI-powered recommendations",
-          style: TextStyles.font14BlueRegular,
+        Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Text(
+            "Access Exclusive luxury properties and AI-powered recommendations",
+            style: TextStyles.font14BlueRegular,
+          ),
         ),
       ],
     );

@@ -7,8 +7,6 @@ import 'package:bayt_aura/features/home/presentation/views/widgets/featured_head
 import 'package:bayt_aura/features/home/presentation/views/widgets/categories_header.dart';
 import 'package:bayt_aura/features/home/presentation/views/widgets/categories_grid_view.dart';
 
-
-
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
 
@@ -19,9 +17,8 @@ class HomeViewBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           HomeAppBar(),
-          const SizedBox(height: 12),
 
-          verticalSpace(20),
+          verticalSpace(24),
 
           // Stats Row
           StatCard(),
@@ -52,4 +49,3 @@ class HomeViewBody extends StatelessWidget {
     );
   }
 }
-

@@ -10,6 +10,7 @@ class ProfileAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.h),
       decoration: BoxDecoration(
         color: AppColors.blue,
         borderRadius: BorderRadius.circular(0),
@@ -18,7 +19,7 @@ class ProfileAppBar extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
             child: Row(
               children: [
                 CircleAvatar(
@@ -29,41 +30,45 @@ class ProfileAppBar extends StatelessWidget {
                     backgroundImage: AssetImage("assets/images/profile.jpg"),
                   ),
                 ),
-                horizontalSpace(10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
 
-                  children: [
-                    Text("John Doe", style: TextStyles.font24WhiteBold),
-                    verticalSpace(12),
-                    Text(
-                      "Premium member",
-                      style: TextStyles.font16DarkBeigeRegular,
-                    ),
-                    verticalSpace(10),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                    Container(
-                      width: 120.w,
-                      height: 30.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.darkBeige),
+                    children: [
+                      Text("John Doe", style: TextStyles.font24WhiteBold),
+                      verticalSpace(12),
+                      Text(
+                        "Premium member",
+                        style: TextStyles.font16DarkBeigeRegular,
                       ),
-                      child: Center(
-                        child: Text(
-                          "Member since Jan 2024",
-                          style: TextStyles.font12DarkBeigeBold,
+                      verticalSpace(10),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: AppColors.darkBeige),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0.sp),
+                            child: Text(
+                              "Member since Jan 2024",
+                              style: TextStyles.font12DarkBeigeBold,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

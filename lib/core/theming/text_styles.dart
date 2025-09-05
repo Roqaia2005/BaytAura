@@ -60,9 +60,9 @@ class TextStyles {
     fontSize: 24,
     fontWeight: FontWeight.bold,
   );
-  static final font12WhiteBold = GoogleFonts.inriaSans(
+  static final font14WhiteBold = GoogleFonts.inriaSans(
     color: Colors.white,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: FontWeight.bold,
   );
   //signout style

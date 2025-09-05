@@ -11,15 +11,15 @@ class HomeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 32.h),
+
       decoration: BoxDecoration(
         color: AppColors.blue,
         borderRadius: BorderRadius.circular(0),
       ),
-      width: double.infinity,
+      // width: double.infinity,
       child: Column(
         children: [
-          verticalSpace(8),
-
           // Header
           Text("Find Your Dream Home", style: TextStyles.font24WhiteBold),
           verticalSpace(4),
@@ -33,8 +33,7 @@ class HomeAppBar extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(16.0.sp),
             child: Container(
-              height: 120.h,
-              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -42,7 +41,7 @@ class HomeAppBar extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 16, top: 8),
+                    padding: EdgeInsets.only(left: 16.sp, top: 8.sp),
                     child: HomeSearchBar(),
                   ),
                   Padding(

@@ -21,6 +21,8 @@ class _AuthViewState extends State<AuthView> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
+          verticalSpace(40),
+
           AuthHeader(),
 
           verticalSpace(20),
