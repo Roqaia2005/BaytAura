@@ -65,4 +65,10 @@ class TextStyles {
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );
+  //signout style
+  static final font16RedSemiBold = GoogleFonts.inriaSans(
+    color: Colors.red,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
 }
