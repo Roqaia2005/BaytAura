@@ -33,7 +33,7 @@ class HomeAppBar extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(16.0.sp),
             child: Container(
-              height: 100.h,
+              height: 120.h,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -41,26 +41,29 @@ class HomeAppBar extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  HomeSearchBar(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                    padding: const EdgeInsets.only(left: 16, top: 8),
+                    child: HomeSearchBar(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 18.w,
+                      vertical: 8.h,
                     ),
                     child: Row(
                       children: [
                         Icon(
                           Icons.location_on_outlined,
-                          size: 18,
+                          size: 18.sp,
                           color: AppColors.blue,
                         ),
-                        SizedBox(width: 6),
+                        SizedBox(width: 6.w),
                         Text(
                           "Current: Dubai, UAE",
                           style: TextStyles.font14BlueBold,
                         ),
                         Spacer(),
-                        Icon(Icons.bolt, color: Colors.orange, size: 18),
+                        Icon(Icons.bolt, color: Colors.orange, size: 18.sp),
                         Text(
                           " AI Powered",
                           style: TextStyles.font12DarkBeigeRegular,
