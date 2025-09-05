@@ -49,6 +49,11 @@ class TextStyles {
     fontSize: 14,
     fontWeight: FontWeight.bold,
   );
+  static final font12DarkBeigeBold = GoogleFonts.inriaSans(
+    color: AppColors.darkBeige,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+  );
 
   static final font24WhiteBold = GoogleFonts.inriaSans(
     color: Colors.white,

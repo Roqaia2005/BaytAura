@@ -1,5 +1,9 @@
 class Routes {
-  static const String loginScreen = '/loginScreen';
-  static const String signupScreen = '/signUpScreen';
-  static const String homeScreen = '/';
+  static const String authScreen = '/authScreen';
+
+  static const String homeScreen = '/homeScreen';
+  static const String profileScreen = '/';
+  static const String searchScreen = '/searchScreen';
+  static const String favoritesScreen = '/favoritesScreen';
+  static const String messagesScreen = '/messagesScreen';
 }

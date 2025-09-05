@@ -3,13 +3,12 @@ import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/widgets/app_button.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bayt_aura/features/auth/presentation/widgets/role_drop_down.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/phone_text_field.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/email_text_field.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/password_text_field.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/name_text_field_section.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/confirm_password_text_field.dart';
-
-
 
 Widget buildSignupForm(BuildContext context) {
   return Padding(
@@ -19,6 +18,12 @@ Widget buildSignupForm(BuildContext context) {
 
       key: const ValueKey(2),
       children: [
+        Text("I am a", style: TextStyles.font14BlueBold),
+        verticalSpace(10),
+
+        RoleDropdown(),
+        verticalSpace(20),
+
         NameTextFieldSection(context: context),
         verticalSpace(20),
         Text("Email Address", style: TextStyles.font14BlueBold),

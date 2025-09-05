@@ -16,7 +16,7 @@ class AppNavBar extends StatelessWidget {
     return NavigationBar(
       selectedIndex: currentPageIndex,
       backgroundColor: Colors.white,
-      indicatorColor: Colors.transparent,
+      indicatorColor: AppColors.beige,
       onDestinationSelected: onDestinationSelected,
       destinations: [
         NavigationDestination(

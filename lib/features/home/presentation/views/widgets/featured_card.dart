@@ -97,7 +97,7 @@ class FeaturedCard extends StatelessWidget {
                   ),
                   AppTextButton(
                     borderRadius: 8,
-                    buttonWidth: 50.w,
+                    buttonWidth: 60.w,
                     buttonHeight: 30.h,
                     backgroundColor: AppColors.blue,
                     buttonText: "view details",

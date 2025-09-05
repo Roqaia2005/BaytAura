@@ -5,7 +5,6 @@ import 'package:bayt_aura/features/auth/presentation/widgets/auth_header.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/build_login_form.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/build_Signup_form.dart';
 
-
 class AuthView extends StatefulWidget {
   const AuthView({super.key});
 
@@ -19,6 +18,7 @@ class _AuthViewState extends State<AuthView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           AuthHeader(),

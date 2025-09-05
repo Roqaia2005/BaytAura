@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeSearchBar extends StatelessWidget {
   const HomeSearchBar({super.key});
@@ -9,8 +10,13 @@ class HomeSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorColor: AppColors.blue,
+
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.search, color: AppColors.blue),
+        prefixIcon: const Icon(
+          FontAwesomeIcons.magnifyingGlass,
+          color: AppColors.blue,
+        ),
         suffixIcon: Container(
           width: 30.w,
           margin: EdgeInsets.only(right: 12, top: 4),
