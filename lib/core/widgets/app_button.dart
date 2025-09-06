@@ -14,6 +14,7 @@ class AppTextButton extends StatelessWidget {
     required this.buttonText,
     required this.textStyle,
     required this.onPressed,
+    this.borderColor,
   });
 
   final double? borderRadius;
@@ -22,6 +23,7 @@ class AppTextButton extends StatelessWidget {
   final double? buttonWidth;
   final double? buttonHeight;
   final Color? backgroundColor;
+  final Color? borderColor;
   final String buttonText;
   final TextStyle textStyle;
   final VoidCallback onPressed;
@@ -32,6 +34,7 @@ class AppTextButton extends StatelessWidget {
       style: ButtonStyle(
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
+            side: BorderSide(color: borderColor ?? AppColors.blue),
             borderRadius: BorderRadius.circular(borderRadius ?? 16.0),
           ),
         ),

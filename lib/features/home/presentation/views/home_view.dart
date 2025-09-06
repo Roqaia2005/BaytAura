@@ -1,10 +1,10 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
-import 'package:bayt_aura/features/home/presentation/views/search_view.dart';
+import 'package:bayt_aura/features/search/presentation/views/search_view.dart';
 import 'package:bayt_aura/features/home/presentation/views/messages_view.dart';
-import 'package:bayt_aura/features/home/presentation/views/favorites_view.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
+import 'package:bayt_aura/features/favorites/presentation/views/favorites_view.dart';
 import 'package:bayt_aura/features/home/presentation/views/widgets/app_nav_bar.dart';
 import 'package:bayt_aura/features/home/presentation/views/widgets/home_view_body.dart';
 

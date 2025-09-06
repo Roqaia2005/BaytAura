@@ -7,7 +7,8 @@ class CategoryCard extends StatelessWidget {
   final String title;
   final String count;
   final IconData icon;
-  const CategoryCard({super.key, 
+  const CategoryCard({
+    super.key,
     required this.title,
     required this.count,
     required this.icon,

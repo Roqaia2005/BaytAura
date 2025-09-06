@@ -5,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeSearchBar extends StatelessWidget {
-  const HomeSearchBar({super.key});
+  const HomeSearchBar({super.key, required this.searchController});
 
+  final TextEditingController searchController;
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: searchController,
       cursorColor: AppColors.blue,
 
       decoration: InputDecoration(
@@ -18,22 +20,22 @@ class HomeSearchBar extends StatelessWidget {
           color: AppColors.blue,
         ),
         suffixIcon: Container(
-          width: 30.w,
-          margin: EdgeInsets.only(right: 12, top: 4),
+          margin: EdgeInsets.only(top: 4.h, bottom: 4.h),
+          padding: EdgeInsets.symmetric(horizontal: 8.w),
           decoration: BoxDecoration(
             color: AppColors.blue,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: const Icon(Icons.filter_alt_outlined, color: Colors.white),
         ),
-        hintText: "Search location, property type...",
+        hintText: "Search for properties",
         hintStyle: TextStyles.font14BlueRegular,
         filled: true,
         fillColor: Colors.white,
         focusColor: Colors.white,
 
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide.none,
         ),
       ),
