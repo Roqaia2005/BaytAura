@@ -3,7 +3,7 @@ import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/auth_toggle.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/auth_header.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/build_login_form.dart';
-import 'package:bayt_aura/features/auth/presentation/widgets/build_Signup_form.dart';
+import 'package:bayt_aura/features/auth/presentation/widgets/build_signup_form.dart';
 
 class AuthView extends StatefulWidget {
   const AuthView({super.key});
@@ -41,9 +41,7 @@ class _AuthViewState extends State<AuthView> {
             child: SingleChildScrollView(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
-                child: showLogin
-                    ? buildLoginForm(context)
-                    : buildSignupForm(context),
+                child: showLogin ? LoginFormWidget() : SignupForm(),
               ),
             ),
           ),

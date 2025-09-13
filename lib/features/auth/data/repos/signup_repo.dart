@@ -13,7 +13,7 @@ class SignupRepo {
   Future<ApiResult<SignupResponse>> signup(
       SignupRequestBody signupRequestBody) async {
     try {
-      final response = await _apiService.signup(signupRequestBody);
+      final response = await _apiService.signupCustomer(signupRequestBody);
       return ApiResult.success(response);
     } catch (errro) {
       return ApiResult.failure(ErrorHandler.handle(errro));

@@ -28,7 +28,7 @@ class SignupCubit extends Cubit<SignupState> {
         phone: phoneController.text,
         password: passwordController.text,
         passwordConfirmation: passwordConfirmationController.text,
-        gender: 0,
+        
       ),
     );
     response.when(

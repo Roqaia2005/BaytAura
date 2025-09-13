@@ -16,7 +16,7 @@ class AppTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.backGroundColor,
     this.controller,
-    required this.validator,
+    this.validator,
     this.prefixIcon,
   });
   final EdgeInsetsGeometry? contentPadding;
@@ -30,7 +30,7 @@ class AppTextFormField extends StatelessWidget {
   final Widget? prefixIcon;
   final Color? backGroundColor;
   final TextEditingController? controller;
-  final Function(String?) validator;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +75,7 @@ class AppTextFormField extends StatelessWidget {
       ),
       obscureText: isObscureText ?? false,
       style: TextStyles.font14BlueRegular,
-      validator: (value) {
-        validator(value);
-        return null;
-      },
+      validator: validator,
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 
 class QuickActionsContainer extends StatelessWidget {
@@ -31,16 +33,19 @@ class QuickActionsContainer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.blue),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "My Favorites",
-                      style: TextStyles.font14BlueRegular,
+                GestureDetector(
+                  onTap: () => context.pushNamed(Routes.favoritesScreen),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.blue),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "My Favorites",
+                        style: TextStyles.font14BlueRegular,
+                      ),
                     ),
                   ),
                 ),

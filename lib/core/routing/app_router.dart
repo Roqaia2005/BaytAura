@@ -7,16 +7,15 @@ import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/home/presentation/views/home_view.dart';
 import 'package:bayt_aura/features/auth/presentation/views/auth_view.dart';
-import 'package:bayt_aura/features/home/presentation/views/messages_view.dart';
+import 'package:bayt_aura/features/home/presentation/views/posts_view.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
 import 'package:bayt_aura/features/favorites/presentation/views/favorites_view.dart';
+import 'package:bayt_aura/features/home/presentation/views/alll_categories_view.dart';
 import 'package:bayt_aura/features/favorites/presentation/views/property_details.dart';
 
 class AppRouter {
   static MaterialPageRoute generateRoute(RouteSettings settings) {
-    //this arguments to be passed in any screen like this(argument as className)
     final arguments = settings.arguments;
-    final property = arguments as Property;
 
     switch (settings.name) {
       case Routes.homeScreen:
@@ -26,8 +25,12 @@ class AppRouter {
       case Routes.favoritesScreen:
         return MaterialPageRoute(builder: (_) => FavoritesView());
       case Routes.messagesScreen:
-        return MaterialPageRoute(builder: (_) => MessagesView());
+        return MaterialPageRoute(builder: (_) => PostsView());
+      case Routes.categoriesScreen:
+        return MaterialPageRoute(builder: (_) =>AllCategoriesView());
       case Routes.detailsScreen:
+        final property = arguments as Property;
+
         return MaterialPageRoute(
           builder: (_) => PropertyDetailsView(property: property),
         );

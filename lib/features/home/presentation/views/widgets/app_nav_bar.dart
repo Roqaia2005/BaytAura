@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppNavBar extends StatelessWidget {
   final int currentPageIndex;
@@ -16,6 +17,7 @@ class AppNavBar extends StatelessWidget {
     return NavigationBar(
       selectedIndex: currentPageIndex,
       backgroundColor: Colors.white,
+      indicatorShape: CircleBorder(),
       indicatorColor: AppColors.beige,
       onDestinationSelected: onDestinationSelected,
       destinations: [
@@ -28,12 +30,17 @@ class AppNavBar extends StatelessWidget {
           label: "Search",
         ),
         NavigationDestination(
-          icon: Icon(Icons.favorite_border, color: AppColors.blue),
-          label: "Favorites",
+          icon: CircleAvatar(
+            radius: 20,
+            backgroundColor: AppColors.blue,
+            child: Icon(Icons.add, color: Colors.white),
+          ),
+          label: "New Post",
         ),
         NavigationDestination(
-          icon: Icon(Icons.message_outlined, color: AppColors.blue),
-          label: "Messages",
+          icon: Icon(FontAwesomeIcons.image, color: AppColors.blue),
+
+          label: "Posts",
         ),
         NavigationDestination(
           icon: Icon(Icons.person_outline, color: AppColors.blue),

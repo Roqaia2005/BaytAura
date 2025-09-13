@@ -10,7 +10,7 @@ class SignupRequestBody {
   final String password;
   @JsonKey(name: 'password_confirmation')
   final String passwordConfirmation;
-  final int gender;
+
 
   SignupRequestBody({
     required this.firstName,
@@ -19,7 +19,7 @@ class SignupRequestBody {
     required this.phone,
     required this.password,
     required this.passwordConfirmation,
-    required this.gender,
+   
   });
 
   Map<String, dynamic> toJson() => _$SignupRequestBodyToJson(this);

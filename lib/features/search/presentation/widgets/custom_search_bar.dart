@@ -4,8 +4,8 @@ import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HomeSearchBar extends StatelessWidget {
-  const HomeSearchBar({super.key, required this.searchController});
+class CustomSearchBar extends StatelessWidget {
+  const CustomSearchBar({super.key, required this.searchController});
 
   final TextEditingController searchController;
   @override
@@ -26,7 +26,12 @@ class HomeSearchBar extends StatelessWidget {
             color: AppColors.blue,
             borderRadius: BorderRadius.circular(12.r),
           ),
-          child: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+          child: IconButton(
+            icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openEndDrawer();
+            },
+          ),
         ),
         hintText: "Search for properties",
         hintStyle: TextStyles.font14BlueRegular,

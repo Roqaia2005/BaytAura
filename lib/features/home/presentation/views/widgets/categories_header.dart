@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:bayt_aura/core/routing/routes.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 
 class CategoriesHeader extends StatelessWidget {
-  const CategoriesHeader({
-    super.key,
-  });
+  const CategoriesHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,12 @@ class CategoriesHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text("Categories", style: TextStyles.font20BlueBold),
-          Text("View All", style: TextStyles.font16DarkBeigeRegular),
+          GestureDetector(
+            onTap: () {
+              context.pushNamed(Routes.categoriesScreen);
+            },
+            child: Text("View All", style: TextStyles.font16DarkBeigeRegular),
+          ),
         ],
       ),
     );

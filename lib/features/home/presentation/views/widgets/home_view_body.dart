@@ -15,47 +15,37 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          HomeAppBar(),
+    return ListView(
+      children: [
+        HomeAppBar(),
 
-          verticalSpace(24),
+        verticalSpace(24),
 
-          // Stats Row
-          StatCard(),
-          verticalSpace(24),
+        // Stats Row
+        StatCard(),
+        verticalSpace(24),
 
-          // Categories
-          CategoriesHeader(),
-          verticalSpace(20),
-          CategoriesGridView(),
+        // Categories
+        CategoriesHeader(),
+        verticalSpace(20),
+        CategoriesGridView(),
 
-          // Featured Section
-          FeaturedHeader(),
-          verticalSpace(12),
+        // Featured Section
+        FeaturedHeader(),
+        verticalSpace(12),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView.builder(
-              itemCount: properties.length,
-              itemBuilder: (context, index) {
-                final property = properties[index];
-                return PropertyCard(
-                  property: property,
-                  onViewDetails: () {
-                    context.pushNamed(
-                      Routes.detailsScreen,
-                      arguments: property,
-                    );
-                  },
-                );
+        ...properties.map(
+          (property) => Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 16,),
+            child:PropertyCard(
+              property: property,
+              onViewDetails: () {
+                context.pushNamed(Routes.detailsScreen, arguments: property);
               },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

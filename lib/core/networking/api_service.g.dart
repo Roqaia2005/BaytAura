@@ -12,7 +12,7 @@ part of 'api_service.dart';
 
 class _ApiService implements ApiService {
   _ApiService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://vcare.integration25.com/api/';
+    baseUrl ??= 'http://localhost:8080/api/auth/';
   }
 
   final Dio _dio;
@@ -32,7 +32,7 @@ class _ApiService implements ApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'auth/login',
+            'login',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -50,7 +50,9 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<SignupResponse> signup(SignupRequestBody signupRequestBody) async {
+  Future<SignupResponse> signupCustomer(
+    SignupRequestBody signupRequestBody,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -60,7 +62,7 @@ class _ApiService implements ApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'auth/signup',
+            'register/customer',
             queryParameters: queryParameters,
             data: _data,
           )

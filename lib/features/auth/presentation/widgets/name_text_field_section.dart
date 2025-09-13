@@ -9,10 +9,10 @@ import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 class NameTextFieldSection extends StatelessWidget {
   const NameTextFieldSection({
     super.key,
-    required this.context,
+   
   });
 
-  final BuildContext context;
+ 
 
   @override
   Widget build(BuildContext context) {
