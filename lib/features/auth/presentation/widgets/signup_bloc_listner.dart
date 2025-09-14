@@ -45,11 +45,16 @@ class SignupBlocListener extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Signup Successful'),
-          content: const SingleChildScrollView(
+          backgroundColor: Colors.white,
+
+          title: Text('Signup Successful', style: TextStyles.font16BlueBold),
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Congratulations, you have signed up successfully!'),
+                Text(
+                  'Congratulations, you have signed up successfully!',
+                  style: TextStyles.font16BlueBold,
+                ),
               ],
             ),
           ),
@@ -57,13 +62,13 @@ class SignupBlocListener extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
+                backgroundColor: AppColors.blue,
                 disabledForegroundColor: Colors.grey.withOpacity(0.38),
               ),
               onPressed: () {
                 context.pushNamed(Routes.homeScreen);
               },
-              child: const Text('Continue'),
+              child: Text('Continue', style: TextStyles.font14BlueBold),
             ),
           ],
         );
@@ -90,4 +95,3 @@ class SignupBlocListener extends StatelessWidget {
     );
   }
 }
-

@@ -44,9 +44,10 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
               controller: context.read<LoginCubit>().emailController,
               hintText: "Email",
               validator: (value) {
-                if (value == null ||
-                    value.isEmpty ||
-                    !AppRegex.isEmailValid(value)) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter your email";
+                }
+                if (!AppRegex.isEmailValid(value)) {
                   return "Please enter a valid email";
                 }
               },
@@ -60,7 +61,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
               controller: context.read<LoginCubit>().passwordController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Please enter a valid password";
+                  return "Please enter your password";
                 }
                 if (!AppRegex.isPasswordValid(value)) {
                   return "Password must be at least 8 characters, include an uppercase letter, number and symbol";
@@ -72,7 +73,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
               suffixIcon: GestureDetector(
                 onTap: () {
                   setState(() {
-                    isObscureText = !isObscureText; // toggle
+                    isObscureText = !isObscureText; 
                   });
                 },
                 child: Icon(

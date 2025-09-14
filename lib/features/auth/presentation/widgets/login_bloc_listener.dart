@@ -27,7 +27,7 @@ class LoginBlocListener extends StatelessWidget {
           },
           success: (loginResponse) {
             context.pop();
-            context.pushNamed(Routes.homeScreen);
+            showSuccessDialog(context);
           },
           error: (error) {
             setUpErrorState(context, error);
@@ -35,6 +35,41 @@ class LoginBlocListener extends StatelessWidget {
         );
       },
       child: SizedBox.shrink(),
+    );
+  }
+
+  void showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text('Login Successful', style: TextStyles.font16BlueBold),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'Congratulations, you have logged in successfully!',
+                  style: TextStyles.font16BlueBold,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: AppColors.blue,
+                disabledForegroundColor: Colors.grey.withOpacity(0.38),
+              ),
+              onPressed: () {
+                context.pushNamed(Routes.homeScreen);
+              },
+              child: Text('Continue', style: TextStyles.font14BlueBold),
+            ),
+          ],
+        );
+      },
     );
   }
 
