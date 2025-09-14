@@ -1,20 +1,25 @@
 class AppRegex {
   static bool isEmailValid(String email) {
-    return RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-        .hasMatch(email);
+    return RegExp(
+      r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$',
+    ).hasMatch(email);
   }
 
   static bool isPasswordValid(String password) {
     return RegExp(
-            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")
-        .hasMatch(password);
+      r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$",
+    ).hasMatch(password);
   }
 
-static bool isConfirmPasswordValid(String password, String confirmPassword) {
+  static bool isUsernameValid(String username) {
+    return RegExp(r'^[a-zA-Z0-9_]{3,}$').hasMatch(username);
+  }
+
+  static bool isConfirmPasswordValid(String password, String confirmPassword) {
     return password == confirmPassword;
   }
 
-    static bool isPhoneNumberValid(String phoneNumber) {
+  static bool isPhoneNumberValid(String phoneNumber) {
     return RegExp(r'^(010|011|012|015)[0-9]{8}$').hasMatch(phoneNumber);
   }
 

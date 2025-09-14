@@ -1,7 +1,7 @@
 class Routes {
   static const String authScreen = '/';
 
-  static const String homeScreen = '/homeScreen';
+  static const String homeScreen = '/home';
   static const String profileScreen = '/profileScreen';
   static const String searchScreen = '/searchScreen';
   static const String favoritesScreen = '/favoritesScreen';

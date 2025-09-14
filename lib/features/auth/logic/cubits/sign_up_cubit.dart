@@ -14,21 +14,81 @@ class SignupCubit extends Cubit<SignupState> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController companyAddressController = TextEditingController();
+
   TextEditingController passwordConfirmationController =
       TextEditingController();
+
+
+  String selectedRole = "Customer"; 
+  void setRole(String role) {
+    selectedRole = role;
+    emit(SignupRoleChanged(role)); 
+  }
+
+
+
   final formKey = GlobalKey<FormState>();
 
-  void emitSignupStates() async {
+  void signupCustomer() async {
     emit(const SignupState.signupLoading());
-    final response = await _signupRepo.signup(
+    final response = await _signupRepo.signupCustomer(
       SignupRequestBody(
+        username: userNameController.text,
         firstName: firstNameController.text,
         lastName: lastNameController.text,
         email: emailController.text,
         phone: phoneController.text,
         password: passwordController.text,
-        passwordConfirmation: passwordConfirmationController.text,
-        
+      ),
+    );
+    response.when(
+      success: (signupResponse) {
+        emit(SignupState.signupSuccess(signupResponse));
+      },
+      failure: (error) {
+        emit(SignupState.signupError(error: error.failure.message ?? ''));
+      },
+    );
+  }
+
+  void signupAdmin() async {
+    emit(const SignupState.signupLoading());
+    final response = await _signupRepo.signupAdmin(
+      SignupRequestBody(
+        username: userNameController.text,
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        email: emailController.text,
+        phone: phoneController.text,
+        password: passwordController.text,
+      ),
+    );
+    response.when(
+      success: (signupResponse) {
+        emit(SignupState.signupSuccess(signupResponse));
+      },
+      failure: (error) {
+        emit(SignupState.signupError(error: error.failure.message ?? ''));
+      },
+    );
+  }
+
+  void signupProvider() async {
+    emit(const SignupState.signupLoading());
+    final response = await _signupRepo.signupProvider(
+      SignupRequestBody(
+        username: userNameController.text,
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        email: emailController.text,
+        phone: phoneController.text,
+        password: passwordController.text,
+        companyName: companyNameController.text,
+
+        companyAddress: companyAddressController.text,
       ),
     );
     response.when(

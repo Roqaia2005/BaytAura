@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
+import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 
 class RoleDropdown extends StatefulWidget {
   const RoleDropdown({super.key});
@@ -10,9 +12,7 @@ class RoleDropdown extends StatefulWidget {
 }
 
 class _RoleDropdownState extends State<RoleDropdown> {
-  String? selectedRole;
-
-  final List<String> roles = ["Admin", "Manager", "User", "Guest"];
+  final List<String> roles = ["Admin", "Customer", "Provider"];
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,10 @@ class _RoleDropdownState extends State<RoleDropdown> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: selectedRole,
+          dropdownColor: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          style: TextStyles.font14BlueRegular,
+          value: context.watch<SignupCubit>().selectedRole,
           hint: Row(
             children: [
               const Icon(Icons.person_outline, color: AppColors.darkBeige),
@@ -40,7 +43,9 @@ class _RoleDropdownState extends State<RoleDropdown> {
           }).toList(),
           onChanged: (value) {
             setState(() {
-              selectedRole = value;
+              if (value != null) {
+                context.read<SignupCubit>().setRole(value);
+              }
             });
           },
         ),

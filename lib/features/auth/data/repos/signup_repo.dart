@@ -10,10 +10,29 @@ class SignupRepo {
 
   SignupRepo(this._apiService);
 
-  Future<ApiResult<SignupResponse>> signup(
+  Future<ApiResult<SignupResponse>> signupCustomer(
       SignupRequestBody signupRequestBody) async {
     try {
       final response = await _apiService.signupCustomer(signupRequestBody);
+      return ApiResult.success(response);
+    } catch (errro) {
+      return ApiResult.failure(ErrorHandler.handle(errro));
+    }
+  }
+  Future<ApiResult<SignupResponse>> signupAdmin(
+      SignupRequestBody signupRequestBody) async {
+    try {
+      final response = await _apiService.signupAdmin(signupRequestBody);
+      return ApiResult.success(response);
+    } catch (errro) {
+      return ApiResult.failure(ErrorHandler.handle(errro));
+    }
+  }
+
+  Future<ApiResult<SignupResponse>> signupProvider(
+      SignupRequestBody signupRequestBody) async {
+    try {
+      final response = await _apiService.signupProvider(signupRequestBody);
       return ApiResult.success(response);
     } catch (errro) {
       return ApiResult.failure(ErrorHandler.handle(errro));

@@ -8,5 +8,6 @@ class SignupState<T> with _$SignupState<T> {
   
   const factory SignupState.signupLoading() = SignupLoading;
   const factory SignupState.signupSuccess(T data) = SignupSuccess<T>;
+  const factory SignupState.signupRoleChanged(String role) = SignupRoleChanged;
   const factory SignupState.signupError({required String error}) = SignupError;
 }

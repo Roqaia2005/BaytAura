@@ -55,13 +55,14 @@ extension SignupStatePatterns<T> on SignupState<T> {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial<T> value)?  initial,TResult Function( SignupLoading<T> value)?  signupLoading,TResult Function( SignupSuccess<T> value)?  signupSuccess,TResult Function( SignupError<T> value)?  signupError,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial<T> value)?  initial,TResult Function( SignupLoading<T> value)?  signupLoading,TResult Function( SignupSuccess<T> value)?  signupSuccess,TResult Function( SignupRoleChanged<T> value)?  signupRoleChanged,TResult Function( SignupError<T> value)?  signupError,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case SignupLoading() when signupLoading != null:
 return signupLoading(_that);case SignupSuccess() when signupSuccess != null:
-return signupSuccess(_that);case SignupError() when signupError != null:
+return signupSuccess(_that);case SignupRoleChanged() when signupRoleChanged != null:
+return signupRoleChanged(_that);case SignupError() when signupError != null:
 return signupError(_that);case _:
   return orElse();
 
@@ -80,13 +81,14 @@ return signupError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial<T> value)  initial,required TResult Function( SignupLoading<T> value)  signupLoading,required TResult Function( SignupSuccess<T> value)  signupSuccess,required TResult Function( SignupError<T> value)  signupError,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial<T> value)  initial,required TResult Function( SignupLoading<T> value)  signupLoading,required TResult Function( SignupSuccess<T> value)  signupSuccess,required TResult Function( SignupRoleChanged<T> value)  signupRoleChanged,required TResult Function( SignupError<T> value)  signupError,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case SignupLoading():
 return signupLoading(_that);case SignupSuccess():
-return signupSuccess(_that);case SignupError():
+return signupSuccess(_that);case SignupRoleChanged():
+return signupRoleChanged(_that);case SignupError():
 return signupError(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -104,13 +106,14 @@ return signupError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial<T> value)?  initial,TResult? Function( SignupLoading<T> value)?  signupLoading,TResult? Function( SignupSuccess<T> value)?  signupSuccess,TResult? Function( SignupError<T> value)?  signupError,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial<T> value)?  initial,TResult? Function( SignupLoading<T> value)?  signupLoading,TResult? Function( SignupSuccess<T> value)?  signupSuccess,TResult? Function( SignupRoleChanged<T> value)?  signupRoleChanged,TResult? Function( SignupError<T> value)?  signupError,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case SignupLoading() when signupLoading != null:
 return signupLoading(_that);case SignupSuccess() when signupSuccess != null:
-return signupSuccess(_that);case SignupError() when signupError != null:
+return signupSuccess(_that);case SignupRoleChanged() when signupRoleChanged != null:
+return signupRoleChanged(_that);case SignupError() when signupError != null:
 return signupError(_that);case _:
   return null;
 
@@ -128,12 +131,13 @@ return signupError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  signupLoading,TResult Function( T data)?  signupSuccess,TResult Function( String error)?  signupError,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  signupLoading,TResult Function( T data)?  signupSuccess,TResult Function( String role)?  signupRoleChanged,TResult Function( String error)?  signupError,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case SignupLoading() when signupLoading != null:
 return signupLoading();case SignupSuccess() when signupSuccess != null:
-return signupSuccess(_that.data);case SignupError() when signupError != null:
+return signupSuccess(_that.data);case SignupRoleChanged() when signupRoleChanged != null:
+return signupRoleChanged(_that.role);case SignupError() when signupError != null:
 return signupError(_that.error);case _:
   return orElse();
 
@@ -152,12 +156,13 @@ return signupError(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  signupLoading,required TResult Function( T data)  signupSuccess,required TResult Function( String error)  signupError,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  signupLoading,required TResult Function( T data)  signupSuccess,required TResult Function( String role)  signupRoleChanged,required TResult Function( String error)  signupError,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case SignupLoading():
 return signupLoading();case SignupSuccess():
-return signupSuccess(_that.data);case SignupError():
+return signupSuccess(_that.data);case SignupRoleChanged():
+return signupRoleChanged(_that.role);case SignupError():
 return signupError(_that.error);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +180,13 @@ return signupError(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  signupLoading,TResult? Function( T data)?  signupSuccess,TResult? Function( String error)?  signupError,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  signupLoading,TResult? Function( T data)?  signupSuccess,TResult? Function( String role)?  signupRoleChanged,TResult? Function( String error)?  signupError,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case SignupLoading() when signupLoading != null:
 return signupLoading();case SignupSuccess() when signupSuccess != null:
-return signupSuccess(_that.data);case SignupError() when signupError != null:
+return signupSuccess(_that.data);case SignupRoleChanged() when signupRoleChanged != null:
+return signupRoleChanged(_that.role);case SignupError() when signupError != null:
 return signupError(_that.error);case _:
   return null;
 
@@ -313,6 +319,72 @@ class _$SignupSuccessCopyWithImpl<T,$Res>
   return _then(SignupSuccess<T>(
 freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as T,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SignupRoleChanged<T> implements SignupState<T> {
+  const SignupRoleChanged(this.role);
+  
+
+ final  String role;
+
+/// Create a copy of SignupState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SignupRoleChangedCopyWith<T, SignupRoleChanged<T>> get copyWith => _$SignupRoleChangedCopyWithImpl<T, SignupRoleChanged<T>>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SignupRoleChanged<T>&&(identical(other.role, role) || other.role == role));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,role);
+
+@override
+String toString() {
+  return 'SignupState<$T>.signupRoleChanged(role: $role)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SignupRoleChangedCopyWith<T,$Res> implements $SignupStateCopyWith<T, $Res> {
+  factory $SignupRoleChangedCopyWith(SignupRoleChanged<T> value, $Res Function(SignupRoleChanged<T>) _then) = _$SignupRoleChangedCopyWithImpl;
+@useResult
+$Res call({
+ String role
+});
+
+
+
+
+}
+/// @nodoc
+class _$SignupRoleChangedCopyWithImpl<T,$Res>
+    implements $SignupRoleChangedCopyWith<T, $Res> {
+  _$SignupRoleChangedCopyWithImpl(this._self, this._then);
+
+  final SignupRoleChanged<T> _self;
+  final $Res Function(SignupRoleChanged<T>) _then;
+
+/// Create a copy of SignupState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? role = null,}) {
+  return _then(SignupRoleChanged<T>(
+null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

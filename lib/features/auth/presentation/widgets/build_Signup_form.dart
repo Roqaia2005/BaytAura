@@ -6,6 +6,7 @@ import 'package:bayt_aura/core/helpers/app_regex.dart';
 import 'package:bayt_aura/core/widgets/app_button.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/role_drop_down.dart';
@@ -13,8 +14,6 @@ import 'package:bayt_aura/features/auth/presentation/widgets/phone_text_field.da
 import 'package:bayt_aura/features/auth/presentation/widgets/signup_bloc_listner.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/name_text_field_section.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/confirm_password_text_field.dart';
-
-
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
@@ -36,16 +35,36 @@ class _SignupFormState extends State<SignupForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
 
-        
           children: [
             Text("I am a", style: TextStyles.font14BlueBold),
             verticalSpace(10),
 
             RoleDropdown(),
             verticalSpace(20),
+            Text("Username", style: TextStyles.font14BlueBold),
+            verticalSpace(10),
+            AppTextFormField(
+              prefixIcon: Icon(
+                FontAwesomeIcons.user,
+                color: AppColors.darkBeige,
+              ),
+              controller: context.read<SignupCubit>().userNameController,
+              hintText: "Username",
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter a username";
+                }
+                if (!AppRegex.isUsernameValid(value)) {
+                  return "Username must be at least 3 characters and can include letters, numbers, and underscores";
+                }
+                return null;
+              },
+            ),
+            verticalSpace(20),
 
             NameTextFieldSection(),
             verticalSpace(20),
+            Text("Email", style: TextStyles.font14BlueBold),
 
             verticalSpace(10),
             AppTextFormField(
@@ -56,9 +75,10 @@ class _SignupFormState extends State<SignupForm> {
               controller: context.read<SignupCubit>().emailController,
               hintText: "Email",
               validator: (value) {
-                if (value == null ||
-                    value.isEmpty ||
-                    !AppRegex.isEmailValid(value)) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter your email";
+                }
+                if (!AppRegex.isEmailValid(value)) {
                   return "Please enter a valid email";
                 }
                 return null;
@@ -66,11 +86,40 @@ class _SignupFormState extends State<SignupForm> {
             ),
 
             verticalSpace(20),
-            verticalSpace(20),
             Text("Phone number", style: TextStyles.font14BlueBold),
             verticalSpace(10),
             PhoneTextField(),
             verticalSpace(20),
+            if (context.watch<SignupCubit>().selectedRole == "Provider") ...[
+              Text("Company Name", style: TextStyles.font14BlueBold),
+              verticalSpace(10),
+              AppTextFormField(
+                controller: context.read<SignupCubit>().companyNameController,
+                hintText: "Company Name",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a company name";
+                  }
+                  return null;
+                },
+              ),
+              verticalSpace(20),
+              Text("Company Address", style: TextStyles.font14BlueBold),
+              verticalSpace(10),
+              AppTextFormField(
+                controller: context
+                    .read<SignupCubit>()
+                    .companyAddressController,
+                hintText: "Company Address",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a company address";
+                  }
+                  return null;
+                },
+              ),
+              verticalSpace(20),
+            ],
 
             Text("Create password", style: TextStyles.font14BlueBold),
             verticalSpace(10),
@@ -105,8 +154,8 @@ class _SignupFormState extends State<SignupForm> {
 
             Text("Confirm password", style: TextStyles.font14BlueBold),
             verticalSpace(10),
-            ConfirmPasswordTextField(),
 
+            ConfirmPasswordTextField(),
             verticalSpace(20),
 
             AppTextButton(
@@ -118,7 +167,14 @@ class _SignupFormState extends State<SignupForm> {
                     .formKey
                     .currentState;
                 if (formState != null && formState.validate()) {
-                  context.read<SignupCubit>().emitSignupStates();
+                  final role = context.read<SignupCubit>().selectedRole;
+                  if (role == "Customer") {
+                    context.read<SignupCubit>().signupCustomer();
+                  } else if (role == "Admin") {
+                    context.read<SignupCubit>().signupAdmin();
+                  } else if (role == "Provider") {
+                    context.read<SignupCubit>().signupProvider();
+                  }
                 }
               },
             ),

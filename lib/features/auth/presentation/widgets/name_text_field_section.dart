@@ -7,12 +7,7 @@ import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 
 class NameTextFieldSection extends StatelessWidget {
-  const NameTextFieldSection({
-    super.key,
-   
-  });
-
- 
+  const NameTextFieldSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +19,14 @@ class NameTextFieldSection extends StatelessWidget {
             children: [
               Text("First Name", style: TextStyles.font14BlueBold),
               verticalSpace(10),
-    
+
               AppTextFormField(
                 hintText: "John",
                 prefixIcon: Icon(
                   Icons.person_2_outlined,
                   color: AppColors.darkBeige,
                 ),
-                controller: context
-                    .read<SignupCubit>()
-                    .firstNameController,
+                controller: context.read<SignupCubit>().firstNameController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter your first name";
@@ -51,16 +44,14 @@ class NameTextFieldSection extends StatelessWidget {
             children: [
               Text("Last Name", style: TextStyles.font14BlueBold),
               verticalSpace(10),
-    
+
               AppTextFormField(
                 hintText: "Doe",
                 prefixIcon: Icon(
                   Icons.person_2_outlined,
                   color: AppColors.darkBeige,
                 ),
-                controller: context
-                    .read<SignupCubit>()
-                    .lastNameController,
+                controller: context.read<SignupCubit>().lastNameController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter your last name";
