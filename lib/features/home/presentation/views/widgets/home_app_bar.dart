@@ -3,7 +3,6 @@ import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/features/search/presentation/widgets/search_container.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
-import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/widgets/app_button.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -158,6 +157,7 @@ class _AddPostViewState extends State<AddPostView> {
                         }
 
                         final newProperty = Property(
+                          id: '',
                           title: _titleController.text,
                           description: _descriptionController.text,
                           price: double.parse(_priceController.text),

@@ -7,5 +7,10 @@ import 'package:bayt_aura/features/home/logic/property_cubit.dart';
 void main() {
   setUpGetIt();
 
-  runApp(BlocProvider(create: (_) => PropertyCubit(), child: const BaytAura()));
+  runApp(
+    BlocProvider(
+      create: (_) => PropertyCubit(getIt()),
+      child: const BaytAura(),
+    ),
+  );
 }

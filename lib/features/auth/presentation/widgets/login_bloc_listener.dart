@@ -50,7 +50,7 @@ class LoginBlocListener extends StatelessWidget {
               children: <Widget>[
                 Text(
                   'Congratulations, you have logged in successfully!',
-                  style: TextStyles.font16BlueBold,
+                  style: TextStyles.font14BlueRegular,
                 ),
               ],
             ),
@@ -59,12 +59,23 @@ class LoginBlocListener extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: AppColors.blue,
+
                 disabledForegroundColor: Colors.grey.withOpacity(0.38),
               ),
-              onPressed: () {
-                context.pushNamed(Routes.homeScreen);
-              },
+                onPressed: () {
+                // Assuming loginResponse contains a 'role' field
+                final loginState = context.read<LoginCubit>().state;
+                loginState.whenOrNull(
+                  success: (loginResponse) {
+                  if (loginResponse.role == 'customer') {
+                    context.pushNamed(Routes.customerScreen);
+                  } else if(loginResponse.role == 'provider') {
+                    context.pushNamed(Routes.providerScreen);
+                  }
+
+                  },
+                );
+                },
               child: Text('Continue', style: TextStyles.font14BlueBold),
             ),
           ],
@@ -78,6 +89,7 @@ class LoginBlocListener extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
         icon: Icon(Icons.error, size: 32, color: Colors.red),
         content: Text(error, style: TextStyles.font14BlueRegular),
         actions: [

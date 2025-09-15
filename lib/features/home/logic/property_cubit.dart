@@ -1,17 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bayt_aura/features/home/logic/property_state.dart';
 import 'package:bayt_aura/features/home/data/models/property.dart';
-
-part 'property_state.dart';
+import 'package:bayt_aura/features/home/data/property_repository.dart';
 
 class PropertyCubit extends Cubit<PropertyState> {
-  PropertyCubit()
-      : super(PropertyLoaded(properties: const [], favorites: const []));
-
+  PropertyCubit(this.propertyRepository)
+    : super(PropertyLoaded(properties: const [], favorites: const []));
+  final PropertyRepository propertyRepository;
   final List<Property> _allProperties = [];
   final List<Property> _favorites = [];
-  final List<Property> _userProperties = []; // 🆕 اللي بيضيفها المستخدم
+  final List<Property> _userProperties = [];
 
-  // 🏠 تحميل كل العقارات (من API أو Mock)
   void loadProperties(List<Property> properties) {
     _allProperties
       ..clear()
@@ -19,27 +18,71 @@ class PropertyCubit extends Cubit<PropertyState> {
     _emitLoaded();
   }
 
-  // ➕ إضافة عقار جديد من المستخدم
-  void addProperty(Property property) {
-    _userProperties.add(property);
-    _allProperties.add(property); // يدخل في القائمة العامة كمان
-    _emitLoaded();
+  void fetchProperties() {
+    propertyRepository
+        .fetchProperties()
+        .then((fetchedProperties) {
+          _allProperties
+            ..clear()
+            ..addAll(fetchedProperties);
+          _emitLoaded();
+        })
+        .catchError((error) {
+          emit(PropertyError(message: error.toString()));
+        });
   }
 
-  // ⭐ إضافة / إزالة من المفضلة
-  void toggleFavorite(Property property) {
+  void addProperty(Property property) {
+    propertyRepository
+        .addProperty(property)
+        .then((addedProperty) {
+          _userProperties.add(addedProperty);
+          _allProperties.add(addedProperty);
+          _emitLoaded();
+        })
+        .catchError((error) {
+          emit(PropertyError(message: error.toString()));
+        });
+  }
+
+  void addFavorite(Property property) {
+    propertyRepository
+        .addFavorite(property.id)
+        .then((_) {
+          _favorites.add(property);
+          _emitLoaded();
+        })
+        .catchError((error) {
+          emit(PropertyError(message: error.toString()));
+        });
+  }
+
+  void removeFavorite(Property property) {
+    propertyRepository
+        .removeFavorite(property.id)
+        .then((_) {
+          _favorites.removeWhere((fav) => fav.id == property.id);
+          _emitLoaded();
+        })
+        .catchError((error) {
+          emit(PropertyError(message: error.toString()));
+        });
+  }
+
+  Future<void> toggleFavorite(Property property) async {
     if (_favorites.contains(property)) {
-      _favorites.remove(property);
+      removeFavorite(property);
     } else {
-      _favorites.add(property);
+      addFavorite(property);
     }
-    _emitLoaded();
   }
 
   void _emitLoaded() {
-    emit(PropertyLoaded(
-      properties: List.from(_allProperties),
-      favorites: List.from(_favorites),
-    ));
+    emit(
+      PropertyLoaded(
+        properties: List.from(_allProperties),
+        favorites: List.from(_favorites),
+      ),
+    );
   }
 }

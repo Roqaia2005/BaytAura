@@ -9,6 +9,7 @@ class SearchContainer extends StatelessWidget {
 
   final TextEditingController searchController;
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -53,7 +53,7 @@ class SignupBlocListener extends StatelessWidget {
               children: <Widget>[
                 Text(
                   'Congratulations, you have signed up successfully!',
-                  style: TextStyles.font16BlueBold,
+                  style: TextStyles.font14BlueRegular,
                 ),
               ],
             ),
@@ -62,11 +62,21 @@ class SignupBlocListener extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: AppColors.blue,
+
                 disabledForegroundColor: Colors.grey.withOpacity(0.38),
               ),
               onPressed: () {
-                context.pushNamed(Routes.homeScreen);
+                  final signupState = context.read<SignupCubit>().state;
+                signupState.whenOrNull(
+                  signupSuccess: (signupResponse) {
+                  if (signupResponse.role == 'customer') {
+                    context.pushNamed(Routes.customerScreen);
+                  } else if(signupResponse.role == 'provider') {
+                    context.pushNamed(Routes.providerScreen);
+                  }
+
+                  },
+                );
               },
               child: Text('Continue', style: TextStyles.font14BlueBold),
             ),

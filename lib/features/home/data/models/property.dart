@@ -1,4 +1,5 @@
 class Property {
+  final String id;
   final String title;
   final String type;
   final String description;
@@ -17,6 +18,7 @@ class Property {
     required this.address,
     required this.latitude,
     required this.longitude,
+    required this.id,
   });
 
   // Convert Property → JSON (for API/Firebase)
@@ -36,6 +38,7 @@ class Property {
   // Convert JSON → Property (for reading data)
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
+      id: json["id"],
       title: json["title"],
       type: json["type"],
       description: json["description"],

@@ -1,15 +1,25 @@
-part of 'property_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:bayt_aura/features/home/data/models/property.dart';
 
-abstract class PropertyState {}
 
-class PropertyInitial extends PropertyState {}
 
-class PropertyLoaded extends PropertyState {
-  final List<Property> properties;
-  final List<Property> favorites;
+part 'property_state.freezed.dart';
+@freezed
+class PropertyState with _$PropertyState {
+  /// Initial state
+  const factory PropertyState.initial() = PropertyInitial;
 
-  PropertyLoaded({
-    required this.properties,
-    required this.favorites,
-  });
+  /// Loading state
+  const factory PropertyState.loading() = PropertyLoading;
+
+  /// Loaded state (with properties + favorites)
+  const factory PropertyState.loaded({
+    required List<Property> properties,
+    required List<Property> favorites,
+  }) = PropertyLoaded;
+
+  /// Error state
+  const factory PropertyState.error({
+    required String message,
+  }) = PropertyError;
 }

@@ -4,19 +4,26 @@ import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/features/search/presentation/views/search_view.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
 import 'package:bayt_aura/features/home/presentation/views/widgets/app_nav_bar.dart';
+import 'package:bayt_aura/features/provider/presentation/views/add_property_view.dart';
 import 'package:bayt_aura/features/home/presentation/views/widgets/home_view_body.dart';
+import 'package:bayt_aura/features/provider/presentation/views/provider_properties_view.dart';
 
 
-
-class CustomerView extends StatefulWidget {
-  const CustomerView({super.key});
+class ProviderDashboard extends StatefulWidget {
+  const ProviderDashboard({super.key});
 
   @override
-  State<CustomerView> createState() => _HomeViewState();
+  State<ProviderDashboard> createState() => _ProviderDashboardState();
 }
 
-class _HomeViewState extends State<CustomerView> {
-  final List<Widget> screens = [HomeViewBody(), SearchView(), ProfileView()];
+class _ProviderDashboardState extends State<ProviderDashboard> {
+  final List<Widget> screens = [
+    HomeViewBody(),
+    SearchView(),
+    AddPostView(),
+    PostsView(),
+    ProfileView(),
+  ];
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {

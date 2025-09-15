@@ -50,6 +50,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 if (!AppRegex.isEmailValid(value)) {
                   return "Please enter a valid email";
                 }
+                return null;
               },
             ),
             verticalSpace(20),

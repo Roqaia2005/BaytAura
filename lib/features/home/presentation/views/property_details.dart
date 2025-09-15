@@ -6,6 +6,7 @@ import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bayt_aura/features/home/logic/property_state.dart';
 import 'package:bayt_aura/features/home/logic/property_cubit.dart';
 import 'package:bayt_aura/features/home/data/models/property.dart';
 
