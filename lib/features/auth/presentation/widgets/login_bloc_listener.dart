@@ -6,6 +6,7 @@ import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_state.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
+import 'package:bayt_aura/features/auth/data/models/login_response.dart';
 
 class LoginBlocListener extends StatelessWidget {
   const LoginBlocListener({super.key});
@@ -26,22 +27,22 @@ class LoginBlocListener extends StatelessWidget {
             );
           },
           success: (loginResponse) {
-            context.pop();
-            showSuccessDialog(context);
+            context.pop(); // close loading dialog
+            showSuccessDialog(context, loginResponse); // ✅ pass response here
           },
           error: (error) {
             setUpErrorState(context, error);
           },
         );
       },
-      child: SizedBox.shrink(),
+      child: const SizedBox.shrink(),
     );
   }
 
-  void showSuccessDialog(BuildContext context) {
+  void showSuccessDialog(BuildContext context, LoginResponse loginResponse) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
           title: Text('Login Successful', style: TextStyles.font16BlueBold),
@@ -59,23 +60,19 @@ class LoginBlocListener extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
-
                 disabledForegroundColor: Colors.grey.withOpacity(0.38),
               ),
-                onPressed: () {
-                // Assuming loginResponse contains a 'role' field
-                final loginState = context.read<LoginCubit>().state;
-                loginState.whenOrNull(
-                  success: (loginResponse) {
-                  if (loginResponse.role == 'customer') {
-                    context.pushNamed(Routes.customerScreen);
-                  } else if(loginResponse.role == 'provider') {
-                    context.pushNamed(Routes.providerScreen);
-                  }
-
-                  },
-                );
-                },
+              onPressed: () {
+                if (loginResponse.role == 'CUSTOMER') {
+                  context.pushReplacementNamed(Routes.customerScreen);
+                } else if (loginResponse.role == 'PROVIDER') {
+                  context.pushReplacementNamed(Routes.providerScreen);
+                } else if (loginResponse.role == 'ADMIN') {
+                  context.pushReplacementNamed(Routes.adminScreen);
+                } else {
+                  context.pop();
+                }
+              },
               child: Text('Continue', style: TextStyles.font14BlueBold),
             ),
           ],
@@ -85,12 +82,12 @@ class LoginBlocListener extends StatelessWidget {
   }
 
   void setUpErrorState(BuildContext context, String error) {
-    context.pop();
+    context.pop(); // close loading dialog
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        icon: Icon(Icons.error, size: 32, color: Colors.red),
+        icon: const Icon(Icons.error, size: 32, color: Colors.red),
         content: Text(error, style: TextStyles.font14BlueRegular),
         actions: [
           TextButton(

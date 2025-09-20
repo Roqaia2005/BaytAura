@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:bayt_aura/features/home/data/models/property.dart';
+import 'package:bayt_aura/features/property/data/models/property.dart';
 
 part 'search_state.freezed.dart';
 

@@ -6,6 +6,7 @@ import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_state.dart';
+import 'package:bayt_aura/features/auth/data/models/sign_up_response.dart';
 
 class SignupBlocListener extends StatelessWidget {
   const SignupBlocListener({super.key});
@@ -28,8 +29,8 @@ class SignupBlocListener extends StatelessWidget {
             );
           },
           signupSuccess: (signupResponse) {
-            context.pop();
-            showSuccessDialog(context);
+            context.pop(); // close loading
+            showSuccessDialog(context, signupResponse); // ✅ pass response
           },
           signupError: (error) {
             setupErrorState(context, error);
@@ -40,43 +41,41 @@ class SignupBlocListener extends StatelessWidget {
     );
   }
 
-  void showSuccessDialog(BuildContext context) {
+  void showSuccessDialog(BuildContext context, SignupResponse signupResponse) {
+    String message;
+
+    // ✅ Different messages depending on role
+    if (signupResponse.role == 'CUSTOMER') {
+      message = 'Congratulations, you have signed up successfully!';
+    } else if (signupResponse.role == 'PROVIDER') {
+      message =
+          'Account created! An admin will review your request before you can login.';
+    } else {
+      message = 'Signup completed!';
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-
           title: Text('Signup Successful', style: TextStyles.font16BlueBold),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                  'Congratulations, you have signed up successfully!',
-                  style: TextStyles.font14BlueRegular,
-                ),
+                Text(message, style: TextStyles.font14BlueRegular),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-
-                disabledForegroundColor: Colors.grey.withOpacity(0.38),
-              ),
               onPressed: () {
-                  final signupState = context.read<SignupCubit>().state;
-                signupState.whenOrNull(
-                  signupSuccess: (signupResponse) {
-                  if (signupResponse.role == 'customer') {
-                    context.pushNamed(Routes.customerScreen);
-                  } else if(signupResponse.role == 'provider') {
-                    context.pushNamed(Routes.providerScreen);
-                  }
-
-                  },
-                );
+                if (signupResponse.role == 'customer') {
+                  context.pushNamed(Routes.customerScreen);
+                } else {
+                  // For provider or unknown roles -> just close
+                  context.pop();
+                }
               },
               child: Text('Continue', style: TextStyles.font14BlueBold),
             ),
@@ -87,17 +86,16 @@ class SignupBlocListener extends StatelessWidget {
   }
 
   void setupErrorState(BuildContext context, String error) {
-    context.pop();
+    context.pop(); // close loading
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
         icon: const Icon(Icons.error, color: Colors.red, size: 32),
         content: Text(error, style: TextStyles.font14BlueRegular),
         actions: [
           TextButton(
-            onPressed: () {
-              context.pop();
-            },
+            onPressed: () => context.pop(),
             child: Text('Got it', style: TextStyles.font14BlueBold),
           ),
         ],

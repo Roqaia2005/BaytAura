@@ -19,20 +19,7 @@ class CustomSearchBar extends StatelessWidget {
           FontAwesomeIcons.magnifyingGlass,
           color: AppColors.blue,
         ),
-        suffixIcon: Container(
-          margin: EdgeInsets.only(top: 4.h, bottom: 4.h),
-          padding: EdgeInsets.symmetric(horizontal: 8.w),
-          decoration: BoxDecoration(
-            color: AppColors.blue,
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
-            onPressed: () {
-              Scaffold.of(context).openEndDrawer();
-            },
-          ),
-        ),
+
         hintText: "Search for properties",
         hintStyle: TextStyles.font14BlueRegular,
         filled: true,

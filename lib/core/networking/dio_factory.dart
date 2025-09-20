@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-
-
+import 'package:bayt_aura/core/helpers/shared_pref_helper.dart';
 
 class DioFactory {
-  /// private constructor as I don't want to allow creating an instance of this class
   DioFactory._();
 
   static Dio? dio;
 
+  static const String userTokenKey = "auth_token";
   static Dio getDio() {
     Duration timeOut = const Duration(seconds: 30);
 
@@ -17,26 +16,25 @@ class DioFactory {
       dio!
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut;
-      // addDioHeaders();
+
+      addDioHeaders();
       addDioInterceptor();
-      return dio!;
-    } else {
-      return dio!;
     }
+    return dio!;
   }
 
-  // static void addDioHeaders()  {
-  //   dio?.options.headers = {
-  //     'Accept': 'application/json',
-  //     'Authorization':
-  //         'Bearer ${SharedPrefHelper.getSecuredString(SharedPrefKeys.userToken)}',
-  //   };
-  // }
+  static Future<void> addDioHeaders() async {
+    final token = await SharedPrefHelper.getSecuredString(userTokenKey);
 
-  static void setTokenIntoHeaderAfterLogin(String token) {
     dio?.options.headers = {
-      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
     };
+  }
+
+  static void setTokenIntoHeaderAfterLogin(String token) async {
+    await SharedPrefHelper.setSecuredString(userTokenKey, token);
+    dio?.options.headers = {'Authorization': 'Bearer $token'};
   }
 
   static void addDioInterceptor() {

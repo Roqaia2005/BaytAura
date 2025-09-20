@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
-import 'package:bayt_aura/features/home/data/models/property.dart';
+import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
-import 'package:bayt_aura/features/home/presentation/views/home_view.dart';
 import 'package:bayt_aura/features/auth/presentation/views/auth_view.dart';
-import 'package:bayt_aura/features/home/presentation/views/favorites_view.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
-import 'package:bayt_aura/features/home/presentation/views/property_details.dart';
-import 'package:bayt_aura/features/home/presentation/views/alll_categories_view.dart';
+import 'package:bayt_aura/features/customer/presentation/views/customer_view.dart';
+import 'package:bayt_aura/features/property/presentation/views/favorites_view.dart';
+import 'package:bayt_aura/features/property/presentation/views/property_details.dart';
+import 'package:bayt_aura/features/admin/presentation/views/admin_dashboard_view.dart';
 import 'package:bayt_aura/features/provider/presentation/views/provider_dashboard.dart';
+import 'package:bayt_aura/features/property/presentation/views/all_properties_view.dart';
 import 'package:bayt_aura/features/provider/presentation/views/provider_properties_view.dart';
+
+
+
 
 class AppRouter {
   static MaterialPageRoute generateRoute(RouteSettings settings) {
@@ -24,6 +28,11 @@ class AppRouter {
 
       case Routes.providerScreen:
         return MaterialPageRoute(builder: (_) => ProviderDashboard());
+      case Routes.adminScreen:
+        return MaterialPageRoute(builder: (_) => AdminDashboard());
+
+      case Routes.allProperties:
+        return MaterialPageRoute(builder: (_) => AllPropertiesView());
 
       case Routes.profileScreen:
         return MaterialPageRoute(builder: (_) => ProfileView());
@@ -31,8 +40,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => FavoritesView());
       case Routes.messagesScreen:
         return MaterialPageRoute(builder: (_) => PostsView());
-      case Routes.categoriesScreen:
-        return MaterialPageRoute(builder: (_) => AllCategoriesView());
+      // case Routes.categoriesScreen:
+      //   return MaterialPageRoute(builder: (_) => AllCategoriesView());
       case Routes.detailsScreen:
         final property = arguments as Property;
 

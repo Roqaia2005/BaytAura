@@ -1,5 +1,5 @@
 import 'package:bayt_aura/core/networking/api_service.dart';
-import 'package:bayt_aura/features/home/data/models/property.dart';
+import 'package:bayt_aura/features/property/data/models/property.dart';
 
 class SearchRepo {
   final ApiService _apiService;

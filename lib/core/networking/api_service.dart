@@ -2,10 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:bayt_aura/core/networking/api_constants.dart';
-import 'package:bayt_aura/features/home/data/models/property.dart';
+import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/auth/data/models/login_response.dart';
 import 'package:bayt_aura/features/auth/data/models/sign_up_response.dart';
 import 'package:bayt_aura/features/auth/data/models/login_request_body.dart';
+import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 import 'package:bayt_aura/features/auth/data/models/sign_up_request_body.dart';
 
 part 'api_service.g.dart';
@@ -14,6 +15,7 @@ part 'api_service.g.dart';
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
+  //********AUTHENTICATION METHODS*********/
   @POST(ApiConstants.login)
   Future<LoginResponse> login(@Body() LoginRequestBody loginRequestBody);
 
@@ -31,9 +33,11 @@ abstract class ApiService {
   Future<SignupResponse> signupProvider(
     @Body() SignupRequestBody signupRequestBody,
   );
+
+  //ADD PROPERTY **PROVIDER**
   @POST(ApiConstants.addProperty)
   Future<Property> addProperty(@Body() Property property);
-
+  //SEARCH METHODS
   @GET(ApiConstants.searchProperties)
   Future<List<Property>> searchProperties(@Query("q") String query);
 
@@ -45,16 +49,61 @@ abstract class ApiService {
     @Query("rooms") int? rooms,
     @Query("minArea") int? minArea,
   });
-
+  //PROPERTY METHODS
   @GET(ApiConstants.fetchProperties)
   Future<List<Property>> fetchProperties();
 
   @GET("${ApiConstants.fetchPropertyById}{id}")
-  Future<Property> fetchPropertyById(@Path("id") String id);
+  Future<Property> fetchPropertyById(@Path("id") int id);
 
   @POST(ApiConstants.addFavorite)
-  Future<void> addFavorite(@Query("propertyId") String propertyId);
+  Future<void> addFavorite(@Path("id") int propertyId);
 
   @DELETE(ApiConstants.removeFavorite)
-  Future<void> removeFavorite(@Query("propertyId") String propertyId);
+  Future<void> removeFavorite(@Path("id") int propertyId);
+
+  @DELETE(ApiConstants.deleteProperty)
+  Future<void> deleteProperty(@Query("propertyId") int propertyId);
+
+  //ADMIN METHODS
+  @PUT(ApiConstants.approveProvider)
+  Future<void> approveProvider(@Path("providerId") int providerId);
+  @GET(ApiConstants.getRequestByIdAdmin)
+  Future<CustomerRequest> getRequestByIdAdmin(@Path("id") int id);
+  @GET(ApiConstants.getAllRequests)
+  Future<List<CustomerRequest>> getAllRequests(); // ADMIN
+  @PUT(ApiConstants.changeRequestStatus)
+  Future<void> changeRequestStatus(
+    @Path("id") int id,
+    @Query("status") String status,
+  );
+  @DELETE(ApiConstants.deleteRequest)
+  Future<void> deleteRequestByAdmin(@Path("id") int id);
+  //******************************************** */
+  //CUSTOMER METHODS
+  @POST(ApiConstants.createRequest)
+  Future<CustomerRequest> createRequest(@Body() CustomerRequest requestBody);
+
+  @GET(ApiConstants.getMyRequests)
+  Future<List<CustomerRequest>> getMyRequests(); // CUSTOMER
+
+  @GET(ApiConstants.getRequestByIdCustomer)
+  Future<CustomerRequest> getRequestByIdCustomer(@Path("id") int id);
+
+  @DELETE(ApiConstants.deleteMyRequest)
+  Future<void> deleteMyRequest(@Path("id") int id); // CUSTOMER
+
+  //PROFILE METHODS
+  @GET(ApiConstants.getProfile)
+  Future<void> getProfile();
+  @PUT(ApiConstants.updateProfile)
+  Future<void> updateProfile();
+
+  @DELETE(ApiConstants.deleteProfile)
+  Future<void> deleteProfile();
+
+  @POST(ApiConstants.uploadProfilePicture)
+  Future<void> uploadProfilePicture();
+  @DELETE(ApiConstants.deleteProfilePicture)
+  Future<void> deleteProfilePicture();
 }

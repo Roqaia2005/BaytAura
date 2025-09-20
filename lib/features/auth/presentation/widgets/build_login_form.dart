@@ -64,10 +64,10 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 if (value == null || value.isEmpty) {
                   return "Please enter your password";
                 }
-                if (!AppRegex.isPasswordValid(value)) {
-                  return "Password must be at least 8 characters, include an uppercase letter, number and symbol";
-                }
-                return null;
+                // if (!AppRegex.isPasswordValid(value)) {
+                //   return "Password must be at least 8 characters, include an uppercase letter, number and symbol";
+                // }
+                // return null;
               },
               hintText: "Password",
               isObscureText: isObscureText,

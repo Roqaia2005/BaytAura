@@ -7,8 +7,8 @@ import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/widgets/custom_drop_down.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
-import 'package:bayt_aura/features/home/data/models/property.dart';
-import 'package:bayt_aura/features/home/logic/property_cubit.dart';
+import 'package:bayt_aura/features/property/data/models/property.dart';
+import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 
 class AddPostView extends StatefulWidget {
   const AddPostView({super.key});
@@ -26,8 +26,13 @@ class _AddPostViewState extends State<AddPostView> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _areaController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _latitudeController = TextEditingController();
+  final TextEditingController _longitudeController = TextEditingController();
+  final TextEditingController _ownerNameController = TextEditingController();
 
   String? _selectedType;
+  String? _selectedPurpose;
+  String? _selectedStatus;
 
   final List<String> propertyTypes = [
     "APARTMENT",
@@ -36,6 +41,9 @@ class _AddPostViewState extends State<AddPostView> {
     "STUDIO",
     "LAND",
   ];
+
+  final List<String> purposes = ["SELL", "RENT"];
+  final List<String> statuses = ["AVAILABLE", "SOLD", "RENTED"];
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +97,30 @@ class _AddPostViewState extends State<AddPostView> {
                   ),
                   verticalSpace(12),
 
+                  CustomDropDown(
+                    value: _selectedPurpose,
+                    itemsList: purposes,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedPurpose = value;
+                      });
+                    },
+                    hintText: "Select purpose",
+                  ),
+                  verticalSpace(12),
+
+                  CustomDropDown(
+                    value: _selectedStatus,
+                    itemsList: statuses,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedStatus = value;
+                      });
+                    },
+                    hintText: "Select property status",
+                  ),
+                  verticalSpace(12),
+
                   AppTextFormField(
                     controller: _descriptionController,
                     hintText: "Description",
@@ -108,6 +140,7 @@ class _AddPostViewState extends State<AddPostView> {
                   AppTextFormField(
                     controller: _priceController,
                     hintText: "Price",
+                    keyboardType: TextInputType.number,
                     prefixIcon: const Icon(
                       Icons.attach_money,
                       color: AppColors.darkBeige,
@@ -120,6 +153,7 @@ class _AddPostViewState extends State<AddPostView> {
                   AppTextFormField(
                     controller: _areaController,
                     hintText: "Area (sq ft)",
+                    keyboardType: TextInputType.number,
                     prefixIcon: const Icon(
                       Icons.square_foot,
                       color: AppColors.darkBeige,
@@ -139,40 +173,95 @@ class _AddPostViewState extends State<AddPostView> {
                     validator: (value) =>
                         value == null || value.isEmpty ? "Enter address" : null,
                   ),
+                  verticalSpace(12),
+
+                  AppTextFormField(
+                    controller: _latitudeController,
+                    hintText: "Latitude",
+                    keyboardType: TextInputType.number,
+                    prefixIcon: const Icon(
+                      Icons.explore,
+                      color: AppColors.darkBeige,
+                    ),
+                    validator: (value) => value == null ||
+                            value.isEmpty ||
+                            double.tryParse(value) == null
+                        ? "Enter valid latitude"
+                        : null,
+                  ),
+                  verticalSpace(12),
+
+                  AppTextFormField(
+                    controller: _longitudeController,
+                    hintText: "Longitude",
+                    keyboardType: TextInputType.number,
+                    prefixIcon: const Icon(
+                      Icons.explore_outlined,
+                      color: AppColors.darkBeige,
+                    ),
+                    validator: (value) => value == null ||
+                            value.isEmpty ||
+                            double.tryParse(value) == null
+                        ? "Enter valid longitude"
+                        : null,
+                  ),
+                  verticalSpace(12),
+
+                  AppTextFormField(
+                    controller: _ownerNameController,
+                    hintText: "Owner Name",
+                    prefixIcon: const Icon(
+                      Icons.person,
+                      color: AppColors.darkBeige,
+                    ),
+                    validator: (value) => value == null || value.isEmpty
+                        ? "Enter owner name"
+                        : null,
+                  ),
                   verticalSpace(24),
 
                   AppTextButton(
                     buttonText: "Add Property",
                     textStyle: TextStyles.font16WhiteBold,
-
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        if (_selectedType == null) {
+                        if (_selectedType == null ||
+                            _selectedPurpose == null ||
+                            _selectedStatus == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Please select property type"),
+                              content: Text(
+                                  "Please select type, purpose and status"),
                             ),
                           );
                           return;
                         }
 
+                        final now = DateTime.now().toIso8601String();
+
                         final newProperty = Property(
-                          id: '',
+                          id: DateTime.now().millisecondsSinceEpoch, // unique id
                           title: _titleController.text,
                           description: _descriptionController.text,
                           price: double.parse(_priceController.text),
                           area: double.parse(_areaController.text),
                           address: _addressController.text,
                           type: _selectedType!,
-                          latitude: 99,
-                          longitude: 99,
+                          purpose: _selectedPurpose!,
+                          propertyStatus: _selectedStatus!,
+                          latitude:
+                              double.parse(_latitudeController.text.trim()),
+                          longitude:
+                              double.parse(_longitudeController.text.trim()),
+                          ownerName: _ownerNameController.text,
+                          createdAt: now,
+                          updatedAt: now,
                         );
 
                         context.read<PropertyCubit>().addProperty(newProperty);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Property Added!")),
                         );
-                        // context.pop();
                       }
                     },
                   ),

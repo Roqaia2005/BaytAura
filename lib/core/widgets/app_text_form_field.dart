@@ -18,6 +18,7 @@ class AppTextFormField extends StatelessWidget {
     this.controller,
     this.validator,
     this.prefixIcon,
+    this.keyboardType,
   });
   final EdgeInsetsGeometry? contentPadding;
   final InputBorder? focusedBorder;
@@ -31,10 +32,12 @@ class AppTextFormField extends StatelessWidget {
   final Color? backGroundColor;
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: keyboardType,
       controller: controller,
       decoration: InputDecoration(
         isDense: true,

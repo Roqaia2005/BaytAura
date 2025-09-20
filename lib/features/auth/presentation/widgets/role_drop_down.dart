@@ -12,7 +12,7 @@ class RoleDropdown extends StatefulWidget {
 }
 
 class _RoleDropdownState extends State<RoleDropdown> {
-  final List<String> roles = ["Admin", "Customer", "Provider"];
+  final List<String> roles = ["Customer", "Provider"];
 
   @override
   Widget build(BuildContext context) {

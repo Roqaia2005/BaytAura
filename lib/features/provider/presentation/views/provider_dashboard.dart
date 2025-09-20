@@ -1,13 +1,11 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
-import 'package:bayt_aura/features/search/presentation/views/search_view.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
-import 'package:bayt_aura/features/home/presentation/views/widgets/app_nav_bar.dart';
+import 'package:bayt_aura/features/provider/presentation/widgets/provider_navbar.dart';
 import 'package:bayt_aura/features/provider/presentation/views/add_property_view.dart';
-import 'package:bayt_aura/features/home/presentation/views/widgets/home_view_body.dart';
+import 'package:bayt_aura/features/property/presentation/views/all_properties_view.dart';
 import 'package:bayt_aura/features/provider/presentation/views/provider_properties_view.dart';
-
 
 class ProviderDashboard extends StatefulWidget {
   const ProviderDashboard({super.key});
@@ -18,8 +16,8 @@ class ProviderDashboard extends StatefulWidget {
 
 class _ProviderDashboardState extends State<ProviderDashboard> {
   final List<Widget> screens = [
-    HomeViewBody(),
-    SearchView(),
+    AllPropertiesView(),
+
     AddPostView(),
     PostsView(),
     ProfileView(),
@@ -35,7 +33,7 @@ class _ProviderDashboardState extends State<ProviderDashboard> {
         child: SvgPicture.asset("assets/svgs/ai.svg"),
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar: AppNavBar(
+      bottomNavigationBar: ProviderNavBar(
         currentPageIndex: currentPageIndex,
         onDestinationSelected: (int index) {
           currentPageIndex = index;

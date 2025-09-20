@@ -1,40 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/features/search/presentation/widgets/custom_search_bar.dart';
-
 
 class SearchContainer extends StatelessWidget {
   const SearchContainer({super.key, required this.searchController});
 
   final TextEditingController searchController;
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.0.sp),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
-        padding: EdgeInsets.only(left: 16, right: 36, top: 8, bottom: 8),
+        padding: EdgeInsets.all(12.sp),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 16.sp, top: 8.sp),
-              child: CustomSearchBar(searchController: searchController),
+            // 🔍 Search Row
+            Row(
+              children: [
+                Expanded(
+                  child: CustomSearchBar(searchController: searchController),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.blue,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  padding: EdgeInsets.all(8.sp),
+                  child: IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                    icon: const Icon(
+                      Icons.filter_list,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-              child: Row(
-                children: [
-                  Spacer(),
-                  Icon(Icons.bolt, color: Colors.orange, size: 18.sp),
-                  Text(" AI Powered", style: TextStyles.font12DarkBeigeRegular),
-                ],
-              ),
+
+            SizedBox(height: 8.h),
+
+            // 📍 Location + AI Powered
+            Row(
+              children: [
+                const Icon(Icons.location_on, color: Colors.grey, size: 16),
+                SizedBox(width: 4.w),
+                Text(
+                  "Current: Dubai, UAE",
+                  style: TextStyles.font12DarkBeigeRegular.copyWith(
+                    color: Colors.black87,
+                  ),
+                ),
+                const Spacer(),
+                const Icon(Icons.bolt, color: Colors.orange, size: 16),
+                SizedBox(width: 4.w),
+                Text("AI Powered", style: TextStyles.font12DarkBeigeRegular),
+              ],
             ),
           ],
         ),
