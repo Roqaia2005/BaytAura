@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/stat_item.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/stat_item.dart';
 
 
 class StatCard extends StatelessWidget {

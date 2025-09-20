@@ -26,7 +26,7 @@ class AllRequestsView extends StatelessWidget {
                 return Card(
                   margin: const EdgeInsets.all(8),
                   child: ListTile(
-                    title: Text(req.title??""),
+                    title: Text(req.title ?? ""),
                     subtitle: Text(
                       "${req.type} - ${req.purpose} - ${req.status}\nCustomer: ${req.customerName}",
                     ),
@@ -38,7 +38,7 @@ class AllRequestsView extends StatelessWidget {
                             icon: const Icon(Icons.check, color: Colors.green),
                             onPressed: () {
                               context.read<AdminCubit>().changeRequestStatus(
-                                req.id??0,
+                                req.id ?? 0,
                                 "ACCEPTED",
                               );
                             },
@@ -47,7 +47,7 @@ class AllRequestsView extends StatelessWidget {
                             icon: const Icon(Icons.close, color: Colors.red),
                             onPressed: () {
                               context.read<AdminCubit>().changeRequestStatus(
-                                req.id??0,
+                                req.id ?? 0,
                                 "REJECTED",
                               );
                             },

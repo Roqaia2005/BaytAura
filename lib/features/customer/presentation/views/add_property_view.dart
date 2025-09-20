@@ -9,8 +9,11 @@ import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/widgets/custom_drop_down.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
+import 'package:bayt_aura/features/property/logic/media_cubit.dart';
+import 'package:bayt_aura/features/property/logic/media_states.dart';
 import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
+
 
 class AddPropertyView extends StatefulWidget {
   const AddPropertyView({super.key});
@@ -22,30 +25,16 @@ class AddPropertyView extends StatefulWidget {
 class _AddPropertyViewState extends State<AddPropertyView> {
   final _formKey = GlobalKey<FormState>();
 
-  // Image picking
-  final List<RequestImages> _selectedImages = [];
+  // Pick images
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> pickImages() async {
+  Future<void> pickImages(int propertyId) async {
     try {
-      final List<XFile>? images = await _picker.pickMultiImage(
-        imageQuality: 80,
-      );
-
-      if (images != null && images.isNotEmpty) {
-        final tempImages = images.map((file) {
-          final id = DateTime.now().millisecondsSinceEpoch;
-          return RequestImages(
-            id: id,
-            url: file.path, // local path; replace with uploaded URL when uploading
-            altName: file.name,
-            publicId: 'public_$id',
-          );
-        }).toList();
-
-        setState(() {
-          _selectedImages.addAll(tempImages);
-        });
+      final List<XFile>? picked = await _picker.pickMultiImage(imageQuality: 80);
+      if (picked != null && picked.isNotEmpty) {
+        for (final img in picked) {
+          await context.read<MediaCubit>().addMedia(propertyId, File(img.path));
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -55,26 +44,20 @@ class _AddPropertyViewState extends State<AddPropertyView> {
   }
 
   // Controllers
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _areaController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _latitudeController = TextEditingController();
-  final TextEditingController _longitudeController = TextEditingController();
-  final TextEditingController _ownerNameController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _areaController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _latitudeController = TextEditingController();
+  final _longitudeController = TextEditingController();
+  final _ownerNameController = TextEditingController();
 
   String? _selectedType;
   String? _selectedPurpose;
   String? _selectedStatus;
 
-  final List<String> propertyTypes = [
-    "APARTMENT",
-    "VILLA",
-    "HOUSE",
-    "STUDIO",
-    "LAND",
-  ];
+  final List<String> propertyTypes = ["APARTMENT", "VILLA", "HOUSE", "STUDIO", "LAND"];
   final List<String> purposes = ["SELL", "RENT"];
   final List<String> statuses = ["AVAILABLE", "SOLD", "RENTED"];
 
@@ -91,11 +74,8 @@ class _AddPropertyViewState extends State<AddPropertyView> {
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.sp),
         child: Card(
-          color: Colors.white,
           elevation: 6,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           child: Padding(
             padding: EdgeInsets.all(20.sp),
             child: Form(
@@ -110,62 +90,63 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                     controller: _titleController,
                     hintText: "Title",
                     prefixIcon: const Icon(Icons.title, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty ? "Enter title" : null,
+                    validator: (v) => v == null || v.isEmpty ? "Enter title" : null,
                   ),
                   verticalSpace(12),
 
+                  // Media preview from cubit
                   Text("Property Images", style: TextStyles.font20BlueBold),
                   verticalSpace(12),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: _selectedImages.map((image) {
-                      if (image.url == null || image.url!.isEmpty) return const SizedBox();
-                      return Stack(
-                        children: [
-                          image.url!.startsWith('http')
-                              ? Image.network(
-                                  image.url!,
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.file(
-                                  File(image.url!),
+                  BlocBuilder<MediaCubit, MediaState>(
+                    builder: (context, state) {
+                      return state.when(
+                        initial: () => const Text("No images selected"),
+                        loading: () => const CircularProgressIndicator(),
+                        loaded: (media) => Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: media.map((img) {
+                            return Stack(
+                              children: [
+                                Image.network(
+                                  img.url??"",
                                   width: 80,
                                   height: 80,
                                   fit: BoxFit.cover,
                                 ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedImages.remove(image);
-                                });
-                              },
-                              child: Container(
-                                color: Colors.black54,
-                                child: const Icon(Icons.close, color: Colors.white, size: 20),
-                              ),
-                            ),
-                          ),
-                        ],
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      context.read<MediaCubit>().deleteMedia(
+                                        // لازم تمرر الـ propertyId الحقيقي هنا
+                                        0, // TODO: replace with propertyId after request is created
+                                        img.id??0,
+                                      );
+                                    },
+                                    child: Container(
+                                      color: Colors.black54,
+                                      child: const Icon(Icons.close, color: Colors.white, size: 20),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                        uploaded: (uploaded) => Text("Uploaded: ${uploaded.altName}"),
+                        error: (msg) => Text("Error: $msg"),
                       );
-                    }).toList(),
+                    },
                   ),
                   verticalSpace(12),
-                  AppTextButton(
-                    buttonText: "Pick Images",
-                    textStyle: TextStyles.font16WhiteBold,
-                    onPressed: pickImages,
-                  ),
 
+                  // باقي الفورم
                   CustomDropDown(
                     value: _selectedType,
                     itemsList: propertyTypes,
-                    onChanged: (value) => setState(() => _selectedType = value),
+                    onChanged: (val) => setState(() => _selectedType = val),
                     hintText: "Select property type",
                   ),
                   verticalSpace(12),
@@ -173,7 +154,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                   CustomDropDown(
                     value: _selectedPurpose,
                     itemsList: purposes,
-                    onChanged: (value) => setState(() => _selectedPurpose = value),
+                    onChanged: (val) => setState(() => _selectedPurpose = val),
                     hintText: "Select purpose",
                   ),
                   verticalSpace(12),
@@ -181,7 +162,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                   CustomDropDown(
                     value: _selectedStatus,
                     itemsList: statuses,
-                    onChanged: (value) => setState(() => _selectedStatus = value),
+                    onChanged: (val) => setState(() => _selectedStatus = val),
                     hintText: "Select property status",
                   ),
                   verticalSpace(12),
@@ -190,19 +171,16 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                     controller: _descriptionController,
                     hintText: "Description",
                     prefixIcon: const Icon(Icons.description, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty ? "Enter description" : null,
+                    validator: (v) => v == null || v.isEmpty ? "Enter description" : null,
                   ),
                   verticalSpace(20),
-
-                  Text("Details", style: TextStyles.font20BlueBold),
-                  verticalSpace(16),
 
                   AppTextFormField(
                     controller: _priceController,
                     hintText: "Price",
                     keyboardType: TextInputType.number,
                     prefixIcon: const Icon(Icons.attach_money, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty ? "Enter price" : null,
+                    validator: (v) => v == null || v.isEmpty ? "Enter price" : null,
                   ),
                   verticalSpace(12),
 
@@ -211,7 +189,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                     hintText: "Area (sq ft)",
                     keyboardType: TextInputType.number,
                     prefixIcon: const Icon(Icons.square_foot, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty ? "Enter area" : null,
+                    validator: (v) => v == null || v.isEmpty ? "Enter area" : null,
                   ),
                   verticalSpace(12),
 
@@ -219,7 +197,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                     controller: _addressController,
                     hintText: "Address",
                     prefixIcon: const Icon(Icons.location_on, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty ? "Enter address" : null,
+                    validator: (v) => v == null || v.isEmpty ? "Enter address" : null,
                   ),
                   verticalSpace(12),
 
@@ -228,9 +206,8 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                     hintText: "Latitude",
                     keyboardType: TextInputType.number,
                     prefixIcon: const Icon(Icons.explore, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty || double.tryParse(value) == null
-                        ? "Enter valid latitude"
-                        : null,
+                    validator: (v) =>
+                        v == null || double.tryParse(v) == null ? "Enter valid latitude" : null,
                   ),
                   verticalSpace(12),
 
@@ -239,9 +216,8 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                     hintText: "Longitude",
                     keyboardType: TextInputType.number,
                     prefixIcon: const Icon(Icons.explore_outlined, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty || double.tryParse(value) == null
-                        ? "Enter valid longitude"
-                        : null,
+                    validator: (v) =>
+                        v == null || double.tryParse(v) == null ? "Enter valid longitude" : null,
                   ),
                   verticalSpace(12),
 
@@ -249,14 +225,14 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                     controller: _ownerNameController,
                     hintText: "Owner Name",
                     prefixIcon: const Icon(Icons.person, color: AppColors.darkBeige),
-                    validator: (value) => value == null || value.isEmpty ? "Enter owner name" : null,
+                    validator: (v) => v == null || v.isEmpty ? "Enter owner name" : null,
                   ),
                   verticalSpace(24),
 
                   AppTextButton(
                     buttonText: "Submit Property Request",
                     textStyle: TextStyles.font16WhiteBold,
-                    onPressed: () {
+                    onPressed: () async {
                       if (!_formKey.currentState!.validate()) return;
                       if (_selectedType == null || _selectedPurpose == null || _selectedStatus == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -276,12 +252,16 @@ class _AddPropertyViewState extends State<AddPropertyView> {
                         address: _addressController.text.trim(),
                         latitude: double.parse(_latitudeController.text.trim()),
                         longitude: double.parse(_longitudeController.text.trim()),
-                        images: List<RequestImages>.from(_selectedImages),
+                        images: [], // الصور هتترفع بعد إنشاء الطلب
                         status: _selectedStatus!,
                         customerName: _ownerNameController.text.trim(),
                       );
 
-                      context.read<CustomerRequestCubit>().createRequest(newRequest);
+                      final cubit = context.read<CustomerRequestCubit>();
+                      await cubit.createRequest(newRequest);
+
+                      // TODO: استبدل الـ 123 بالـ id اللي جاي من السيرفر بعد إنشاء الطلب
+                      pickImages(123);
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Property adding request submitted")),

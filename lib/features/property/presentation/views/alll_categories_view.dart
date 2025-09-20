@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/category_card.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/category_card.dart';
 
 class AllCategoriesView extends StatelessWidget {
   const AllCategoriesView({super.key});

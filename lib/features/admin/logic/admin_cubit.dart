@@ -32,10 +32,10 @@ class AdminCubit extends Cubit<RequestState> {
   }
 
   /// Get all requests
-  void getAllRequests() async {
+  void getCustomerRequests() async {
     try {
       emit(RequestLoading());
-      final requests = await _repository.getAllRequests();
+      final requests = await _repository.getCustomerRequests();
       emit(RequestLoaded(requests));
     } catch (e) {
       emit(RequestError(e.toString()));

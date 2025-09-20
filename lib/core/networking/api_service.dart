@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/error_logger.dart';
@@ -37,7 +38,7 @@ abstract class ApiService {
   //ADD PROPERTY **PROVIDER**
   @POST(ApiConstants.addProperty)
   Future<Property> addProperty(@Body() Property property);
-  //SEARCH METHODS
+  //***********SEARCH METHODS****************//
   @GET(ApiConstants.searchProperties)
   Future<List<Property>> searchProperties(@Query("q") String query);
 
@@ -70,8 +71,8 @@ abstract class ApiService {
   Future<void> approveProvider(@Path("providerId") int providerId);
   @GET(ApiConstants.getRequestByIdAdmin)
   Future<CustomerRequest> getRequestByIdAdmin(@Path("id") int id);
-  @GET(ApiConstants.getAllRequests)
-  Future<List<CustomerRequest>> getAllRequests(); // ADMIN
+  @GET(ApiConstants.getCustomerRequests)
+  Future<List<CustomerRequest>> getCustomerRequests(); // ADMIN
   @PUT(ApiConstants.changeRequestStatus)
   Future<void> changeRequestStatus(
     @Path("id") int id,
@@ -106,4 +107,25 @@ abstract class ApiService {
   Future<void> uploadProfilePicture();
   @DELETE(ApiConstants.deleteProfilePicture)
   Future<void> deleteProfilePicture();
+
+  //MEDIA
+  @GET(ApiConstants.getAllMedia)
+  Future<List<RequestImages>> getAllMedia(@Path("id") int propertyId);
+
+  @GET(ApiConstants.getSingleMedia)
+  Future<RequestImages> getSingleMedia(@Path("id") int mediaId);
+
+  @DELETE(ApiConstants.deleteMedia)
+  Future<void> deleteMedia(
+    @Path("pId") int propertyId,
+    @Path("mId") int mediaId,
+  );
+
+  @POST(ApiConstants.uploadMedia)
+  @MultiPart()
+  Future<RequestImages> uploadMedia(
+    @Path("id") int propertyId,
+    @Part(name: "file") File file,
+    @Part(name: "altName") String altName,
+  );
 }

@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:bayt_aura/core/networking/api_service.dart';
 import 'package:bayt_aura/core/helpers/shared_pref_helper.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
+import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 
 class PropertyRepository {
   final ApiService _apiService;
@@ -19,7 +21,7 @@ class PropertyRepository {
 
   Future<List<Property>> fetchProperties() async {
     try {
-  final token = await SharedPrefHelper.getSecuredString("auth_token");
+      final token = await SharedPrefHelper.getSecuredString("auth_token");
       final response = await _apiService.fetchProperties();
       return response;
     } catch (e) {
@@ -51,4 +53,6 @@ class PropertyRepository {
       throw Exception('Failed to remove favorite: $e');
     }
   }
+
+
 }

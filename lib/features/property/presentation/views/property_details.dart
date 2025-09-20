@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/features/property/logic/property_cubit.dart';
-import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 
 class PropertyDetailsView extends StatelessWidget {
@@ -26,7 +23,6 @@ class PropertyDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 📸 Images carousel
                 SizedBox(
                   height: 280.h,
                   child: PageView.builder(
@@ -35,7 +31,7 @@ class PropertyDetailsView extends StatelessWidget {
                       final image =
                           property.images != null && property.images!.isNotEmpty
                           ? property.images![index].url
-                          : "https://via.placeholder.com/600x400";
+                          : "https://media.inmobalia.com/imgV1/B95mbh8olwFQm~uCUaVOI2kQT0hb0a8sZ9turUNfnwtvuccYCzs0YVPfPbfkc2VnnN1JFDpiVdhTScitlOnQDySlvNG28jsNw5Jn5ZQDAI6m79rHOtL07CQEwpIzDqyzicG779TlSpDJ9v56j_P7AoX6DJWBKxlPNJw~8mw_MGMy9ihvwY3EPIQnk5TkSGj7Zv0XIzj~AhV9_piHBnLuEoEp9qf0zztN79omdcTVlZBX9pOJlkfbFKtH627E2yYkT~BUqI~Qe7_Jt5xDm45uAK4OgKKPY0dkPcRbJHeqbOrtWgQKYCqgZuBLx2sgFzREgdoWuS~Ju1NLWG0Ob2RVoXZfMNNcnHn74egSCZWUZlTaJJlrke_9qe8dyIoP_IYpdCUE4Mb4B1yO1wDpugw-.jpg";
 
                       return ClipRRect(
                         borderRadius: BorderRadius.only(
@@ -54,7 +50,6 @@ class PropertyDetailsView extends StatelessWidget {
 
                 verticalSpace(20),
 
-                // 🏷 Title + Price
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Row(
@@ -80,7 +75,6 @@ class PropertyDetailsView extends StatelessWidget {
 
                 verticalSpace(10),
 
-                // 📍 Address
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Row(
@@ -105,7 +99,6 @@ class PropertyDetailsView extends StatelessWidget {
 
                 verticalSpace(20),
 
-                // 📊 Info box
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Container(
@@ -175,7 +168,6 @@ class PropertyDetailsView extends StatelessWidget {
 
                 verticalSpace(24),
 
-                // 📖 Description
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Text(
@@ -200,7 +192,6 @@ class PropertyDetailsView extends StatelessWidget {
             ),
           ),
 
-          // 🔙 Back Button
           Positioned(
             top: 40.h,
             left: 16.w,
@@ -210,9 +201,6 @@ class PropertyDetailsView extends StatelessWidget {
             ),
           ),
 
-          // ❤️ Favorite Button
-
-          // 📞 Contact Button
           Positioned(
             bottom: 20.h,
             left: 16.w,

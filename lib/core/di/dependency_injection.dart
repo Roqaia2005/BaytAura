@@ -11,9 +11,10 @@ import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/search/data/repos/search_repo.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
+import 'package:bayt_aura/features/property/data/models/media_repo.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
+import 'package:bayt_aura/features/customer/data/repo/customer_repo.dart';
 import 'package:bayt_aura/features/property/data/property_repository.dart';
-import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 
 final getIt = GetIt.instance;
 Future<void> setUpGetIt() async {
@@ -40,10 +41,18 @@ Future<void> setUpGetIt() async {
   getIt.registerLazySingleton<SearchRepo>(
     () => SearchRepo(apiService: getIt<ApiService>()),
   );
+  getIt.registerLazySingleton<PropertyRepository>(
+    () => PropertyRepository(apiService: getIt<ApiService>()),
+  );
 
   getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<SearchRepo>()));
   getIt.registerFactory<AdminCubit>(() => AdminCubit(getIt()));
+
+  getIt.registerLazySingleton<CustomerRepo>(
+    () => CustomerRepo(apiService: getIt<ApiService>()),
+  );
+
   getIt.registerFactory<CustomerRequestCubit>(
-    () => CustomerRequestCubit(getIt()),
+    () => CustomerRequestCubit(getIt<CustomerRepo>(), getIt<MediaRepository>()),
   );
 }

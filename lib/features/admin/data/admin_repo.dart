@@ -18,8 +18,8 @@ class AdminRepository {
   }
 
   /// Get all requests (customer requests)
-  Future<List<CustomerRequest>> getAllRequests() {
-    return _apiService.getAllRequests();
+  Future<List<CustomerRequest>> getCustomerRequests() {
+    return _apiService.getCustomerRequests();
   }
 
   /// Get a specific request by ID (admin view)

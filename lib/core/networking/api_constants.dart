@@ -20,8 +20,8 @@ class ApiConstants {
       'requests'; //customer create request to add the property
 
   static const String getMyRequests = 'requests'; //customer get his requests
-  static const String getAllRequests =
-      'admin/requests'; //admin get all requests
+  static const String getCustomerRequests =
+      'admin/requests'; //admin get all customer requests
   static const String getRequestByIdAdmin = 'admin/requests/{id}';
   static const String getRequestByIdCustomer = 'requests/{id}';
   static const String deleteMyRequest = 'requests/{id}'; //customer
@@ -29,13 +29,17 @@ class ApiConstants {
   static const String changeRequestStatus =
       'admin/requests/{id}/status'; //by admin
 
+  // profile data
 
+  static const String getProfile = "user/profile";
+  static const String updateProfile = "user/profile";
+  static const String deleteProfile = "user/profile";
+  static const String uploadProfilePicture = "user/profile/pfp";
+  static const String deleteProfilePicture = "user/profile/pfp";
 
-// profile data
-
-static const String getProfile="user/profile";
-static const String updateProfile="user/profile";
-static const String deleteProfile="user/profile";
-static const String uploadProfilePicture="user/profile/pfp";
-static const String deleteProfilePicture="user/profile/pfp";
+  //media data
+  static const uploadMedia = "properties/{id}/media-upload";
+  static const getAllMedia = "properties/{id}/media";
+  static const getSingleMedia = "properties/media/{id}";
+  static const deleteMedia = "properties/{pId}/media/{mId}";
 }

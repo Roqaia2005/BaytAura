@@ -13,11 +13,11 @@ import 'package:bayt_aura/features/search/logic/search_state.dart';
 import 'package:bayt_aura/features/search/logic/search_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/stat_card.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/property_card.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/property_header.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/categories_header.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/categories_grid_view.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/stat_card.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/property_card.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/property_header.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/categories_header.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/categories_grid_view.dart';
 
 class AllPropertiesView extends StatefulWidget {
   const AllPropertiesView({super.key});

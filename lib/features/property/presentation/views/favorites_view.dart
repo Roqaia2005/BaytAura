@@ -6,7 +6,7 @@ import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/property_card.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/property_card.dart';
 
 class FavoritesView extends StatelessWidget {
   const FavoritesView({super.key});

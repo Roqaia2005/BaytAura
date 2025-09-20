@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/features/property/presentation/views/widgets/category_card.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/category_card.dart';
 
 class CategoriesGridView extends StatelessWidget {
   const CategoriesGridView({super.key});
