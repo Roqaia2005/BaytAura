@@ -12,19 +12,24 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProfileAppBar(),
-            QuickActionsContainer(),
-            AccountContainer(),
-            ActivityContainer(),
-            SupportContainer(),
-            InfoWidget(),
-            SignoutButton(),
-          ],
+    return BlocProvider(
+      create: (context) => ProfileCubit(
+        context.read<ProfileRepository>(),
+      )..loadProfile(), // fetch profile on screen load
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Column(
+            children: const [
+              ProfileAppBar(),
+              QuickActionsContainer(),
+              AccountContainer(),
+              ActivityContainer(),
+              SupportContainer(),
+              InfoWidget(),
+              SignoutButton(),
+            ],
+          ),
         ),
       ),
     );

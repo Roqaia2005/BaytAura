@@ -8,7 +8,6 @@ import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
-import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/role_drop_down.dart';
 import 'package:bayt_aura/features/auth/presentation/widgets/phone_text_field.dart';
@@ -175,7 +174,6 @@ class _SignupFormState extends State<SignupForm> {
                     context.read<SignupCubit>().signupAdmin();
                   } else if (role == "Provider") {
                     context.read<SignupCubit>().signupProvider();
-
                   }
                 }
               },

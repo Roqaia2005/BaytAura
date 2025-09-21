@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:bayt_aura/core/networking/api_constants.dart';
+import 'package:bayt_aura/features/profile/data/models/profile.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/auth/data/models/login_response.dart';
 import 'package:bayt_aura/features/auth/data/models/sign_up_response.dart';
@@ -96,15 +97,15 @@ abstract class ApiService {
 
   //PROFILE METHODS
   @GET(ApiConstants.getProfile)
-  Future<void> getProfile();
+  Future<Profile> getProfile();
   @PUT(ApiConstants.updateProfile)
-  Future<void> updateProfile();
+  Future<void> updateProfile(Profile profile);
 
   @DELETE(ApiConstants.deleteProfile)
   Future<void> deleteProfile();
 
   @POST(ApiConstants.uploadProfilePicture)
-  Future<void> uploadProfilePicture();
+  Future<void> uploadProfilePicture(File file);
   @DELETE(ApiConstants.deleteProfilePicture)
   Future<void> deleteProfilePicture();
 
@@ -128,4 +129,9 @@ abstract class ApiService {
     @Part(name: "file") File file,
     @Part(name: "altName") String altName,
   );
+
+
+
+
+
 }

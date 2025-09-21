@@ -9,92 +9,88 @@ class ProfileAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 24.h),
-      decoration: BoxDecoration(
-        color: AppColors.blue,
-        borderRadius: BorderRadius.circular(0),
-      ),
-      width: double.infinity,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: AppColors.beige,
-                  radius: 80.r,
-                  child: CircleAvatar(
-                    radius: 70.r,
-                    backgroundImage: AssetImage("assets/images/profile.jpg"),
-                  ),
-                ),
-
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                    children: [
-                      Text("John Doe", style: TextStyles.font24WhiteBold),
-                      verticalSpace(12),
-                      Text(
-                        "Premium member",
-                        style: TextStyles.font16DarkBeigeRegular,
-                      ),
-                      verticalSpace(10),
-
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: AppColors.darkBeige),
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          loaded: (profile) {
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 24.h),
+              decoration: BoxDecoration(
+                color: AppColors.blue,
+                borderRadius: BorderRadius.circular(0),
+              ),
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: AppColors.beige,
+                          radius: 80.r,
+                          child:GestureDetector(
+  onTap: () async {
+    // pick image
+    final picker = ImagePicker();
+    final file = await picker.pickImage(source: ImageSource.gallery);
+    if (file != null) {
+      context.read<ProfileCubit>().uploadProfilePicture(File(file.path));
+    }
+  },
+  child: CircleAvatar(
+                            radius: 70.r,
+                            backgroundImage: profile.profilePictureUrl != null
+                                ? NetworkImage(profile.profilePictureUrl!)
+                                : const AssetImage("assets/images/profile.jpg")
+                                    as ImageProvider,
+                          ),
+),
+ 
                         ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0.sp),
-                            child: Text(
-                              "Member since Jan 2024",
-                              style: TextStyles.font12DarkBeigeBold,
-                            ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${profile.firstName} ${profile.lastName}",
+                                  style: TextStyles.font24WhiteBold),
+                              verticalSpace(12),
+                              Text(
+                                profile.role, // show ADMIN / PROVIDER / CUSTOMER
+                                style: TextStyles.font16DarkBeigeRegular,
+                              ),
+                              verticalSpace(10),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(color: AppColors.darkBeige),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0.sp),
+                                    child: Text(
+                                      "Member since Jan 2024", // replace when backend has field
+                                      style: TextStyles.font12DarkBeigeBold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Text("12", style: TextStyles.font24WhiteBold),
-                    Text("Favorites", style: TextStyles.font12DarkBeigeRegular),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("5", style: TextStyles.font24WhiteBold),
-                    Text("Search", style: TextStyles.font12DarkBeigeRegular),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("8", style: TextStyles.font24WhiteBold),
-                    Text("Viewings", style: TextStyles.font12DarkBeigeRegular),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+                ],
+              ),
+            );
+          },
+          orElse: () => const Center(child: CircularProgressIndicator()),
+        );
+      },
     );
   }
 }

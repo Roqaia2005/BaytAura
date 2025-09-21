@@ -35,23 +35,26 @@ class _AccountContainerState extends State<AccountContainer> {
           children: [
             Text("Account", style: TextStyles.font16BlueBold),
             verticalSpace(20),
-            ListTile(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              leading: Icon(
-                FontAwesomeIcons.penToSquare,
-                color: AppColors.darkBeige,
-              ),
-              title: Text("Edit profile", style: TextStyles.font14BlueRegular),
-
-              trailing: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  size: 20,
-                  Icons.arrow_forward_ios,
-                  color: AppColors.darkBeige,
-                ),
-              ),
-            ),
+           ListTile(
+  leading: Icon(
+    FontAwesomeIcons.penToSquare,
+    color: AppColors.darkBeige,
+  ),
+  title: Text("Edit profile", style: TextStyles.font14BlueRegular),
+  trailing: IconButton(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+      );
+    },
+    icon: Icon(
+      size: 20,
+      Icons.arrow_forward_ios,
+      color: AppColors.darkBeige,
+    ),
+  ),
+),
 
             ListTile(
               leading: const Icon(
