@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:your_app/features/profile/logic/profile_cubit.dart';
+import 'package:bayt_aura/features/profile/data/models/profile.dart';
+import 'package:bayt_aura/features/profile/logic/profile.state.dart';
+import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -32,16 +34,16 @@ class _EditProfileViewState extends State<EditProfileView> {
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           state.maybeWhen(
-            success: (_) {
+            loaded: (_) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Profile updated successfully")),
               );
               Navigator.pop(context);
             },
             error: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(message)));
             },
             orElse: () {},
           );
@@ -72,23 +74,25 @@ class _EditProfileViewState extends State<EditProfileView> {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
-                      onPressed: () {
-  final updated = Profile(
-    username: _usernameController.text,
-    firstName: _firstNameController.text,
-    lastName: _lastNameController.text,
-    phone: _phoneController.text,
-    email: "", // keep email unchanged or prefill
-    role: "",  // keep role unchanged
-    profilePictureUrl: null, // keep as is
-  );
-  context.read<ProfileCubit>().updateProfile(updated);
-}
-
+                      onPressed:
+                      () {
+                        final updated = Profile(
+                          username: _usernameController.text,
+                          firstName: _firstNameController.text,
+                          lastName: _lastNameController.text,
+                          phone: _phoneController.text,
+                          email: "", // keep email unchanged or prefill
+                          role: "", // keep role unchanged
+                          profilePictureUrl: null, // keep as is
+                        );
+                        context.read<ProfileCubit>().updateProfile(updated);
+                      };
                     },
                     child: state.maybeWhen(
                       loading: () => const CircularProgressIndicator(),
-                      orElse: () => const Text("Save Changes"),
+                      orElse: () =>
+                          Text("Failed to save changes, Try again later"),
+                     
                     ),
                   ),
                 ],

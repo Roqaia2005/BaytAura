@@ -3,6 +3,7 @@ import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bayt_aura/features/profile/presentation/views/edit_profile_screen.dart';
 
 class AccountContainer extends StatefulWidget {
   const AccountContainer({super.key});
@@ -45,7 +46,7 @@ class _AccountContainerState extends State<AccountContainer> {
     onPressed: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+        MaterialPageRoute(builder: (_) => const EditProfileView()),
       );
     },
     icon: Icon(

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
+import 'package:bayt_aura/features/profile/data/repo/profile_repo.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/info_widget.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/signout_button.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/profile_app_bar.dart';
