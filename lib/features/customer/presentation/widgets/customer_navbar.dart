@@ -33,7 +33,23 @@ class CustomerNavBar extends StatelessWidget {
           ),
           label: "New Post",
         ),
-       
+        NavigationDestination(
+          icon: CircleAvatar(
+            radius: 20,
+            backgroundColor: AppColors.blue,
+            child: Icon(Icons.send, color: Colors.white),
+          ),
+          label: "My Requests",
+        ),
+        NavigationDestination(
+          icon: CircleAvatar(
+            radius: 20,
+            backgroundColor: AppColors.blue,
+            child: Icon(Icons.add_home_work_outlined, color: Colors.white),
+          ),
+          label: "My Properties",
+        ),
+
         NavigationDestination(
           icon: Icon(Icons.person_outline, color: AppColors.blue),
           label: "Profile",

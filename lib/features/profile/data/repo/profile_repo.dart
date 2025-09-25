@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import '../models/profile.dart';
 import 'package:bayt_aura/core/networking/api_service.dart';
+
 
 class ProfileRepository {
   final ApiService _api;
@@ -10,7 +12,13 @@ class ProfileRepository {
   Future<Profile> getProfile() => _api.getProfile();
   Future<void> updateProfile(Profile profile) => _api.updateProfile(profile);
   Future<void> deleteProfile() => _api.deleteProfile();
-  Future<void> uploadProfilePicture(File file) =>
-      _api.uploadProfilePicture(file);
+ Future<void> uploadProfilePicture(File file) async {
+  final formData = FormData.fromMap({
+    "file": await MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
+  });
+
+  await _api.uploadProfilePicture(formData);
+}
+
   Future<void> deleteProfilePicture() => _api.deleteProfilePicture();
 }

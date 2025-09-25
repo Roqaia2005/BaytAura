@@ -55,14 +55,17 @@ extension PropertyStatePatterns on PropertyState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PropertyInitial value)?  initial,TResult Function( PropertyLoading value)?  loading,TResult Function( PropertyLoaded value)?  loaded,TResult Function( PropertyError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PropertyInitial value)?  initial,TResult Function( PropertyLoading value)?  loading,TResult Function( PropertyLoaded value)?  loaded,TResult Function( PropertyError value)?  error,TResult Function( PropertyUpdated value)?  updated,TResult Function( PropertyDeleted value)?  deleted,TResult Function( PropertyAdded value)?  added,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case PropertyInitial() when initial != null:
 return initial(_that);case PropertyLoading() when loading != null:
 return loading(_that);case PropertyLoaded() when loaded != null:
 return loaded(_that);case PropertyError() when error != null:
-return error(_that);case _:
+return error(_that);case PropertyUpdated() when updated != null:
+return updated(_that);case PropertyDeleted() when deleted != null:
+return deleted(_that);case PropertyAdded() when added != null:
+return added(_that);case _:
   return orElse();
 
 }
@@ -80,14 +83,17 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PropertyInitial value)  initial,required TResult Function( PropertyLoading value)  loading,required TResult Function( PropertyLoaded value)  loaded,required TResult Function( PropertyError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PropertyInitial value)  initial,required TResult Function( PropertyLoading value)  loading,required TResult Function( PropertyLoaded value)  loaded,required TResult Function( PropertyError value)  error,required TResult Function( PropertyUpdated value)  updated,required TResult Function( PropertyDeleted value)  deleted,required TResult Function( PropertyAdded value)  added,}){
 final _that = this;
 switch (_that) {
 case PropertyInitial():
 return initial(_that);case PropertyLoading():
 return loading(_that);case PropertyLoaded():
 return loaded(_that);case PropertyError():
-return error(_that);case _:
+return error(_that);case PropertyUpdated():
+return updated(_that);case PropertyDeleted():
+return deleted(_that);case PropertyAdded():
+return added(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -104,14 +110,17 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PropertyInitial value)?  initial,TResult? Function( PropertyLoading value)?  loading,TResult? Function( PropertyLoaded value)?  loaded,TResult? Function( PropertyError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PropertyInitial value)?  initial,TResult? Function( PropertyLoading value)?  loading,TResult? Function( PropertyLoaded value)?  loaded,TResult? Function( PropertyError value)?  error,TResult? Function( PropertyUpdated value)?  updated,TResult? Function( PropertyDeleted value)?  deleted,TResult? Function( PropertyAdded value)?  added,}){
 final _that = this;
 switch (_that) {
 case PropertyInitial() when initial != null:
 return initial(_that);case PropertyLoading() when loading != null:
 return loading(_that);case PropertyLoaded() when loaded != null:
 return loaded(_that);case PropertyError() when error != null:
-return error(_that);case _:
+return error(_that);case PropertyUpdated() when updated != null:
+return updated(_that);case PropertyDeleted() when deleted != null:
+return deleted(_that);case PropertyAdded() when added != null:
+return added(_that);case _:
   return null;
 
 }
@@ -128,13 +137,16 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Property> properties,  List<Property> favorites)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Property> properties,  List<Favorite> favorites)?  loaded,TResult Function( String message)?  error,TResult Function( Property property)?  updated,TResult Function( int propertyId)?  deleted,TResult Function( Property property,  List<String> uploadErrors)?  added,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case PropertyInitial() when initial != null:
 return initial();case PropertyLoading() when loading != null:
 return loading();case PropertyLoaded() when loaded != null:
 return loaded(_that.properties,_that.favorites);case PropertyError() when error != null:
-return error(_that.message);case _:
+return error(_that.message);case PropertyUpdated() when updated != null:
+return updated(_that.property);case PropertyDeleted() when deleted != null:
+return deleted(_that.propertyId);case PropertyAdded() when added != null:
+return added(_that.property,_that.uploadErrors);case _:
   return orElse();
 
 }
@@ -152,13 +164,16 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Property> properties,  List<Property> favorites)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Property> properties,  List<Favorite> favorites)  loaded,required TResult Function( String message)  error,required TResult Function( Property property)  updated,required TResult Function( int propertyId)  deleted,required TResult Function( Property property,  List<String> uploadErrors)  added,}) {final _that = this;
 switch (_that) {
 case PropertyInitial():
 return initial();case PropertyLoading():
 return loading();case PropertyLoaded():
 return loaded(_that.properties,_that.favorites);case PropertyError():
-return error(_that.message);case _:
+return error(_that.message);case PropertyUpdated():
+return updated(_that.property);case PropertyDeleted():
+return deleted(_that.propertyId);case PropertyAdded():
+return added(_that.property,_that.uploadErrors);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -175,13 +190,16 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Property> properties,  List<Property> favorites)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Property> properties,  List<Favorite> favorites)?  loaded,TResult? Function( String message)?  error,TResult? Function( Property property)?  updated,TResult? Function( int propertyId)?  deleted,TResult? Function( Property property,  List<String> uploadErrors)?  added,}) {final _that = this;
 switch (_that) {
 case PropertyInitial() when initial != null:
 return initial();case PropertyLoading() when loading != null:
 return loading();case PropertyLoaded() when loaded != null:
 return loaded(_that.properties,_that.favorites);case PropertyError() when error != null:
-return error(_that.message);case _:
+return error(_that.message);case PropertyUpdated() when updated != null:
+return updated(_that.property);case PropertyDeleted() when deleted != null:
+return deleted(_that.propertyId);case PropertyAdded() when added != null:
+return added(_that.property,_that.uploadErrors);case _:
   return null;
 
 }
@@ -257,7 +275,7 @@ String toString() {
 
 
 class PropertyLoaded implements PropertyState {
-  const PropertyLoaded({required final  List<Property> properties, required final  List<Property> favorites}): _properties = properties,_favorites = favorites;
+  const PropertyLoaded({required final  List<Property> properties, required final  List<Favorite> favorites}): _properties = properties,_favorites = favorites;
   
 
  final  List<Property> _properties;
@@ -267,8 +285,8 @@ class PropertyLoaded implements PropertyState {
   return EqualUnmodifiableListView(_properties);
 }
 
- final  List<Property> _favorites;
- List<Property> get favorites {
+ final  List<Favorite> _favorites;
+ List<Favorite> get favorites {
   if (_favorites is EqualUnmodifiableListView) return _favorites;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_favorites);
@@ -305,7 +323,7 @@ abstract mixin class $PropertyLoadedCopyWith<$Res> implements $PropertyStateCopy
   factory $PropertyLoadedCopyWith(PropertyLoaded value, $Res Function(PropertyLoaded) _then) = _$PropertyLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<Property> properties, List<Property> favorites
+ List<Property> properties, List<Favorite> favorites
 });
 
 
@@ -326,7 +344,7 @@ class _$PropertyLoadedCopyWithImpl<$Res>
   return _then(PropertyLoaded(
 properties: null == properties ? _self._properties : properties // ignore: cast_nullable_to_non_nullable
 as List<Property>,favorites: null == favorites ? _self._favorites : favorites // ignore: cast_nullable_to_non_nullable
-as List<Property>,
+as List<Favorite>,
   ));
 }
 
@@ -393,6 +411,212 @@ class _$PropertyErrorCopyWithImpl<$Res>
   return _then(PropertyError(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class PropertyUpdated implements PropertyState {
+  const PropertyUpdated({required this.property});
+  
+
+ final  Property property;
+
+/// Create a copy of PropertyState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PropertyUpdatedCopyWith<PropertyUpdated> get copyWith => _$PropertyUpdatedCopyWithImpl<PropertyUpdated>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PropertyUpdated&&(identical(other.property, property) || other.property == property));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,property);
+
+@override
+String toString() {
+  return 'PropertyState.updated(property: $property)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PropertyUpdatedCopyWith<$Res> implements $PropertyStateCopyWith<$Res> {
+  factory $PropertyUpdatedCopyWith(PropertyUpdated value, $Res Function(PropertyUpdated) _then) = _$PropertyUpdatedCopyWithImpl;
+@useResult
+$Res call({
+ Property property
+});
+
+
+
+
+}
+/// @nodoc
+class _$PropertyUpdatedCopyWithImpl<$Res>
+    implements $PropertyUpdatedCopyWith<$Res> {
+  _$PropertyUpdatedCopyWithImpl(this._self, this._then);
+
+  final PropertyUpdated _self;
+  final $Res Function(PropertyUpdated) _then;
+
+/// Create a copy of PropertyState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? property = null,}) {
+  return _then(PropertyUpdated(
+property: null == property ? _self.property : property // ignore: cast_nullable_to_non_nullable
+as Property,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class PropertyDeleted implements PropertyState {
+  const PropertyDeleted({required this.propertyId});
+  
+
+ final  int propertyId;
+
+/// Create a copy of PropertyState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PropertyDeletedCopyWith<PropertyDeleted> get copyWith => _$PropertyDeletedCopyWithImpl<PropertyDeleted>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PropertyDeleted&&(identical(other.propertyId, propertyId) || other.propertyId == propertyId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,propertyId);
+
+@override
+String toString() {
+  return 'PropertyState.deleted(propertyId: $propertyId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PropertyDeletedCopyWith<$Res> implements $PropertyStateCopyWith<$Res> {
+  factory $PropertyDeletedCopyWith(PropertyDeleted value, $Res Function(PropertyDeleted) _then) = _$PropertyDeletedCopyWithImpl;
+@useResult
+$Res call({
+ int propertyId
+});
+
+
+
+
+}
+/// @nodoc
+class _$PropertyDeletedCopyWithImpl<$Res>
+    implements $PropertyDeletedCopyWith<$Res> {
+  _$PropertyDeletedCopyWithImpl(this._self, this._then);
+
+  final PropertyDeleted _self;
+  final $Res Function(PropertyDeleted) _then;
+
+/// Create a copy of PropertyState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? propertyId = null,}) {
+  return _then(PropertyDeleted(
+propertyId: null == propertyId ? _self.propertyId : propertyId // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class PropertyAdded implements PropertyState {
+  const PropertyAdded({required this.property, final  List<String> uploadErrors = const []}): _uploadErrors = uploadErrors;
+  
+
+ final  Property property;
+ final  List<String> _uploadErrors;
+@JsonKey() List<String> get uploadErrors {
+  if (_uploadErrors is EqualUnmodifiableListView) return _uploadErrors;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_uploadErrors);
+}
+
+
+/// Create a copy of PropertyState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PropertyAddedCopyWith<PropertyAdded> get copyWith => _$PropertyAddedCopyWithImpl<PropertyAdded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PropertyAdded&&(identical(other.property, property) || other.property == property)&&const DeepCollectionEquality().equals(other._uploadErrors, _uploadErrors));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,property,const DeepCollectionEquality().hash(_uploadErrors));
+
+@override
+String toString() {
+  return 'PropertyState.added(property: $property, uploadErrors: $uploadErrors)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PropertyAddedCopyWith<$Res> implements $PropertyStateCopyWith<$Res> {
+  factory $PropertyAddedCopyWith(PropertyAdded value, $Res Function(PropertyAdded) _then) = _$PropertyAddedCopyWithImpl;
+@useResult
+$Res call({
+ Property property, List<String> uploadErrors
+});
+
+
+
+
+}
+/// @nodoc
+class _$PropertyAddedCopyWithImpl<$Res>
+    implements $PropertyAddedCopyWith<$Res> {
+  _$PropertyAddedCopyWithImpl(this._self, this._then);
+
+  final PropertyAdded _self;
+  final $Res Function(PropertyAdded) _then;
+
+/// Create a copy of PropertyState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? property = null,Object? uploadErrors = null,}) {
+  return _then(PropertyAdded(
+property: null == property ? _self.property : property // ignore: cast_nullable_to_non_nullable
+as Property,uploadErrors: null == uploadErrors ? _self._uploadErrors : uploadErrors // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

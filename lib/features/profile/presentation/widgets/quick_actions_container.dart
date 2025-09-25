@@ -49,21 +49,7 @@ class QuickActionsContainer extends StatelessWidget {
                     ),
                   ),
                 ),
-                horizontalSpace(20),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.blue),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Saved searches",
-                      style: TextStyles.font14BlueRegular,
-                    ),
-                  ),
-                ),
+               
               ],
             ),
           ],

@@ -36,7 +36,7 @@ class ProfileAppBar extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           backgroundColor: AppColors.beige,
-                          radius: 80.r,
+                          radius: 60.r,
                           child: GestureDetector(
                             onTap: () async {
                               // pick image

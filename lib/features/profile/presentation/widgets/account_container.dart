@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bayt_aura/features/profile/presentation/views/edit_profile_screen.dart';
 
@@ -17,9 +20,9 @@ class _AccountContainerState extends State<AccountContainer> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -36,26 +39,23 @@ class _AccountContainerState extends State<AccountContainer> {
           children: [
             Text("Account", style: TextStyles.font16BlueBold),
             verticalSpace(20),
-           ListTile(
-  leading: Icon(
-    FontAwesomeIcons.penToSquare,
-    color: AppColors.darkBeige,
-  ),
-  title: Text("Edit profile", style: TextStyles.font14BlueRegular),
-  trailing: IconButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const EditProfileView()),
-      );
-    },
-    icon: Icon(
-      size: 20,
-      Icons.arrow_forward_ios,
-      color: AppColors.darkBeige,
-    ),
-  ),
-),
+            ListTile(
+              leading: Icon(
+                FontAwesomeIcons.penToSquare,
+                color: AppColors.darkBeige,
+              ),
+              title: Text("Edit profile", style: TextStyles.font14BlueRegular),
+              trailing: IconButton(
+                onPressed: () {
+                  context.pushNamed(Routes.editProfile);
+                },
+                icon: Icon(
+                  size: 20,
+                  Icons.arrow_forward_ios,
+                  color: AppColors.darkBeige,
+                ),
+              ),
+            ),
 
             ListTile(
               leading: const Icon(
@@ -79,39 +79,6 @@ class _AccountContainerState extends State<AccountContainer> {
                       isNotificationOn = value;
                     });
                   },
-                ),
-              ),
-            ),
-
-            ListTile(
-              leading: Icon(
-                FontAwesomeIcons.shieldHalved,
-                color: AppColors.darkBeige,
-              ),
-              title: Text(
-                "Privacy & Security",
-                style: TextStyles.font14BlueRegular,
-              ),
-
-              trailing: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  size: 20,
-                  Icons.arrow_forward_ios,
-                  color: AppColors.darkBeige,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.star, color: AppColors.darkBeige),
-              title: Text("My Reviews", style: TextStyles.font14BlueRegular),
-
-              trailing: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  size: 20,
-                  Icons.arrow_forward_ios,
-                  color: AppColors.darkBeige,
                 ),
               ),
             ),

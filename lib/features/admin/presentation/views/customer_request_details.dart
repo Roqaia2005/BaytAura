@@ -1,16 +1,18 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/features/property/data/models/property.dart';
+import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 
-class PropertyDetailsView extends StatelessWidget {
-  final Property property;
-  const PropertyDetailsView({super.key, required this.property});
+class CustomerRequestDetailsView extends StatelessWidget {
+  final CustomerRequest customerRequest;
+  const CustomerRequestDetailsView({super.key, required this.customerRequest});
 
-  String formatPrice(num? price) =>
+  String formatPrice(double? price) =>
       price != null ? "${price.toStringAsFixed(0)} EGP" : "N/A";
 
   String formatDate(String? date) {
@@ -37,15 +39,13 @@ class PropertyDetailsView extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: 16 / 9,
                     child: PageView.builder(
-                      // Show at least 1 page even if images are null/empty
-                      itemCount: property.images?.isNotEmpty == true
-                          ? property.images!.length
-                          : 1,
+                      itemCount: customerRequest.images?.length ?? 1,
                       itemBuilder: (context, index) {
-                        // Use the property's image if available, otherwise fallback
-                        final image = (property.images?.isNotEmpty == true)
-                            ? property.images![index].url
-                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s";
+                        final image =
+                            (customerRequest.images != null &&
+                                customerRequest.images!.isNotEmpty)
+                            ? customerRequest.images![index].url
+                            : "https://cf.bstatic.com/xdata/images/hotel/max1024x768/295090917.jpg?k=d17621b71b0eaa0c7a37d8d8d02d33896cef75145f61e7d96d296d88375a7d39&o=&hp=1";
 
                         return ClipRRect(
                           borderRadius: BorderRadius.only(
@@ -53,18 +53,9 @@ class PropertyDetailsView extends StatelessWidget {
                             bottomRight: Radius.circular(24.r),
                           ),
                           child: Image.network(
-                            image ??
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s",
+                            image ?? "",
                             width: double.infinity,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              // fallback in case URL fails to load
-                              return Image.network(
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s",
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              );
-                            },
                           ),
                         );
                       },
@@ -81,14 +72,14 @@ class PropertyDetailsView extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            property.title ?? "No Title",
+                            customerRequest.title,
                             style: TextStyles.font20BlueBold.copyWith(
                               fontSize: 22.sp,
                             ),
                           ),
                         ),
                         Text(
-                          formatPrice(property.price),
+                          formatPrice(customerRequest.price),
                           style: TextStyles.font20BlueBold.copyWith(
                             color: AppColors.darkBeige,
                           ),
@@ -112,7 +103,7 @@ class PropertyDetailsView extends StatelessWidget {
                         SizedBox(width: 6.w),
                         Expanded(
                           child: Text(
-                            property.address ?? "No Address",
+                            customerRequest.address,
                             style: TextStyles.font14BlueRegular.copyWith(
                               color: Colors.grey.shade700,
                             ),
@@ -139,38 +130,28 @@ class PropertyDetailsView extends StatelessWidget {
                         children: [
                           _infoTile(
                             Icons.square_foot,
-                            "${property.area ?? 0} m²",
+                            "${customerRequest.area} m²",
                             "Area",
                           ),
                           _infoTile(
                             Icons.home_work_outlined,
-                            property.type ?? "N/A",
+                            customerRequest.type,
                             "Type",
                           ),
                           _infoTile(
                             Icons.flag,
-                            property.purpose ?? "N/A",
+                            customerRequest.purpose,
                             "Purpose",
                           ),
                           _infoTile(
                             Icons.check_circle,
-                            property.propertyStatus ?? "N/A",
+                            customerRequest.status ?? "N/A",
                             "Status",
                           ),
                           _infoTile(
                             Icons.person,
-                            property.ownerName ?? "N/A",
+                            customerRequest.customerName ?? "N/A",
                             "Owner",
-                          ),
-                          _infoTile(
-                            Icons.calendar_today,
-                            formatDate(property.createdAt),
-                            "Created",
-                          ),
-                          _infoTile(
-                            Icons.update,
-                            formatDate(property.updatedAt),
-                            "Updated",
                           ),
                         ],
                       ),
@@ -193,7 +174,7 @@ class PropertyDetailsView extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Text(
-                      property.description ?? "No description available",
+                      customerRequest.description,
                       style: TextStyles.font14BlueRegular.copyWith(
                         color: Colors.grey.shade600,
                         height: 1.5,

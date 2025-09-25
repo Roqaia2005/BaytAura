@@ -6,26 +6,27 @@ class SearchRepo {
 
   SearchRepo({required ApiService apiService}) : _apiService = apiService;
 
-  Future<List<Property>> search(String query) async {
-    final results = await _apiService.searchProperties(query);
-
-    return results;
-  }
-
-  Future<List<Property>> applyFilter({
+  Future<List<Property>> getProperties({
+    String? query,
     String? type,
     int? minPrice,
     int? maxPrice,
-    int? rooms,
+
     int? minArea,
+    int? maxArea,
+    String? owner,
+    String? purpose,
   }) async {
-    final results = await _apiService.filterProperties(
+    return await _apiService.getProperties(
+      query: query,
       type: type,
       minPrice: minPrice,
       maxPrice: maxPrice,
-      rooms: rooms,
+
       minArea: minArea,
+      maxArea: maxArea,
+      owner: owner,
+      purpose: purpose,
     );
-    return results;
   }
 }

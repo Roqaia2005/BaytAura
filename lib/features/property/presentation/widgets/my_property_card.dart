@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/features/property/logic/property_state.dart';
-import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
-import 'package:bayt_aura/features/property/data/models/favorite.dart';
 
-class PropertyCard extends StatelessWidget {
+class MyPropertyCard extends StatelessWidget {
   final Property property;
   final VoidCallback onViewDetails;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const PropertyCard({
+  const MyPropertyCard({
     super.key,
     required this.property,
     required this.onViewDetails,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   String formatPrice(num? price) => "${price?.toStringAsFixed(0) ?? 0} EGP";
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = (property.images != null && property.images!.isNotEmpty)
+        ? property.images!.first.url
+        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s";
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
       child: Container(
@@ -41,7 +45,7 @@ class PropertyCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // صورة العقار مع Gradient Overlay
+            // Property Image with Gradient Overlay
             Stack(
               children: [
                 ClipRRect(
@@ -49,12 +53,15 @@ class PropertyCard extends StatelessWidget {
                     top: Radius.circular(20.r),
                   ),
                   child: Image.network(
-                    property.images != null && property.images!.isNotEmpty
-                        ? property.images!.first.url ??
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s"
-                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s",
+                    imageUrl ??
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s",
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Image.network(
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s",
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Positioned.fill(
@@ -74,7 +81,7 @@ class PropertyCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // نوع العقار
+                // Property Type
                 Positioned(
                   bottom: 12.h,
                   left: 16.w,
@@ -95,61 +102,59 @@ class PropertyCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // زرار المفضلة
+                // Edit & Delete buttons instead of favorite
                 Positioned(
                   top: 12.h,
                   right: 14.w,
-                  child: BlocBuilder<PropertyCubit, dynamic>(
-                    builder: (context, state) {
-                      if (state is PropertyLoaded) {
-                        Favorite? existingFavorite;
-                        for (var fav in state.favorites) {
-                          if (fav.property.id == property.id) {
-                            existingFavorite = fav;
-                            break;
-                          }
-                        }
-                        final isFavorite = existingFavorite != null;
-
-                        return GestureDetector(
-                          onTap: () {
-                            if (isFavorite) {
-                              context.read<PropertyCubit>().removeFavorite(
-                                existingFavorite!,
-                              );
-                            } else {
-                              context.read<PropertyCubit>().addFavorite(
-                                property,
-                              );
-                            }
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            padding: EdgeInsets.all(6.w),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.7),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 6,
-                                  offset: const Offset(2, 2),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: isFavorite ? Colors.red : Colors.grey[700],
-                              size: 24.sp,
-                            ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: onEdit,
+                        child: Container(
+                          padding: EdgeInsets.all(6.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.8),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 6,
+                                offset: const Offset(2, 2),
+                              ),
+                            ],
                           ),
-                        );
-                      }
-
-                      return const SizedBox.shrink();
-                    },
+                          child: Icon(
+                            Icons.edit,
+                            color: AppColors.blue,
+                            size: 24.sp,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      GestureDetector(
+                        onTap: onDelete,
+                        child: Container(
+                          padding: EdgeInsets.all(6.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.8),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 6,
+                                offset: const Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 24.sp,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -157,7 +162,7 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(14),
 
-            // عنوان العقار و السعر
+            // Title & Price
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -187,7 +192,7 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(8),
 
-            // العنوان
+            // Location
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -210,7 +215,7 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(10),
 
-            // المساحة
+            // Area
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -231,7 +236,7 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(10),
 
-            // الوصف
+            // Description
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
@@ -248,7 +253,7 @@ class PropertyCard extends StatelessWidget {
             verticalSpace(14),
             Divider(color: Colors.grey.shade300, height: 1),
 
-            // زرار عرض التفاصيل
+            // View Details Button
             Padding(
               padding: EdgeInsets.all(14.w),
               child: SizedBox(

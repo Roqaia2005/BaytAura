@@ -1,85 +1,73 @@
+import 'dart:io';
+
 class CustomerRequest {
+  String title;
+  String type;
+  String purpose;
+  String description;
+  double price;
+  double area;
+  String address;
+  double latitude;
+  double longitude;
+
   int? id;
-  String? title;
-  String? type;
-  String? purpose;
-  String? description;
-  double? price;
-  double? area;
-  String? address;
-  double? latitude;
-  double? longitude;
   List<RequestImages>? images;
-  String? propertyStatus;
-  String? createdAt;
-  String? updatedAt;
-  String? customerName;
+  List<File>? files;
   String? status;
+  String? customerName;
 
   CustomerRequest({
+    required this.title,
+    required this.type,
+    required this.purpose,
+    required this.description,
+    required this.price,
+    required this.area,
+    required this.address,
+    required this.latitude,
+    required this.longitude,
     this.id,
-    this.title,
-    this.type,
-    this.purpose,
-    this.description,
-    this.price,
-    this.area,
-    this.address,
-    this.latitude,
-    this.longitude,
     this.images,
-    this.propertyStatus,
-    this.createdAt,
-    this.updatedAt,
-    this.customerName,
     this.status,
+    this.customerName,
+    this.files,
   });
 
-  CustomerRequest.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    status = json['status'];
-    type = json['type'];
-    purpose = json['purpose'];
-    description = json['description'];
-    price = json['price'];
-    area = json['area'];
-    address = json['address'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-    if (json['images'] != null) {
-      images = <RequestImages>[];
-      json['images'].forEach((v) {
-        images!.add(RequestImages.fromJson(v));
-      });
-    }
-    propertyStatus = json['propertyStatus'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    customerName = json['ownerName'];
+  Map<String, dynamic> toJson() {
+    return {
+      "title": title,
+      "type": type,
+      "purpose": purpose,
+      "description": description,
+      "price": price,
+      "area": area,
+      "address": address,
+      "latitude": latitude,
+      "longitude": longitude,
+    };
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
-    data['type'] = type;
-    data['status'] = status;
-    data['purpose'] = purpose;
-    data['description'] = description;
-    data['price'] = price;
-    data['area'] = area;
-    data['address'] = address;
-    data['latitude'] = latitude;
-    data['longitude'] = longitude;
-    if (images != null) {
-      data['images'] = images!.map((RequestImages v) => v.toJson()).toList();
-    }
-    data['propertyStatus'] = propertyStatus;
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
-    data['ownerName'] = customerName;
-    return data;
+  factory CustomerRequest.fromJson(Map<String, dynamic> json) {
+    return CustomerRequest(
+      id: json['id'],
+      title: json['title'],
+      type: json['type'],
+      purpose: json['purpose'],
+      description: json['description'],
+      price: (json['price'] as num).toDouble(),
+      area: (json['area'] as num).toDouble(),
+      address: json['address'],
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      images: json['images'] != null
+          ? (json['images'] as List)
+                .map((e) => RequestImages.fromJson(e))
+                .toList()
+          : [],
+      status: json['status'],
+      customerName: json['customerName'],
+    );
   }
 }
 
@@ -89,21 +77,18 @@ class RequestImages {
   String? altName;
   String? publicId;
 
-  RequestImages({id, url, altName, publicId});
+  RequestImages({this.id, this.url, this.altName, this.publicId});
 
-  RequestImages.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    url = json['url'];
-    altName = json['altName'];
-    publicId = json['publicId'];
+  factory RequestImages.fromJson(Map<String, dynamic> json) {
+    return RequestImages(
+      id: json['id'],
+      url: json['url'],
+      altName: json['altName'],
+      publicId: json['publicId'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['url'] = url;
-    data['altName'] = altName;
-    data['publicId'] = publicId;
-    return data;
+    return {"id": id, "url": url, "altName": altName, "publicId": publicId};
   }
 }

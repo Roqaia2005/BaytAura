@@ -6,20 +6,24 @@ import 'package:bayt_aura/features/admin/data/admin_repo.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/search/logic/search_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/login_repo.dart';
+import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/signup_repo.dart';
 import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/search/data/repos/search_repo.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
-import 'package:bayt_aura/features/property/data/models/media_repo.dart';
+import 'package:bayt_aura/features/profile/data/repo/profile_repo.dart';
+import 'package:bayt_aura/features/property/data/repos/media_repo.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/customer/data/repo/customer_repo.dart';
-import 'package:bayt_aura/features/property/data/property_repository.dart';
+import 'package:bayt_aura/features/property/data/repos/property_repository.dart';
 
 final getIt = GetIt.instance;
+
 Future<void> setUpGetIt() async {
   Dio dio = DioFactory.getDio();
   getIt.registerLazySingleton<ApiService>(() => ApiService(dio));
+
   // login
   getIt.registerLazySingleton<LoginRepo>(() => LoginRepo(getIt()));
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt()));
@@ -28,31 +32,42 @@ Future<void> setUpGetIt() async {
   getIt.registerLazySingleton<SignupRepo>(() => SignupRepo(getIt()));
   getIt.registerFactory<SignupCubit>(() => SignupCubit(getIt()));
 
-  //property repo and cubit
-
-  getIt.registerLazySingleton<PropertyRepository>(
-    () => PropertyRepository(apiService: getIt()),
-  );
-  getIt.registerLazySingleton<AdminRepository>(() => AdminRepository(getIt()));
-  getIt.registerFactory<PropertyCubit>(() => PropertyCubit(getIt()));
-
-  // search repo and cubit
-
-  getIt.registerLazySingleton<SearchRepo>(
-    () => SearchRepo(apiService: getIt<ApiService>()),
-  );
+  // property
   getIt.registerLazySingleton<PropertyRepository>(
     () => PropertyRepository(apiService: getIt<ApiService>()),
   );
+  getIt.registerFactory<PropertyCubit>(
+    () => PropertyCubit(getIt<PropertyRepository>(), getIt<MediaRepository>()),
+  );
 
-  getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<SearchRepo>()));
+  // admin
+  getIt.registerLazySingleton<AdminRepository>(() => AdminRepository(getIt()));
   getIt.registerFactory<AdminCubit>(() => AdminCubit(getIt()));
 
+  // search
+  getIt.registerLazySingleton<SearchRepo>(
+    () => SearchRepo(apiService: getIt<ApiService>()),
+  );
+  getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt()));
+
+  getIt.registerLazySingleton<MediaRepository>(
+    () => MediaRepository(getIt<ApiService>()),
+  );
+
+  // customer
   getIt.registerLazySingleton<CustomerRepo>(
     () => CustomerRepo(apiService: getIt<ApiService>()),
   );
 
   getIt.registerFactory<CustomerRequestCubit>(
     () => CustomerRequestCubit(getIt<CustomerRepo>(), getIt<MediaRepository>()),
+  );
+
+  // profile
+  getIt.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepository(getIt<ApiService>()),
+  );
+  getIt.registerFactory<ProfileCubit>(
+    () => ProfileCubit(getIt<ProfileRepository>()),
   );
 }

@@ -1,27 +1,34 @@
 class ApiConstants {
-  static const String baseUrl = "http://192.168.1.7:8080/api/";
+  static const String baseUrl = "http://192.168.1.8:8080/api/";
   static const String login = 'auth/login';
   static const String registerCustomer = 'auth/register/customer';
   static const String registerAdmin = 'auth/register/admin';
   static const String registerProvider = 'auth/register/provider';
   static const String addProperty = 'properties';
 
-  static const String searchProperties = 'properties/search';
-  static const String filterProperties = 'properties/filter';
-
   static const String fetchProperties = 'properties';
 
   static const String fetchPropertyById = 'properties/'; // Append property ID
   static const String addFavorite = 'properties/{id}/favorite';
   static const String removeFavorite = 'properties/{id}/unfavorite';
-  static const String approveProvider = 'admin/provider/{id}/approve';
-  static const String deleteProperty = 'admin/properties/{id}'; //by admin
+  static const String myFavorites = 'user/profile/favorites';
+  static const String approveProvider = 'admin/provider/{id}/status';
+  static const String deleteProperty = "admin/properties/{propertyId}";
+  static const String deleteMyProperty = "properties/{propertyId}";
+
+  //by admin
+  static const String updateMyProperty = 'properties/{id}'; //customer,provider
   static const String createRequest =
       'requests'; //customer create request to add the property
 
   static const String getMyRequests = 'requests'; //customer get his requests
+  static const String getMyProperties = 'properties/my'; //customer,provider
   static const String getCustomerRequests =
-      'admin/requests'; //admin get all customer requests
+      'admin/customer-requests'; //admin get all customer requests
+
+  static const String getProviderRequests =
+      'admin/provider-requests'; //admin get all customer requests
+
   static const String getRequestByIdAdmin = 'admin/requests/{id}';
   static const String getRequestByIdCustomer = 'requests/{id}';
   static const String deleteMyRequest = 'requests/{id}'; //customer

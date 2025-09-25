@@ -8,14 +8,14 @@ class CategoriesGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
-        crossAxisSpacing: 1.sp,
-        mainAxisSpacing: 0.5.sp,
-
         physics: const NeverScrollableScrollPhysics(),
+        crossAxisSpacing: 16.w,  // wider horizontal space
+        mainAxisSpacing: 16.h,   // wider vertical space
+        childAspectRatio: 1.1,   // balance between width/height
         children: const [
           CategoryCard(
             title: "For Rent",

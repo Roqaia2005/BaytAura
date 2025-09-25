@@ -26,19 +26,21 @@ class FavoritesView extends StatelessWidget {
           final favorites = state is PropertyLoaded ? state.favorites : [];
 
           if (favorites.isEmpty) {
-            return const Center(child: Text("No favorites yet."));
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.blue),
+            );
           }
 
           return ListView.builder(
             itemCount: favorites.length,
             itemBuilder: (context, index) {
+              final favorite = favorites[index]; // Favorite object
+              final property = favorite.property; // Extract the Property
+
               return PropertyCard(
-                property: favorites[index],
+                property: property,
                 onViewDetails: () {
-                  context.pushNamed(
-                    Routes.detailsScreen,
-                    arguments: favorites[index],
-                  );
+                  context.pushNamed(Routes.detailsScreen, arguments: property);
                 },
               );
             },

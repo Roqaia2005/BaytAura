@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class Property {
   int? id;
   String? title;
@@ -10,6 +12,7 @@ class Property {
   double? latitude;
   double? longitude;
   List<Images>? images;
+  List<File>? files;
   String? propertyStatus;
   String? createdAt;
   String? updatedAt;
@@ -31,6 +34,7 @@ class Property {
     this.createdAt,
     this.updatedAt,
     this.ownerName,
+    this.files,
   });
 
   Property.fromJson(Map<String, dynamic> json) {
@@ -58,7 +62,7 @@ class Property {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+
     data['title'] = title;
     data['type'] = type;
     data['purpose'] = purpose;
@@ -68,14 +72,22 @@ class Property {
     data['address'] = address;
     data['latitude'] = latitude;
     data['longitude'] = longitude;
-    if (images != null) {
-      data['images'] = images!.map((v) => v.toJson()).toList();
-    }
-    data['propertyStatus'] = propertyStatus;
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
-    data['ownerName'] = ownerName;
+
     return data;
+  }
+
+  Property copyWith({
+    int? id,
+    int? favoriteId,
+    String? title,
+    String? description,
+  }) {
+    return Property(
+      id: id ?? this.id,
+
+      title: title ?? this.title,
+      description: description ?? this.description,
+    );
   }
 }
 

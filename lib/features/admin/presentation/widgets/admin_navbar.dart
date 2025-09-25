@@ -22,8 +22,12 @@ class AdminNavBar extends StatelessWidget {
       onDestinationSelected: onDestinationSelected,
       destinations: [
         NavigationDestination(
-          icon: Icon(FontAwesomeIcons.clockRotateLeft, color: AppColors.blue),
-          label: "Requests",
+          icon: Icon(FontAwesomeIcons.personCircleCheck, color: AppColors.blue),
+          label: "Provider Requests",
+        ),
+        NavigationDestination(
+          icon: Icon(FontAwesomeIcons.image, color: AppColors.blue),
+          label: "Customer Requests",
         ),
 
         NavigationDestination(

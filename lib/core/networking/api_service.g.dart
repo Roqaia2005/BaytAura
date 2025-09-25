@@ -12,7 +12,7 @@ part of 'api_service.dart';
 
 class _ApiService implements ApiService {
   _ApiService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://192.168.1.7:8080/api/';
+    baseUrl ??= 'http://192.168.1.8:8080/api/';
   }
 
   final Dio _dio;
@@ -140,14 +140,42 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<Property> addProperty(Property property) async {
+  Future<Property> addProperty(
+    String title,
+    String type,
+    String purpose,
+    String description,
+    double price,
+    double area,
+    String address,
+    double latitude,
+    double longitude,
+    List<MultipartFile>? files,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(property.toJson());
+    final _data = FormData();
+    _data.fields.add(MapEntry('title', title));
+    _data.fields.add(MapEntry('type', type));
+    _data.fields.add(MapEntry('purpose', purpose));
+    _data.fields.add(MapEntry('description', description));
+    _data.fields.add(MapEntry('price', price.toString()));
+    _data.fields.add(MapEntry('area', area.toString()));
+    _data.fields.add(MapEntry('address', address));
+    _data.fields.add(MapEntry('latitude', latitude.toString()));
+    _data.fields.add(MapEntry('longitude', longitude.toString()));
+    if (files != null) {
+      _data.files.addAll(files.map((i) => MapEntry('files', i)));
+    }
     final _options = _setStreamType<Property>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
             'properties',
@@ -168,49 +196,26 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<Property>> searchProperties(String query) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'q': query};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<Property>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            'properties/search',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<Property> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => Property.fromJson(i as Map<String, dynamic>))
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<List<Property>> filterProperties({
+  Future<List<Property>> getProperties({
+    String? query,
     String? type,
     int? minPrice,
     int? maxPrice,
-    int? rooms,
     int? minArea,
+    int? maxArea,
+    String? owner,
+    String? purpose,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
+      r'q': query,
       r'type': type,
       r'minPrice': minPrice,
       r'maxPrice': maxPrice,
-      r'rooms': rooms,
       r'minArea': minArea,
+      r'maxArea': maxArea,
+      r'owner': owner,
+      r'purpose': purpose,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -219,7 +224,7 @@ class _ApiService implements ApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'properties/filter',
+            'properties',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -268,6 +273,64 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<List<Property>> getMyProperties() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<Property>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'properties/my',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Property> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => Property.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<List<Favorite>> fetchMyFavorites() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<Favorite>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'user/profile/favorites',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Favorite> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => Favorite.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<Property> fetchPropertyById(int id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -277,7 +340,7 @@ class _ApiService implements ApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'properties/${id}',
+            'properties/',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -314,7 +377,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> removeFavorite(int propertyId) async {
+  Future<void> removeFavorite(int favoriteId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -323,7 +386,7 @@ class _ApiService implements ApiService {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'properties/${propertyId}/unfavorite',
+            'properties/${favoriteId}/unfavorite',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -335,14 +398,14 @@ class _ApiService implements ApiService {
   @override
   Future<void> deleteProperty(int propertyId) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'propertyId': propertyId};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<void>(
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'admin/properties/{id}',
+            'admin/properties/${propertyId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -352,16 +415,70 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> approveProvider(int providerId) async {
+  Future<void> deleteMyProperty(int propertyId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<void>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'properties/${propertyId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<Property> updateMyProperty(
+    int propertyId,
+    Map<String, dynamic> body,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<Property>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'admin/provider/{id}/approve',
+            'properties/${propertyId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late Property _value;
+    try {
+      _value = Property.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<void> approveProvider(
+    int providerId,
+    Map<String, dynamic> body,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<void>(
+      Options(method: 'PUT', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'admin/provider/${providerId}/status',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -407,7 +524,7 @@ class _ApiService implements ApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'admin/requests',
+            'admin/customer-requests',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -429,11 +546,43 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> changeRequestStatus(int id, String status) async {
+  Future<List<ProviderRequest>> getProviderRequests() async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'status': status};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<ProviderRequest>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'admin/provider-requests',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<ProviderRequest> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) => ProviderRequest.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<void> changeRequestStatus(int id, Map<String, String> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
     final _options = _setStreamType<void>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
@@ -467,14 +616,46 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<CustomerRequest> createRequest(CustomerRequest requestBody) async {
+  Future<CustomerRequest> createRequest(
+    String title,
+    String type,
+    String purpose,
+    String description,
+    double price,
+    double area,
+    String address,
+    double latitude,
+    double longitude,
+    String? customerName,
+    List<MultipartFile>? files,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(requestBody.toJson());
+    final _data = FormData();
+    _data.fields.add(MapEntry('title', title));
+    _data.fields.add(MapEntry('type', type));
+    _data.fields.add(MapEntry('purpose', purpose));
+    _data.fields.add(MapEntry('description', description));
+    _data.fields.add(MapEntry('price', price.toString()));
+    _data.fields.add(MapEntry('area', area.toString()));
+    _data.fields.add(MapEntry('address', address));
+    _data.fields.add(MapEntry('latitude', latitude.toString()));
+    _data.fields.add(MapEntry('longitude', longitude.toString()));
+    if (customerName != null) {
+      _data.fields.add(MapEntry('customerName', customerName));
+    }
+    if (files != null) {
+      _data.files.addAll(files.map((i) => MapEntry('files', i)));
+    }
     final _options = _setStreamType<CustomerRequest>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
             'requests',
@@ -637,13 +818,18 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> uploadProfilePicture(File file) async {
+  Future<void> uploadProfilePicture(FormData formData) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = formData;
     final _options = _setStreamType<void>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
             'user/profile/pfp',

@@ -9,27 +9,29 @@ import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/widgets/custom_drop_down.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
-import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
+import 'package:bayt_aura/features/property/logic/property_state.dart';
 
-class AddPostView extends StatefulWidget {
-  const AddPostView({super.key});
+class EditPropertyView extends StatefulWidget {
+  final Property property;
+
+  const EditPropertyView({super.key, required this.property});
 
   @override
-  State<AddPostView> createState() => _AddPostViewState();
+  State<EditPropertyView> createState() => _EditPropertyViewState();
 }
 
-class _AddPostViewState extends State<AddPostView> {
+class _EditPropertyViewState extends State<EditPropertyView> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _areaController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _latitudeController = TextEditingController();
-  final TextEditingController _longitudeController = TextEditingController();
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _priceController;
+  late TextEditingController _areaController;
+  late TextEditingController _addressController;
+  late TextEditingController _latitudeController;
+  late TextEditingController _longitudeController;
 
   String? _selectedType;
   String? _selectedPurpose;
@@ -46,6 +48,44 @@ class _AddPostViewState extends State<AddPostView> {
   List<File> selectedImages = [];
   final ImagePicker _picker = ImagePicker();
 
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.property.title);
+    _descriptionController = TextEditingController(
+      text: widget.property.description ?? '',
+    );
+    _priceController = TextEditingController(
+      text: widget.property.price?.toString() ?? '',
+    );
+    _areaController = TextEditingController(
+      text: widget.property.area?.toString() ?? '',
+    );
+    _addressController = TextEditingController(
+      text: widget.property.address ?? '',
+    );
+    _latitudeController = TextEditingController(
+      text: widget.property.latitude?.toString() ?? '',
+    );
+    _longitudeController = TextEditingController(
+      text: widget.property.longitude?.toString() ?? '',
+    );
+    _selectedType = widget.property.type;
+    _selectedPurpose = widget.property.purpose;
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    _areaController.dispose();
+    _addressController.dispose();
+    _latitudeController.dispose();
+    _longitudeController.dispose();
+    super.dispose();
+  }
+
   Future<void> pickImages() async {
     final pickedFiles = await _picker.pickMultiImage(imageQuality: 80);
     if (pickedFiles.isNotEmpty) {
@@ -55,57 +95,40 @@ class _AddPostViewState extends State<AddPostView> {
     }
   }
 
-  void _submitProperty() {
+  void _saveChanges() {
     if (!_formKey.currentState!.validate()) return;
-
     if (_selectedType == null || _selectedPurpose == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select type, purpose")),
+        const SnackBar(content: Text("Please select type and purpose")),
       );
       return;
     }
 
-    final newProperty = Property(
+    final updatedProperty = Property(
+      id: widget.property.id,
       title: _titleController.text,
       description: _descriptionController.text,
-      price: double.parse(_priceController.text),
-      area: double.parse(_areaController.text),
+      price: double.tryParse(_priceController.text),
+      area: double.tryParse(_areaController.text),
       address: _addressController.text,
       type: _selectedType!,
       purpose: _selectedPurpose!,
-
-      latitude: double.parse(_latitudeController.text.trim()),
-      longitude: double.parse(_longitudeController.text.trim()),
+      latitude: double.tryParse(_latitudeController.text),
+      longitude: double.tryParse(_longitudeController.text),
     );
 
-    context.read<PropertyCubit>().addProperty(
-      newProperty,
-      selectedImages.map((f) => f.path).toList(),
-    );
+    context.read<PropertyCubit>().updateProperty(updatedProperty);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PropertyCubit, PropertyState>(
       listener: (context, state) {
-        if (state is PropertyAdded) {
-          if (state.uploadErrors.isNotEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "Property added but some images failed: ${state.uploadErrors.join(', ')}",
-                ),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text("Property Added!")));
-          }
-        } else if (state is PropertyError) {
+        if (state is PropertyUpdated) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text("Error: ${state.message}")));
+          ).showSnackBar(const SnackBar(content: Text("Property Updated!")));
+          Navigator.pop(context, state.property); // return updated property
         }
       },
       builder: (context, state) {
@@ -123,12 +146,11 @@ class _AddPostViewState extends State<AddPostView> {
             elevation: 0,
             centerTitle: true,
             backgroundColor: AppColors.blue,
-            title: Text("Add New Property", style: TextStyles.font24WhiteBold),
+            title: Text("Edit Property", style: TextStyles.font24WhiteBold),
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(20.sp),
             child: Card(
-              color: Colors.white,
               elevation: 6,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r),
@@ -140,6 +162,7 @@ class _AddPostViewState extends State<AddPostView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Property info section
                       Text("Property Info", style: TextStyles.font20BlueBold),
                       verticalSpace(16),
                       AppTextFormField(
@@ -149,28 +172,24 @@ class _AddPostViewState extends State<AddPostView> {
                           Icons.title,
                           color: AppColors.darkBeige,
                         ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter title"
-                            : null,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Enter title" : null,
                       ),
                       verticalSpace(12),
                       CustomDropDown(
                         value: _selectedType,
                         itemsList: propertyTypes,
-                        onChanged: (value) =>
-                            setState(() => _selectedType = value),
+                        onChanged: (v) => setState(() => _selectedType = v),
                         hintText: "Select property type",
                       ),
                       verticalSpace(12),
                       CustomDropDown(
                         value: _selectedPurpose,
                         itemsList: purposes,
-                        onChanged: (value) =>
-                            setState(() => _selectedPurpose = value),
+                        onChanged: (v) => setState(() => _selectedPurpose = v),
                         hintText: "Select purpose",
                       ),
                       verticalSpace(12),
-
                       AppTextFormField(
                         controller: _descriptionController,
                         hintText: "Description",
@@ -178,9 +197,8 @@ class _AddPostViewState extends State<AddPostView> {
                           Icons.description,
                           color: AppColors.darkBeige,
                         ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter description"
-                            : null,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Enter description" : null,
                       ),
                       verticalSpace(20),
                       Text("Images", style: TextStyles.font20BlueBold),
@@ -232,9 +250,8 @@ class _AddPostViewState extends State<AddPostView> {
                           Icons.attach_money,
                           color: AppColors.darkBeige,
                         ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter price"
-                            : null,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Enter price" : null,
                       ),
                       verticalSpace(12),
                       AppTextFormField(
@@ -245,9 +262,8 @@ class _AddPostViewState extends State<AddPostView> {
                           Icons.square_foot,
                           color: AppColors.darkBeige,
                         ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter area"
-                            : null,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Enter area" : null,
                       ),
                       verticalSpace(12),
                       AppTextFormField(
@@ -257,9 +273,8 @@ class _AddPostViewState extends State<AddPostView> {
                           Icons.location_on,
                           color: AppColors.darkBeige,
                         ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter address"
-                            : null,
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Enter address" : null,
                       ),
                       verticalSpace(12),
                       AppTextFormField(
@@ -270,10 +285,8 @@ class _AddPostViewState extends State<AddPostView> {
                           Icons.explore,
                           color: AppColors.darkBeige,
                         ),
-                        validator: (value) =>
-                            value == null ||
-                                value.isEmpty ||
-                                double.tryParse(value) == null
+                        validator: (v) =>
+                            v == null || v.isEmpty || double.tryParse(v) == null
                             ? "Enter valid latitude"
                             : null,
                       ),
@@ -286,18 +299,16 @@ class _AddPostViewState extends State<AddPostView> {
                           Icons.explore_outlined,
                           color: AppColors.darkBeige,
                         ),
-                        validator: (value) =>
-                            value == null ||
-                                value.isEmpty ||
-                                double.tryParse(value) == null
+                        validator: (v) =>
+                            v == null || v.isEmpty || double.tryParse(v) == null
                             ? "Enter valid longitude"
                             : null,
                       ),
                       verticalSpace(12),
                       AppTextButton(
-                        buttonText: "Add Property",
+                        buttonText: "Save Changes",
                         textStyle: TextStyles.font16WhiteBold,
-                        onPressed: _submitProperty,
+                        onPressed: _saveChanges,
                       ),
                     ],
                   ),

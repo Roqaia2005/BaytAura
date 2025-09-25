@@ -1,11 +1,16 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/di/dependency_injection.dart';
+import 'package:bayt_aura/features/search/logic/search_cubit.dart';
+import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
+import 'package:bayt_aura/features/property/presentation/views/my_properties.dart';
 import 'package:bayt_aura/features/provider/presentation/widgets/provider_navbar.dart';
 import 'package:bayt_aura/features/provider/presentation/views/add_property_view.dart';
-import 'package:bayt_aura/features/property/presentation/views/all_properties_view.dart';
-import 'package:bayt_aura/features/provider/presentation/views/provider_properties_view.dart';
+
+// import 'package:bayt_aura/features/provider/presentation/views/provider_properties_view.dart';
 
 class ProviderDashboard extends StatefulWidget {
   const ProviderDashboard({super.key});
@@ -16,31 +21,38 @@ class ProviderDashboard extends StatefulWidget {
 
 class _ProviderDashboardState extends State<ProviderDashboard> {
   final List<Widget> screens = [
-    AllPropertiesView(),
-
+    MyPropertiesView(),
     AddPostView(),
-    PostsView(),
+
     ProfileView(),
   ];
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        shape: CircleBorder(),
-        backgroundColor: AppColors.blue,
-        onPressed: () {},
-        child: SvgPicture.asset("assets/svgs/ai.svg"),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<SearchCubit>()),
+        BlocProvider(
+          create: (_) => getIt<PropertyCubit>()..fetchMyProperties(),
+        ),
+      ],
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          shape: CircleBorder(),
+          backgroundColor: AppColors.blue,
+          onPressed: () {},
+          child: SvgPicture.asset("assets/svgs/ai.svg"),
+        ),
+        backgroundColor: Colors.white,
+        bottomNavigationBar: ProviderNavBar(
+          currentPageIndex: currentPageIndex,
+          onDestinationSelected: (int index) {
+            currentPageIndex = index;
+            setState(() {});
+          },
+        ),
+        body: screens[currentPageIndex],
       ),
-      backgroundColor: Colors.white,
-      bottomNavigationBar: ProviderNavBar(
-        currentPageIndex: currentPageIndex,
-        onDestinationSelected: (int index) {
-          currentPageIndex = index;
-          setState(() {});
-        },
-      ),
-      body: screens[currentPageIndex],
     );
   }
 }

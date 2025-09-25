@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/features/property/logic/media_states.dart';
-import 'package:bayt_aura/features/property/data/models/media_repo.dart';
+import 'package:bayt_aura/features/property/data/repos/media_repo.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 
 class MediaCubit extends Cubit<MediaState> {

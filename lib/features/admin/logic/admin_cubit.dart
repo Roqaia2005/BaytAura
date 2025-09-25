@@ -1,66 +1,76 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/features/admin/data/admin_repo.dart';
-import 'package:bayt_aura/features/admin/logic/request_state.dart';
+import 'package:bayt_aura/features/admin/logic/admin_state.dart';
 
-
-
-class AdminCubit extends Cubit<RequestState> {
+class AdminCubit extends Cubit<AdminState> {
   final AdminRepository _repository;
 
-  AdminCubit(this._repository) : super(RequestInitial());
+  AdminCubit(this._repository) : super(AdminInitial());
 
   /// Approve provider
-  void approveProvider(int id) async {
-    try {
-      emit(RequestLoading());
-      await _repository.approveProvider(id);
-      emit(RequestSuccess("Provider approved successfully"));
-    } catch (e) {
-      emit(RequestError(e.toString()));
-    }
+Future<void> approveProvider(int id, String status) async {
+  try {
+    emit(AdminLoading());
+    await _repository.approveProvider(id, status); // pass status
+    emit(ProviderApproved("Provider $status successfully"));
+  } catch (e) {
+    emit(AdminError(e.toString()));
   }
+}
 
-  /// Change request status (property request)
-  void changeRequestStatus(int id, String status) async {
+
+  /// Change request status (property/customer request)
+  Future<void> changeRequestStatus(int id, String status) async {
     try {
-      emit(RequestLoading());
+      emit(AdminLoading());
       await _repository.changeRequestStatus(id, status);
-      emit(RequestSuccess("Request status updated successfully"));
+      emit(RequestStatusChanged("Request status updated successfully"));
     } catch (e) {
-      emit(RequestError(e.toString()));
+      emit(AdminError(e.toString()));
     }
   }
 
-  /// Get all requests
-  void getCustomerRequests() async {
+  /// Get all customer requests
+  Future<void> getCustomerRequests() async {
     try {
-      emit(RequestLoading());
+      emit(AdminLoading());
       final requests = await _repository.getCustomerRequests();
-      emit(RequestLoaded(requests));
+      emit(CustomerRequestsLoaded(requests));
     } catch (e) {
-      emit(RequestError(e.toString()));
+      emit(AdminError(e.toString()));
+    }
+  }
+
+  /// Get all provider requests
+  Future<void> getProviderRequests() async {
+    try {
+      emit(AdminLoading());
+      final requests = await _repository.getProviderRequests();
+      emit(ProviderRequestsLoaded(requests));
+    } catch (e) {
+      emit(AdminError(e.toString()));
     }
   }
 
   /// Get single request by ID
-  void getRequestById(int id) async {
+  Future<void> getRequestById(int id) async {
     try {
-      emit(RequestLoading());
+      emit(AdminLoading());
       final request = await _repository.getRequestByIdAdmin(id);
       emit(SingleRequestLoaded(request));
     } catch (e) {
-      emit(RequestError(e.toString()));
+      emit(AdminError(e.toString()));
     }
   }
 
-  // /// Delete request by admin
-  // void deleteRequest(int id) async {
-  //   try {
-  //     emit(RequestLoading());
-  //     await _repository.deleteRequest(id);
-  //     emit(RequestSuccess("Request deleted successfully"));
-  //   } catch (e) {
-  //     emit(RequestError(e.toString()));
-  //   }
-  // }
+  /// Delete request
+  Future<void> deleteRequest(int id) async {
+    try {
+      emit(AdminLoading());
+      await _repository.deleteRequest(id);
+      emit(RequestDeleted("Request deleted successfully"));
+    } catch (e) {
+      emit(AdminError(e.toString()));
+    }
+  }
 }

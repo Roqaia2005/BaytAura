@@ -34,11 +34,7 @@ class ProviderNavBar extends StatelessWidget {
           ),
           label: "New Post",
         ),
-        NavigationDestination(
-          icon: Icon(FontAwesomeIcons.image, color: AppColors.blue),
 
-          label: "Posts",
-        ),
         NavigationDestination(
           icon: Icon(Icons.person_outline, color: AppColors.blue),
           label: "Profile",

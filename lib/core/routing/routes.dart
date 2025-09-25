@@ -12,4 +12,8 @@ class Routes {
   static const String detailsScreen = '/detailsScreen';
   static const String categoriesScreen = '/categoriesScreen';
   static const String allProperties = '/categoriesScreen';
+  static const String editProfile = '/editProfile';
+  static const String editProperty = '/editProperty';
+  static const String customerRequestDetails = '/customerRequestDetails';
+  static const String editCustomerRequest = '/editCustomerRequest';
 }

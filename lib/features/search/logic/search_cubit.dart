@@ -7,35 +7,33 @@ class SearchCubit extends Cubit<SearchState> {
 
   SearchCubit(this.searchRepo) : super(const SearchState.initial());
 
-  Future<void> search(String query) async {
-    try {
-      emit(const SearchState.loading());
-      final results = await searchRepo.search(query);
-      emit(SearchState.loaded(results));
-    } catch (e) {
-      emit(SearchState.error("Failed to search: $e"));
-    }
-  }
-
-  Future<void> applyFilter({
+  Future<void> searchOrFilter({
+    String? query,
     String? type,
     int? minPrice,
     int? maxPrice,
-    int? rooms,
+
     int? minArea,
+    int? maxArea,
+    String? owner,
+    String? purpose,
   }) async {
     try {
       emit(const SearchState.loading());
-      final results = await searchRepo.applyFilter(
+      final results = await searchRepo.getProperties(
+        query: query,
         type: type,
         minPrice: minPrice,
         maxPrice: maxPrice,
-        rooms: rooms,
+
         minArea: minArea,
+        maxArea: maxArea,
+        owner: owner,
+        purpose: purpose,
       );
       emit(SearchState.loaded(results));
     } catch (e) {
-      emit(SearchState.error("Failed to filter: $e"));
+      emit(SearchState.error("Failed to fetch properties: $e"));
     }
   }
 }
