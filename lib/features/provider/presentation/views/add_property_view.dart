@@ -1,17 +1,16 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:bayt_aura/core/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:bayt_aura/core/theming/colors.dart';
-import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/widgets/app_button.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/core/widgets/custom_drop_down.dart';
-import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
+import 'package:bayt_aura/core/helpers/image_picker.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/property_form_fields.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/property_form_scaffold.dart';
+import 'package:bayt_aura/features/property/presentation/widgets/property_images_section.dart';
 
 class AddPostView extends StatefulWidget {
   const AddPostView({super.key});
@@ -22,60 +21,43 @@ class AddPostView extends StatefulWidget {
 
 class _AddPostViewState extends State<AddPostView> {
   final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _areaController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _latitudeController = TextEditingController();
-  final TextEditingController _longitudeController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _areaController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _latitudeController = TextEditingController();
+  final _longitudeController = TextEditingController();
 
   String? _selectedType;
   String? _selectedPurpose;
+  final List<File> selectedImages = [];
 
-  final List<String> propertyTypes = [
-    "APARTMENT",
-    "VILLA",
-    "HOUSE",
-    "STUDIO",
-    "LAND",
-  ];
-  final List<String> purposes = ["SALE", "RENT"];
-
-  List<File> selectedImages = [];
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> pickImages() async {
-    final pickedFiles = await _picker.pickMultiImage(imageQuality: 80);
-    if (pickedFiles.isNotEmpty) {
-      setState(() {
-        selectedImages.addAll(pickedFiles.map((e) => File(e.path)));
-      });
-    }
+  Future<void> _pickImages() async {
+    final files = await ImagePickerHelper.pickImages();
+    if (files.isNotEmpty) setState(() => selectedImages.addAll(files));
   }
 
-  void _submitProperty() {
-    if (!_formKey.currentState!.validate()) return;
-
+  void _submitPost() {
+    if (_formKey.currentState == null || !_formKey.currentState!.validate())
+      return;
     if (_selectedType == null || _selectedPurpose == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select type, purpose")),
+        const SnackBar(content: Text("Please select type and purpose")),
       );
       return;
     }
 
     final newProperty = Property(
-      title: _titleController.text,
-      description: _descriptionController.text,
-      price: double.parse(_priceController.text),
-      area: double.parse(_areaController.text),
-      address: _addressController.text,
+      title: _titleController.text.trim(),
+      description: _descriptionController.text.trim(),
+      price: double.tryParse(_priceController.text.trim()) ?? 0,
+      area: double.tryParse(_areaController.text.trim()) ?? 0,
+      address: _addressController.text.trim(),
       type: _selectedType!,
       purpose: _selectedPurpose!,
-
-      latitude: double.parse(_latitudeController.text.trim()),
-      longitude: double.parse(_longitudeController.text.trim()),
+      latitude: double.tryParse(_latitudeController.text.trim()) ?? 0,
+      longitude: double.tryParse(_longitudeController.text.trim()) ?? 0,
     );
 
     context.read<PropertyCubit>().addProperty(
@@ -89,222 +71,57 @@ class _AddPostViewState extends State<AddPostView> {
     return BlocConsumer<PropertyCubit, PropertyState>(
       listener: (context, state) {
         if (state is PropertyAdded) {
-          if (state.uploadErrors.isNotEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "Property added but some images failed: ${state.uploadErrors.join(', ')}",
-                ),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text("Property Added!")));
-          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Property Added"),
+              backgroundColor: Colors.green,
+            ),
+          );
         } else if (state is PropertyError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text("Error: ${state.message}")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          );
         }
       },
       builder: (context, state) {
-        if (state is PropertyLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(color: AppColors.blue),
-            ),
-          );
-        }
-
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            elevation: 0,
-            centerTitle: true,
-            backgroundColor: AppColors.blue,
-            title: Text("Add New Property", style: TextStyles.font24WhiteBold),
-          ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.all(20.sp),
-            child: Card(
-              color: Colors.white,
-              elevation: 6,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.r),
+        return Stack(
+          children: [
+            PropertyFormScaffold(
+              formKey: _formKey,
+              title: "Add New Post",
+              formFields: PropertyFormFields(
+                titleController: _titleController,
+                descriptionController: _descriptionController,
+                priceController: _priceController,
+                areaController: _areaController,
+                addressController: _addressController,
+                latitudeController: _latitudeController,
+                longitudeController: _longitudeController,
+                selectedType: _selectedType,
+                selectedPurpose: _selectedPurpose,
+                propertyTypes: propertyTypes,
+                purposes: purposes,
+                onTypeChanged: (val) => setState(() => _selectedType = val),
+                onPurposeChanged: (val) =>
+                    setState(() => _selectedPurpose = val),
               ),
-              child: Padding(
-                padding: EdgeInsets.all(20.sp),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Property Info", style: TextStyles.font20BlueBold),
-                      verticalSpace(16),
-                      AppTextFormField(
-                        controller: _titleController,
-                        hintText: "Title",
-                        prefixIcon: const Icon(
-                          Icons.title,
-                          color: AppColors.darkBeige,
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter title"
-                            : null,
-                      ),
-                      verticalSpace(12),
-                      CustomDropDown(
-                        value: _selectedType,
-                        itemsList: propertyTypes,
-                        onChanged: (value) =>
-                            setState(() => _selectedType = value),
-                        hintText: "Select property type",
-                      ),
-                      verticalSpace(12),
-                      CustomDropDown(
-                        value: _selectedPurpose,
-                        itemsList: purposes,
-                        onChanged: (value) =>
-                            setState(() => _selectedPurpose = value),
-                        hintText: "Select purpose",
-                      ),
-                      verticalSpace(12),
-
-                      AppTextFormField(
-                        controller: _descriptionController,
-                        hintText: "Description",
-                        prefixIcon: const Icon(
-                          Icons.description,
-                          color: AppColors.darkBeige,
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter description"
-                            : null,
-                      ),
-                      verticalSpace(20),
-                      Text("Images", style: TextStyles.font20BlueBold),
-                      verticalSpace(12),
-                      SizedBox(
-                        height: 100,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: selectedImages.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index == selectedImages.length) {
-                              return GestureDetector(
-                                onTap: pickImages,
-                                child: Container(
-                                  width: 100,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                  ),
-                                  color: Colors.grey[300],
-                                  child: const Icon(
-                                    Icons.add_a_photo,
-                                    size: 40,
-                                  ),
-                                ),
-                              );
-                            }
-                            return Container(
-                              width: 100,
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                image: DecorationImage(
-                                  image: FileImage(selectedImages[index]),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      verticalSpace(20),
-                      Text("Details", style: TextStyles.font20BlueBold),
-                      verticalSpace(16),
-                      AppTextFormField(
-                        controller: _priceController,
-                        hintText: "Price",
-                        keyboardType: TextInputType.number,
-                        prefixIcon: const Icon(
-                          Icons.attach_money,
-                          color: AppColors.darkBeige,
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter price"
-                            : null,
-                      ),
-                      verticalSpace(12),
-                      AppTextFormField(
-                        controller: _areaController,
-                        hintText: "Area (sq ft)",
-                        keyboardType: TextInputType.number,
-                        prefixIcon: const Icon(
-                          Icons.square_foot,
-                          color: AppColors.darkBeige,
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter area"
-                            : null,
-                      ),
-                      verticalSpace(12),
-                      AppTextFormField(
-                        controller: _addressController,
-                        hintText: "Address",
-                        prefixIcon: const Icon(
-                          Icons.location_on,
-                          color: AppColors.darkBeige,
-                        ),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Enter address"
-                            : null,
-                      ),
-                      verticalSpace(12),
-                      AppTextFormField(
-                        controller: _latitudeController,
-                        hintText: "Latitude",
-                        keyboardType: TextInputType.number,
-                        prefixIcon: const Icon(
-                          Icons.explore,
-                          color: AppColors.darkBeige,
-                        ),
-                        validator: (value) =>
-                            value == null ||
-                                value.isEmpty ||
-                                double.tryParse(value) == null
-                            ? "Enter valid latitude"
-                            : null,
-                      ),
-                      verticalSpace(12),
-                      AppTextFormField(
-                        controller: _longitudeController,
-                        hintText: "Longitude",
-                        keyboardType: TextInputType.number,
-                        prefixIcon: const Icon(
-                          Icons.explore_outlined,
-                          color: AppColors.darkBeige,
-                        ),
-                        validator: (value) =>
-                            value == null ||
-                                value.isEmpty ||
-                                double.tryParse(value) == null
-                            ? "Enter valid longitude"
-                            : null,
-                      ),
-                      verticalSpace(12),
-                      AppTextButton(
-                        buttonText: "Add Property",
-                        textStyle: TextStyles.font16WhiteBold,
-                        onPressed: _submitProperty,
-                      ),
-                    ],
-                  ),
-                ),
+              imagesSection: PropertyImagesSection(
+                newImages: selectedImages,
+                onPickImages: _pickImages,
+                onRemoveNew: (i) => setState(() => selectedImages.removeAt(i)),
+              ),
+              submitButton: AppTextButton(
+                buttonText: "Add Post",
+                textStyle: TextStyles.font16WhiteBold,
+                onPressed: _submitPost,
               ),
             ),
-          ),
+            if (state is PropertyLoading)
+              Container(
+                color: Colors.black38,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+          ],
         );
       },
     );

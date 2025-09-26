@@ -8,65 +8,29 @@ import 'package:bayt_aura/features/property/data/repos/property_repository.dart'
 
 class PropertyCubit extends Cubit<PropertyState> {
   PropertyCubit(this.propertyRepository, this.mediaRepo)
-    : super(PropertyLoaded(properties: const [], favorites: const []));
+    : super(const PropertyState.initial());
 
   final PropertyRepository propertyRepository;
   final MediaRepository mediaRepo;
 
   final List<Property> _allProperties = [];
-  final List<Property> myProperties = [];
-  final List<Favorite> _favorites = [];
   final List<Property> _userProperties = [];
+  final List<Favorite> _favorites = [];
 
-  void loadProperties(List<Property> properties) {
-    _allProperties
-      ..clear()
-      ..addAll(properties);
-    _emitLoaded();
-  }
-
-  //for customer and provider
-
-  void fetchPropertiesWithFavorites() async {
-    try {
-      final fetchedProperties = await propertyRepository.fetchProperties();
-      _allProperties
-        ..clear()
-        ..addAll(fetchedProperties);
-
-      final fetchedFavorites = await propertyRepository.fetchFavorites();
-      _updateFavorites(fetchedFavorites);
-
-      _emitLoaded();
-    } catch (error) {
-      emit(PropertyError(message: error.toString()));
-    }
-  }
-
-  void fetchProperties() async {
-    try {
-      final fetchedProperties = await propertyRepository.fetchProperties();
-      _allProperties
-        ..clear()
-        ..addAll(fetchedProperties);
-
-      _emitLoaded();
-    } catch (error) {
-      emit(PropertyError(message: error.toString()));
-    }
-  }
-
-  //customer,provider
-  void fetchMyProperties() async {
+  // ------------------------------
+  // Fetch all properties
+  // ------------------------------
+  Future<void> fetchProperties() async {
     emit(const PropertyState.loading());
     try {
-      final fetchedMyProperties = await propertyRepository.getMyProperties();
-      _userProperties
+      final fetchedProperties = await propertyRepository.fetchProperties();
+      _allProperties
         ..clear()
-        ..addAll(fetchedMyProperties);
+        ..addAll(fetchedProperties);
+
       emit(
         PropertyLoaded(
-          properties: List.from(_userProperties),
+          properties: List.from(_allProperties),
           favorites: List.from(_favorites),
         ),
       );
@@ -75,18 +39,58 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  void fetchFavorites() async {
+  // ------------------------------
+  // Fetch properties with favorites
+  // ------------------------------
+  Future<void> fetchPropertiesWithFavorites() async {
+    emit(const PropertyState.loading());
     try {
+      final fetchedProperties = await propertyRepository.fetchProperties();
+      _allProperties
+        ..clear()
+        ..addAll(fetchedProperties);
+
       final fetchedFavorites = await propertyRepository.fetchFavorites();
       _updateFavorites(fetchedFavorites);
-      _emitLoaded();
+
+      emit(
+        PropertyLoaded(
+          properties: List.from(_allProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
     } catch (error) {
       emit(PropertyError(message: error.toString()));
     }
   }
 
-  void addProperty(Property property, List<String>? imagePaths) async {
-    emit(PropertyState.loading());
+  // ------------------------------
+  // Fetch my properties (customer/provider)
+  // ------------------------------
+  Future<void> fetchMyProperties() async {
+    emit(const PropertyState.loading());
+    try {
+      final fetchedMyProperties = await propertyRepository.getMyProperties();
+      _userProperties
+        ..clear()
+        ..addAll(fetchedMyProperties);
+
+      emit(
+        MyPropertyLoaded(
+          myProperties: List.from(_userProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
+    } catch (error) {
+      emit(PropertyError(message: error.toString()));
+    }
+  }
+
+  // ------------------------------
+  // Add new property
+  // ------------------------------
+  Future<void> addProperty(Property property, List<String>? imagePaths) async {
+    emit(const PropertyState.loading());
     try {
       final addedProperty = await propertyRepository.addProperty(property);
 
@@ -109,17 +113,49 @@ class PropertyCubit extends Cubit<PropertyState> {
       }
 
       emit(PropertyAdded(property: addedProperty, uploadErrors: uploadErrors));
+      // refresh my properties
+      emit(
+        MyPropertyLoaded(
+          myProperties: List.from(_userProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
     } catch (error) {
-      emit(PropertyState.error(message: error.toString()));
+      emit(PropertyError(message: error.toString()));
     }
   }
 
-  void addFavorite(Property property) async {
+  // ------------------------------
+  // Favorites
+  // ------------------------------
+  Future<void> fetchFavorites() async {
+    try {
+      final fetchedFavorites = await propertyRepository.fetchFavorites();
+      _updateFavorites(fetchedFavorites);
+
+      emit(
+        PropertyLoaded(
+          properties: List.from(_allProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
+    } catch (error) {
+      emit(PropertyError(message: error.toString()));
+    }
+  }
+
+  Future<void> addFavorite(Property property) async {
     try {
       await propertyRepository.addFavorite(property.id!);
       final fetchedFavorites = await propertyRepository.fetchFavorites();
       _updateFavorites(fetchedFavorites);
-      _emitLoaded();
+
+      emit(
+        PropertyLoaded(
+          properties: List.from(_allProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
     } catch (error) {
       emit(PropertyError(message: error.toString()));
     }
@@ -130,7 +166,13 @@ class PropertyCubit extends Cubit<PropertyState> {
       await propertyRepository.removeFavorite(favorite.favoriteId);
       final fetchedFavorites = await propertyRepository.fetchFavorites();
       _updateFavorites(fetchedFavorites);
-      _emitLoaded();
+
+      emit(
+        PropertyLoaded(
+          properties: List.from(_allProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
     } catch (error) {
       emit(PropertyError(message: error.toString()));
     }
@@ -152,16 +194,81 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
+  Future<void> updateProperty(
+    Property property,
+    List<String>? imagePaths,
+  ) async {
+    emit(const PropertyState.loading());
+    try {
+      final updatedProperty = await propertyRepository.updateProperty(property);
+
+      final index = _allProperties.indexWhere(
+        (p) => p.id == updatedProperty.id,
+      );
+      if (index != -1) {
+        _allProperties[index] = updatedProperty;
+      }
+
+      final userIndex = _userProperties.indexWhere(
+        (p) => p.id == updatedProperty.id,
+      );
+      if (userIndex != -1) {
+        _userProperties[userIndex] = updatedProperty;
+      }
+
+      List<String> uploadErrors = [];
+      if (imagePaths != null) {
+        for (final path in imagePaths) {
+          final file = File(path);
+          if (!file.existsSync()) continue;
+          try {
+            if (updatedProperty.id != null) {
+              await mediaRepo.uploadMedia(updatedProperty.id!, file);
+            }
+          } catch (e) {
+            uploadErrors.add(file.path);
+          }
+        }
+      }
+
+      emit(PropertyUpdated(property: updatedProperty));
+
+      emit(
+        PropertyLoaded(
+          properties: List.from(_allProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
+
+      emit(
+        MyPropertyLoaded(
+          myProperties: List.from(_userProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
+    } catch (e) {
+      emit(PropertyError(message: e.toString()));
+    }
+  }
+
+  // ------------------------------
+  // Delete property
+  // ------------------------------
   Future<void> deleteProperty(int propertyId) async {
     try {
       await propertyRepository.deleteProperty(propertyId);
-      emit(PropertyDeleted(propertyId: propertyId));
 
       _allProperties.removeWhere((p) => p.id == propertyId);
       _userProperties.removeWhere((p) => p.id == propertyId);
       _favorites.removeWhere((f) => f.property.id == propertyId);
 
-      _emitLoaded();
+      emit(PropertyDeleted(propertyId: propertyId));
+      emit(
+        PropertyLoaded(
+          properties: List.from(_allProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
     } catch (error) {
       emit(PropertyError(message: error.toString()));
     }
@@ -170,47 +277,24 @@ class PropertyCubit extends Cubit<PropertyState> {
   Future<void> deleteMyProperty(int propertyId) async {
     try {
       await propertyRepository.deleteMyProperty(propertyId);
-      emit(PropertyDeleted(propertyId: propertyId));
 
       _allProperties.removeWhere((p) => p.id == propertyId);
       _userProperties.removeWhere((p) => p.id == propertyId);
       _favorites.removeWhere((f) => f.property.id == propertyId);
 
-      _emitLoaded();
+      emit(PropertyDeleted(propertyId: propertyId));
+      emit(
+        MyPropertyLoaded(
+          myProperties: List.from(_userProperties),
+          favorites: List.from(_favorites),
+        ),
+      );
     } catch (error) {
       emit(PropertyError(message: error.toString()));
     }
   }
 
-  Future<void> updateProperty(Property property) async {
-    emit(const PropertyState.loading());
-    try {
-      final updatedProperty = await propertyRepository.updateProperty(property);
 
-      // Update _allProperties
-      final index = _allProperties.indexWhere(
-        (p) => p.id == updatedProperty.id,
-      );
-      if (index != -1) _allProperties[index] = updatedProperty;
 
-      // Update _userProperties if exists
-      final userIndex = _userProperties.indexWhere(
-        (p) => p.id == updatedProperty.id,
-      );
-      if (userIndex != -1) _userProperties[userIndex] = updatedProperty;
 
-      emit(PropertyUpdated(property: updatedProperty));
-    } catch (e) {
-      emit(PropertyError(message: e.toString()));
-    }
-  }
-
-  void _emitLoaded() {
-    emit(
-      PropertyLoaded(
-        properties: List.from(_allProperties),
-        favorites: List.from(_favorites),
-      ),
-    );
-  }
 }

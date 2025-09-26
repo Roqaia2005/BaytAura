@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,21 +9,48 @@ import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/my_property_card.dart';
 
-class MyPropertiesView extends StatelessWidget {
+class MyPropertiesView extends StatefulWidget {
   const MyPropertiesView({super.key});
+
+  @override
+  State<MyPropertiesView> createState() => _MyPropertiesViewState();
+}
+
+class _MyPropertiesViewState extends State<MyPropertiesView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<PropertyCubit>().fetchMyProperties();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("My Properties")),
-      body: BlocBuilder<PropertyCubit, PropertyState>(
+      body: BlocConsumer<PropertyCubit, PropertyState>(
+        listener: (context, state) {
+          if (state is PropertyUpdated) {
+            context.read<PropertyCubit>().fetchMyProperties();
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Property updated successfully")),
+            );
+          }
+          if (state is PropertyDeleted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Property deleted successfully")),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is PropertyLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.blue),
+            );
           }
 
-          if (state is PropertyLoaded) {
-            final properties = state.properties;
+          if (state is MyPropertyLoaded) {
+            final properties = state.myProperties;
 
             if (properties.isEmpty) {
               return const Center(child: Text("No properties found."));
@@ -41,10 +69,15 @@ class MyPropertiesView extends StatelessWidget {
                     Routes.detailsScreen,
                     arguments: property,
                   ),
+
                   onEdit: () async {
-                    context.pushNamed(Routes.editProperty, arguments: property);
-                    // Refresh from Cubit after returning
-                    context.read<PropertyCubit>().fetchMyProperties();
+                    final result = await Navigator.of(
+                      context,
+                    ).pushNamed(Routes.editProperty, arguments: property);
+
+                    if (result is Property) {
+                      await context.read<PropertyCubit>().fetchMyProperties();
+                    }
                   },
 
                   onDelete: () => context

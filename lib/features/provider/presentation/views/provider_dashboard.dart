@@ -24,7 +24,7 @@ class _ProviderDashboardState extends State<ProviderDashboard> {
     MyPropertiesView(),
     AddPostView(),
 
-    ProfileView(),
+    ProfileView(), 
   ];
   int currentPageIndex = 0;
   @override

@@ -5,6 +5,7 @@ import 'package:bayt_aura/core/networking/api_service.dart';
 import 'package:bayt_aura/features/admin/data/admin_repo.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/search/logic/search_cubit.dart';
+import 'package:bayt_aura/features/property/logic/media_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/login_repo.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/signup_repo.dart';
@@ -70,4 +71,5 @@ Future<void> setUpGetIt() async {
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<ProfileRepository>()),
   );
+  getIt.registerFactory<MediaCubit>(() => MediaCubit(getIt<MediaRepository>()));
 }

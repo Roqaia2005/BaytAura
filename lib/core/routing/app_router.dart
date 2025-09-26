@@ -4,6 +4,7 @@ import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/search/logic/search_cubit.dart';
+import 'package:bayt_aura/features/property/logic/media_cubit.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
@@ -105,8 +106,11 @@ class AppRouter {
       case Routes.editProperty:
         final property = arguments as Property;
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => getIt<PropertyCubit>(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => getIt<PropertyCubit>()),
+              BlocProvider(create: (context) => getIt<MediaCubit>()),
+            ],
             child: EditPropertyView(property: property),
           ),
         );

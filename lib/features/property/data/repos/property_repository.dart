@@ -96,8 +96,6 @@ class PropertyRepository {
 
   // UPDATE property **customer , provider only updates their properties
   Future<Property> updateProperty(Property property) async {
-    final media = property.files ?? []; // List<String> of image URLs or IDs
-
     return _apiService.updateMyProperty(
       property.id!, // path parameter
       {
@@ -110,7 +108,6 @@ class PropertyRepository {
         "address": property.address ?? "",
         "latitude": property.latitude ?? 0,
         "longitude": property.longitude ?? 0,
-        "media": media,
       },
     );
   }

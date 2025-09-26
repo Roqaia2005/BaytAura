@@ -19,7 +19,6 @@ import 'package:bayt_aura/features/property/presentation/widgets/property_header
 import 'package:bayt_aura/features/property/presentation/widgets/categories_header.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/categories_grid_view.dart';
 
-
 class AllPropertiesView extends StatefulWidget {
   const AllPropertiesView({super.key});
 
@@ -179,42 +178,50 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
           SliverToBoxAdapter(child: const PropertyHeader()),
           SliverToBoxAdapter(child: SizedBox(height: 12.h)),
 
-          // Properties List
           BlocBuilder<SearchCubit, SearchState>(
             builder: (context, searchState) {
               return searchState.whenOrNull(
                     initial: () {
                       return BlocBuilder<PropertyCubit, PropertyState>(
                         builder: (context, propertyState) {
-                          return propertyState.whenOrNull(
-                                loading: () => const SliverFillRemaining(
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
-                                loaded: (properties, favorites) => SliverList(
-                                  delegate: SliverChildBuilderDelegate((
-                                    context,
-                                    index,
-                                  ) {
-                                    final property = properties[index];
-                                    return PropertyCard(
-                                      key: ValueKey(property.id),
-                                      property: property,
-                                      onViewDetails: () {
-                                        context.pushNamed(
-                                          Routes.detailsScreen,
-                                          arguments: property,
-                                        );
-                                      },
+                          if (propertyState is PropertyLoading) {
+                            return const SliverFillRemaining(
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
+                          if (propertyState is PropertyLoaded) {
+                            final properties = propertyState.properties;
+
+                            return SliverList(
+                              delegate: SliverChildBuilderDelegate((
+                                context,
+                                index,
+                              ) {
+                                final property = properties[index];
+                                return PropertyCard(
+                                  key: ValueKey(property.id),
+                                  property: property,
+                                  onViewDetails: () {
+                                    context.pushNamed(
+                                      Routes.detailsScreen,
+                                      arguments: property,
                                     );
-                                  }, childCount: properties.length),
-                                ),
-                                error: (message) => SliverFillRemaining(
-                                  child: Center(child: Text(message)),
-                                ),
-                              ) ??
-                              SliverToBoxAdapter(child: SizedBox.shrink());
+                                  },
+                                );
+                              }, childCount: properties.length),
+                            );
+                          }
+
+                          if (propertyState is PropertyError) {
+                            return SliverFillRemaining(
+                              child: Center(child: Text(propertyState.message)),
+                            );
+                          }
+
+                          return const SliverToBoxAdapter(
+                            child: SizedBox.shrink(),
+                          );
                         },
                       );
                     },
@@ -240,7 +247,7 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                       child: Center(child: Text(message)),
                     ),
                   ) ??
-                  SliverToBoxAdapter(child: SizedBox.shrink());
+                  const SliverToBoxAdapter(child: SizedBox.shrink());
             },
           ),
         ],
