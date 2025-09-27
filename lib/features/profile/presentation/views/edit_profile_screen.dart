@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
+import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/profile/data/models/profile.dart';
 import 'package:bayt_aura/features/profile/logic/profile.state.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
@@ -32,6 +33,8 @@ class _EditProfileViewState extends State<EditProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+
       appBar: AppBar(
         title: Text("Edit Profile", style: TextStyles.font16WhiteBold),
         centerTitle: true,
@@ -62,7 +65,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               _usernameController.text = profile.username;
               _firstNameController.text = profile.firstName;
               _lastNameController.text = profile.lastName;
-              _phoneController.text = profile.phone ?? "";
+              _phoneController.text = profile.phone;
 
               return Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -99,7 +102,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          backgroundColor: Colors.blueAccent,
+                          backgroundColor: AppColors.blue,
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -116,9 +119,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                           }
                         },
                         child: state.maybeWhen(
-                          loading: () => const CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
+                          loading: () =>  AppCircularIndicator(),
                           orElse: () => const Text(
                             "Save Changes",
                             style: TextStyle(fontSize: 16, color: Colors.white),

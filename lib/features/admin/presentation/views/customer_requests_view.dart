@@ -6,6 +6,7 @@ import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/admin/logic/admin_state.dart';
+import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 
 class CustomerRequestsView extends StatefulWidget {
   const CustomerRequestsView({super.key});
@@ -72,7 +73,7 @@ class _CustomerRequestsViewState extends State<CustomerRequestsView>
         },
         builder: (context, state) {
           if (state is AdminLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child:  AppCircularIndicator());
           }
           if (state is CustomerRequestsLoaded) {
             final allRequests = state.requests;

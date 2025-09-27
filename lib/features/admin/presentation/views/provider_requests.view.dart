@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/helpers/spacing.dart';
+import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/admin/logic/admin_state.dart';
+import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 
 class ProviderRequestsView extends StatefulWidget {
   const ProviderRequestsView({super.key});
@@ -14,99 +17,169 @@ class ProviderRequestsView extends StatefulWidget {
 class _ProviderRequestsViewState extends State<ProviderRequestsView> {
   @override
   void initState() {
-    context.read<AdminCubit>().getProviderRequests();
-
     super.initState();
+    context.read<AdminCubit>().getProviderRequests();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Provider Requests"), centerTitle: true),
+      backgroundColor: AppColors.whiteColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.blue,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          "Provider Requests",
+          style: TextStyles.font20BlueBold.copyWith(color: Colors.white),
+        ),
+      ),
       body: BlocConsumer<AdminCubit, AdminState>(
         listener: (context, state) {
           if (state is ProviderApproved) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.green,
+              ),
+            );
           }
           if (state is AdminError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Error: ${state.message}")));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Error: ${state.message}"),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         },
         builder: (context, state) {
           if (state is AdminLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: AppCircularIndicator());
           }
+
           if (state is ProviderRequestsLoaded) {
             final providers = state.requests;
 
             if (providers.isEmpty) {
-              return const Center(child: Text("No provider requests found"));
+              return Center(
+                child: Text(
+                  "No provider requests found",
+                  style: TextStyles.font16DarkBeigeRegular,
+                ),
+              );
             }
+
             return ListView.builder(
+              padding: const EdgeInsets.all(12),
               itemCount: providers.length,
               itemBuilder: (context, index) {
                 final provider = providers[index];
+
                 return Card(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: ListTile(
-                    leading: const CircleAvatar(child: Icon(Icons.person)),
-                    title: Text(provider.firstName ?? ""),
-                    subtitle: Text(provider.email ?? ""),
-                    trailing: (provider.status == "PENDING")
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
+                  elevation: 3,
+                  color: Colors.white,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, top: 16),
+                          child: Row(
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  context.read<AdminCubit>().approveProvider(
-                                    provider.id!,
-                                    "ACCEPTED",
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  minimumSize: const Size(90, 36),
+                              CircleAvatar(
+                                radius: 28,
+                                backgroundColor: AppColors.beige,
+                                child: Icon(
+                                  Icons.person,
+                                  color: AppColors.blue,
+                                  size: 28,
                                 ),
-                                child: const Text("Accept"),
-                              ),
-                              const SizedBox(width: 8),
-                              ElevatedButton(
-                                onPressed: () {
-                                  context.read<AdminCubit>().approveProvider(
-                                    provider.id!,
-                                    "REJECTED",
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                  minimumSize: const Size(90, 36),
-                                ),
-                                child: const Text("Reject"),
                               ),
                             ],
-                          )
-                        : Text(
-                            provider.status == "ACCEPTED"
-                                ? "Accepted ✅"
-                                : "Rejected ❌",
                           ),
+                        ),
+                        Text(
+                          provider.firstName ?? "",
+                          style: TextStyles.font16BlueBold,
+                        ),
+                        verticalSpace(10),
+                        Text(
+                          provider.email ?? "",
+                          style: TextStyles.font14DarkBeigeBold,
+                        ),
+                        verticalSpace(10),
+
+                        provider.status == "PENDING"
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _actionButton(
+                                    text: "Accept",
+                                    color: Colors.green,
+                                    onPressed: () {
+                                      context
+                                          .read<AdminCubit>()
+                                          .approveProvider(
+                                            provider.id!,
+                                            "ACCEPTED",
+                                          );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _actionButton(
+                                    text: "Reject",
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      context
+                                          .read<AdminCubit>()
+                                          .approveProvider(
+                                            provider.id!,
+                                            "REJECTED",
+                                          );
+                                    },
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                provider.status == "ACCEPTED"
+                                    ? "Accepted ✅"
+                                    : "Rejected ❌",
+                                style: TextStyles.font14BlueBold,
+                              ),
+                      ],
+                    ),
                   ),
                 );
               },
             );
           }
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.blue),
-          );
+
+          return const Center(child: AppCircularIndicator());
         },
       ),
+    );
+  }
+
+  Widget _actionButton({
+    required String text,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        minimumSize: const Size(90, 40),
+        elevation: 2,
+      ),
+      onPressed: onPressed,
+      child: Text(text, style: TextStyles.font14WhiteBold),
     );
   }
 }

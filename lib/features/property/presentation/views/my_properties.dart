@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
+import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
@@ -26,7 +28,14 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("My Properties")),
+      backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        centerTitle: true,
+
+        backgroundColor: AppColors.blue,
+        title: Text("My Properties", style: TextStyles.font24WhiteBold),
+      ),
       body: BlocConsumer<PropertyCubit, PropertyState>(
         listener: (context, state) {
           if (state is PropertyUpdated) {
@@ -44,16 +53,19 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
         },
         builder: (context, state) {
           if (state is PropertyLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.blue),
-            );
+            return const Center(child: AppCircularIndicator());
           }
 
           if (state is MyPropertyLoaded) {
             final properties = state.myProperties;
 
             if (properties.isEmpty) {
-              return const Center(child: Text("No properties found."));
+              return Center(
+                child: Text(
+                  "No properties found.",
+                  style: TextStyles.font16BlueBold,
+                ),
+              );
             }
 
             return ListView.builder(

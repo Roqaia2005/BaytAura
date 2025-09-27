@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
+import 'package:bayt_aura/features/home/home_view.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/search/logic/search_cubit.dart';
@@ -23,6 +24,7 @@ import 'package:bayt_aura/features/profile/presentation/views/edit_profile_scree
 import 'package:bayt_aura/features/provider/presentation/views/provider_dashboard.dart';
 import 'package:bayt_aura/features/property/presentation/views/all_properties_view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/customer_request_details.dart';
+import 'package:bayt_aura/features/provider/presentation/views/provider_request_submitted_view.dart';
 
 class AppRouter {
   static MaterialPageRoute generateRoute(RouteSettings settings) {
@@ -124,6 +126,14 @@ class AppRouter {
             ],
             child: const AuthView(),
           ),
+        );
+      case Routes.providerRequestSubmittedView:
+        return MaterialPageRoute(
+          builder: (_) => ProviderRequestSubmittedView(),
+        );
+      case Routes.homeScreen:
+        return MaterialPageRoute(
+          builder: (_) => HomeView(),
         );
 
       default:

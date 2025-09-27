@@ -86,8 +86,6 @@ abstract class ApiService {
   @DELETE(ApiConstants.removeFavorite)
   Future<void> removeFavorite(@Path("id") int favoriteId);
 
-  @DELETE(ApiConstants.deleteProperty)
-  Future<void> deleteProperty(@Path("propertyId") int propertyId);
 
   @DELETE(ApiConstants.deleteMyProperty)
   Future<void> deleteMyProperty(@Path("propertyId") int propertyId);
@@ -116,6 +114,9 @@ abstract class ApiService {
     @Path("id") int id,
     @Body() Map<String, String> body,
   );
+
+  @DELETE(ApiConstants.deleteProperty)
+  Future<void> deleteProperty(@Path("propertyId") int propertyId);
 
   @DELETE(ApiConstants.deleteRequest)
   Future<void> deleteRequestByAdmin(@Path("id") int id);

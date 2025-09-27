@@ -30,7 +30,7 @@ class SignupBlocListener extends StatelessWidget {
           },
           signupSuccess: (signupResponse) {
             context.pop(); // close loading
-            showSuccessDialog(context, signupResponse); // ✅ pass response
+            showSuccessDialog(context, signupResponse);
           },
           signupError: (error) {
             setupErrorState(context, error);
@@ -44,10 +44,10 @@ class SignupBlocListener extends StatelessWidget {
   void showSuccessDialog(BuildContext context, SignupResponse signupResponse) {
     String message;
 
-    // ✅ Different messages depending on role
     if (signupResponse.role == 'CUSTOMER') {
       message = 'Congratulations, you have signed up successfully!';
     } else if (signupResponse.role == 'PROVIDER') {
+      context.pushNamed(Routes.providerRequestSubmittedView);
       message =
           'Account created! An admin will review your request before you can login.';
     } else {
@@ -71,9 +71,8 @@ class SignupBlocListener extends StatelessWidget {
             TextButton(
               onPressed: () {
                 if (signupResponse.role == 'customer') {
-                  context.pushNamed(Routes.customerScreen);
+                  context.pushNamedAndRemoveUntil(Routes.customerScreen);
                 } else {
-                  // For provider or unknown roles -> just close
                   context.pop();
                 }
               },

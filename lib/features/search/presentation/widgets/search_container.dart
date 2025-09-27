@@ -40,7 +40,7 @@ class SearchContainer extends StatelessWidget {
                     color: AppColors.blue,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
-                  padding: EdgeInsets.all(8.sp),
+                  padding: EdgeInsets.all(4.sp),
                   child: IconButton(
                     onPressed: () {
                       Scaffold.of(context).openEndDrawer();
@@ -57,18 +57,8 @@ class SearchContainer extends StatelessWidget {
 
             SizedBox(height: 8.h),
 
-            // 📍 Location + AI Powered
             Row(
               children: [
-                const Icon(Icons.location_on, color: Colors.grey, size: 16),
-                SizedBox(width: 4.w),
-                Text(
-                  "Current: Dubai, UAE",
-                  style: TextStyles.font12DarkBeigeRegular.copyWith(
-                    color: Colors.black87,
-                  ),
-                ),
-                const Spacer(),
                 const Icon(Icons.bolt, color: Colors.orange, size: 16),
                 SizedBox(width: 4.w),
                 Text("AI Powered", style: TextStyles.font12DarkBeigeRegular),

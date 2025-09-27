@@ -4,11 +4,6 @@ import 'package:bayt_aura/features/profile/data/models/profile.dart';
 import 'package:bayt_aura/features/profile/logic/profile.state.dart';
 import 'package:bayt_aura/features/profile/data/repo/profile_repo.dart';
 
-
-
-
-
-
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository repository;
 

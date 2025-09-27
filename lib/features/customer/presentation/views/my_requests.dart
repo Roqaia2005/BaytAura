@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
+import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/customer/logic/customer_state.dart';
 import 'package:bayt_aura/features/property/data/repos/media_repo.dart';
@@ -22,9 +23,7 @@ class CustomerRequestsScreen extends StatelessWidget {
           final cubit = context.read<CustomerRequestCubit>();
 
           if (state is CustomerRequestLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.blue),
-            );
+            return const Center(child: AppCircularIndicator());
           } else if (state is CustomerRequestsLoaded) {
             final requests = state.requests;
             if (requests.isEmpty) {
@@ -36,8 +35,12 @@ class CustomerRequestsScreen extends StatelessWidget {
               );
             }
             return Scaffold(
+              backgroundColor: Colors.white,
+
               appBar: AppBar(
-                title: Text("My Requests", style: TextStyles.font16BlueBold),
+                centerTitle: true,
+                title: Text("My Requests", style: TextStyles.font24WhiteBold),
+                backgroundColor: AppColors.blue,
               ),
               body: ListView.builder(
                 itemCount: requests.length,

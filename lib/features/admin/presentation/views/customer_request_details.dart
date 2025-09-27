@@ -1,9 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
-import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
-import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';

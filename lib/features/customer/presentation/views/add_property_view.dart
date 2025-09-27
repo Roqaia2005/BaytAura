@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/widgets/app_button.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/core/helpers/image_picker.dart';
+import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/customer/logic/customer_state.dart';
 import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
@@ -119,7 +120,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
             if (state is CustomerRequestLoading)
               Container(
                 color: Colors.black38,
-                child: const Center(child: CircularProgressIndicator()),
+                child: const Center(child:  AppCircularIndicator()),
               ),
           ],
         );

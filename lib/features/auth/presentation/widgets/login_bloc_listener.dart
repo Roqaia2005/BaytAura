@@ -28,7 +28,7 @@ class LoginBlocListener extends StatelessWidget {
           },
           success: (loginResponse) {
             context.pop(); // close loading dialog
-            showSuccessDialog(context, loginResponse); // ✅ pass response here
+            showSuccessDialog(context, loginResponse);
           },
           error: (error) {
             setUpErrorState(context, error);
@@ -64,11 +64,11 @@ class LoginBlocListener extends StatelessWidget {
               ),
               onPressed: () {
                 if (loginResponse.role == 'CUSTOMER') {
-                  context.pushReplacementNamed(Routes.customerScreen);
+                  context.pushNamedAndRemoveUntil(Routes.customerScreen);
                 } else if (loginResponse.role == 'PROVIDER') {
-                  context.pushReplacementNamed(Routes.providerScreen);
+                  context.pushNamedAndRemoveUntil(Routes.providerScreen);
                 } else if (loginResponse.role == 'ADMIN') {
-                  context.pushReplacementNamed(Routes.adminScreen);
+                  context.pushNamedAndRemoveUntil(Routes.adminScreen);
                 } else {
                   context.pop();
                 }

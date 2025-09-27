@@ -28,9 +28,12 @@ class AdminPropertiesView extends StatefulWidget {
 
 class _AdminPropertiesViewState extends State<AdminPropertiesView> {
   final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _areaController = TextEditingController();
+  final TextEditingController _minAreaController = TextEditingController();
+  final TextEditingController _maxAreaController = TextEditingController();
+  final TextEditingController _ownerController = TextEditingController();
 
   String? _selectedType;
+  String? _selectedPurpose;
 
   final List<String> propertyTypes = [
     "APARTMENT",
@@ -40,6 +43,11 @@ class _AdminPropertiesViewState extends State<AdminPropertiesView> {
     "LAND",
   ];
 
+  final List<String> purposes = [
+    "RENT",
+    "SALE",
+  ];
+
   num? minPrice;
   num? maxPrice;
   RangeValues? currentRange;
@@ -47,6 +55,7 @@ class _AdminPropertiesViewState extends State<AdminPropertiesView> {
   @override
   void initState() {
     super.initState();
+
     _searchController.addListener(() {
       final query = _searchController.text.trim();
       if (query.isNotEmpty) {
@@ -60,13 +69,16 @@ class _AdminPropertiesViewState extends State<AdminPropertiesView> {
   @override
   void dispose() {
     _searchController.dispose();
-    _areaController.dispose();
+    _minAreaController.dispose();
+    _maxAreaController.dispose();
+    _ownerController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       endDrawer: BlocBuilder<PropertyCubit, PropertyState>(
         builder: (context, state) {
           return state.whenOrNull(
@@ -91,91 +103,149 @@ class _AdminPropertiesViewState extends State<AdminPropertiesView> {
 
                   return Drawer(
                     child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Filter Properties",
-                              style: TextStyles.font14BlueRegular.copyWith(
-                                fontSize: 16.sp,
-                              ),
+                      padding: EdgeInsets.all(16.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Filter Properties",
+                            style: TextStyles.font14BlueRegular.copyWith(
+                              fontSize: 16.sp,
                             ),
-                            12.verticalSpace,
-                            Text(
-                              "Price Range",
-                              style: TextStyles.font14BlueRegular.copyWith(
-                                fontSize: 14.sp,
-                              ),
+                          ),
+                          12.verticalSpace,
+
+                          // Price Range
+                          Text(
+                            "Price Range",
+                            style: TextStyles.font14BlueRegular.copyWith(
+                              fontSize: 14.sp,
                             ),
-                            RangeSlider(
-                              min: minPrice!.toDouble(),
-                              max: maxPrice!.toDouble(),
-                              divisions: 10,
-                              activeColor: AppColors.blue,
-                              inactiveColor: Colors.grey.shade300,
-                              values: currentRange!,
-                              labels: RangeLabels(
-                                currentRange!.start.toInt().toString(),
-                                currentRange!.end.toInt().toString(),
-                              ),
-                              onChanged: (values) {
-                                setState(() {
-                                  currentRange = values;
-                                });
-                              },
+                          ),
+                          RangeSlider(
+                            min: minPrice!.toDouble(),
+                            max: maxPrice!.toDouble(),
+                            divisions: 10,
+                            activeColor: AppColors.blue,
+                            inactiveColor: Colors.grey.shade300,
+                            values: currentRange!,
+                            labels: RangeLabels(
+                              currentRange!.start.toInt().toString(),
+                              currentRange!.end.toInt().toString(),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Min: ${currentRange!.start.toInt()}",
-                                  style: TextStyle(fontSize: 12.sp),
-                                ),
-                                Text(
-                                  "Max: ${currentRange!.end.toInt()}",
-                                  style: TextStyle(fontSize: 12.sp),
-                                ),
-                              ],
-                            ),
-                            20.verticalSpace,
-                            CustomDropDown(
-                              value: _selectedType,
-                              itemsList: propertyTypes,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedType = value;
-                                });
-                              },
-                            ),
-                            20.verticalSpace,
-                            AppTextFormField(
-                              hintText: "Min Area (m²)",
-                              controller: _areaController,
-                            ),
-                            20.verticalSpace,
-                            AppTextButton(
-                              buttonText: "Apply Filters",
-                              textStyle: TextStyles.font14WhiteBold,
-                              onPressed: () {
-                                context.read<SearchCubit>().searchOrFilter(
-                                  type: _selectedType,
-                                  minPrice: currentRange!.start.toInt(),
-                                  maxPrice: currentRange!.end.toInt(),
-                                  minArea: int.tryParse(_areaController.text),
+                            onChanged: (values) {
+                              setState(() {
+                                currentRange = values;
+                              });
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Min: ${currentRange!.start.toInt()}",
+                                  style: TextStyle(fontSize: 12.sp)),
+                              Text("Max: ${currentRange!.end.toInt()}",
+                                  style: TextStyle(fontSize: 12.sp)),
+                            ],
+                          ),
+                          20.verticalSpace,
+
+                          // Type
+                          CustomDropDown(
+                            value: _selectedType,
+                            itemsList: propertyTypes,
+                            hintText: "Select Type",
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedType = value;
+                              });
+                            },
+                          ),
+                          20.verticalSpace,
+
+                          // Purpose
+                          CustomDropDown(
+                            value: _selectedPurpose,
+                            itemsList: purposes,
+                            hintText: "Select Purpose",
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedPurpose = value;
+                              });
+                            },
+                          ),
+                          20.verticalSpace,
+
+                          // Min / Max Area
+                          AppTextFormField(
+                            hintText: "Min Area (m²)",
+                            controller: _minAreaController,
+                            keyboardType: TextInputType.number,
+                          ),
+                          10.verticalSpace,
+                          AppTextFormField(
+                            hintText: "Max Area (m²)",
+                            controller: _maxAreaController,
+                            keyboardType: TextInputType.number,
+                          ),
+                          20.verticalSpace,
+
+                          // Owner
+                          AppTextFormField(
+                            hintText: "Owner",
+                            controller: _ownerController,
+                          ),
+                          20.verticalSpace,
+
+                          // Apply Filters
+                          AppTextButton(
+                            buttonText: "Apply Filters",
+                            textStyle: TextStyles.font14WhiteBold,
+                            onPressed: () {
+                              context.read<SearchCubit>().searchOrFilter(
+                                    query: _searchController.text.trim(),
+                                    type: _selectedType,
+                                    minPrice: currentRange!.start.toInt(),
+                                    maxPrice: currentRange!.end.toInt(),
+                                    minArea:
+                                        int.tryParse(_minAreaController.text),
+                                    maxArea:
+                                        int.tryParse(_maxAreaController.text),
+                                    owner: _ownerController.text.trim(),
+                                    purpose: _selectedPurpose,
+                                  );
+                              context.pop();
+                            },
+                          ),
+                          10.verticalSpace,
+
+                          // Reset
+                          AppTextButton(
+                            buttonText: "Reset Filters",
+                            textStyle: TextStyles.font14WhiteBold,
+                            onPressed: () {
+                              setState(() {
+                                _selectedType = null;
+                                _selectedPurpose = null;
+                                _minAreaController.clear();
+                                _maxAreaController.clear();
+                                _ownerController.clear();
+                                currentRange = RangeValues(
+                                  minPrice!.toDouble(),
+                                  maxPrice!.toDouble(),
                                 );
-                                context.pop();
-                              },
-                            ),
-                          ],
-                        ),
+                              });
+                              context.read<SearchCubit>().searchOrFilter();
+                              context.pop();
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
               ) ??
-              const Drawer(); // fallback
+              const Drawer();
         },
       ),
       body: SingleChildScrollView(
@@ -190,6 +260,8 @@ class _AdminPropertiesViewState extends State<AdminPropertiesView> {
             const CategoriesGridView(),
             const PropertyHeader(),
             12.verticalSpace,
+
+            // show search results OR fallback to property list
             BlocBuilder<SearchCubit, SearchState>(
               builder: (context, searchState) {
                 return searchState.whenOrNull(

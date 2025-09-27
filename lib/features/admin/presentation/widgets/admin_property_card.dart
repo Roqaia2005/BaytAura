@@ -49,10 +49,9 @@ class AdminPropertyCard extends StatelessWidget {
                   child: Image.network(
                     property.images != null && property.images!.isNotEmpty
                         ? property.images!.first.url ??
-                              "https://via.placeholder.com/400"
-                        : "https://via.placeholder.com/400",
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s"
+                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s",
                     width: double.infinity,
-                    height: 180.h,
                     fit: BoxFit.cover,
                   ),
                 ),

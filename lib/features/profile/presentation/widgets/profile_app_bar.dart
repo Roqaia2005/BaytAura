@@ -6,6 +6,7 @@ import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/profile/logic/profile.state.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 
@@ -80,23 +81,6 @@ class ProfileAppBar extends StatelessWidget {
                                 style: TextStyles.font16DarkBeigeRegular,
                               ),
                               verticalSpace(10),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(
-                                    color: AppColors.darkBeige,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0.sp),
-                                    child: Text(
-                                      "Member since Jan 2024", // replace when backend has field
-                                      style: TextStyles.font12DarkBeigeBold,
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -107,7 +91,7 @@ class ProfileAppBar extends StatelessWidget {
               ),
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: AppCircularIndicator()),
           orElse: () {
             return Text("something went wrong");
           },
