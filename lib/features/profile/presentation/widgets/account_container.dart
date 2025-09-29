@@ -59,7 +59,7 @@ class _AccountContainerState extends State<AccountContainer> {
             ),
             ListTile(
               leading: Icon(
-                FontAwesomeIcons.penToSquare,
+                FontAwesomeIcons.trash,
                 color: AppColors.darkBeige,
               ),
               title: Text(
@@ -68,38 +68,48 @@ class _AccountContainerState extends State<AccountContainer> {
               ),
               trailing: IconButton(
                 onPressed: () {
-                  AlertDialog(
-                    title: Text(
-                      "Confirm Deletion",
-                      style: TextStyles.font16BlueBold,
-                    ),
-                    content: Text(
-                      "Are you sure you want to delete your profile permanently?",
-                      style: TextStyles.font14BlueRegular,
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        },
-                        child: Text("Cancel", style: TextStyles.font14BlueBold),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.read<ProfileCubit>().deleteProfile();
-                          Navigator.of(context).pop(true);
-                        },
-                        child: Text(
-                          'Yes , Delete',
-                          style: TextStyles.font14BlueBold,
+                  showDialog(
+                    context: context,
+                    builder: (ctx) {
+                      return AlertDialog(
+                        title: Text(
+                          "Confirm Deletion",
+                          style: TextStyles.font16BlueBold,
                         ),
-                      ),
-                    ],
+                        content: Text(
+                          "Are you sure you want to delete your profile permanently?",
+                          style: TextStyles.font14BlueRegular,
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(ctx).pop(false);
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyles.font14BlueBold,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context.read<ProfileCubit>().deleteProfile();
+                              Navigator.of(ctx).pop(true);
+                            },
+                            child: Text(
+                              'Yes, Delete',
+                              style: TextStyles.font14BlueBold.copyWith(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
                 icon: Icon(
                   size: 20,
-                  FontAwesomeIcons.deleteLeft,
+                  Icons.delete,
                   color: Colors.red,
                 ),
               ),

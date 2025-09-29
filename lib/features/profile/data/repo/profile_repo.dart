@@ -10,11 +10,18 @@ class ProfileRepository {
 
   Future<Profile> getProfile() => _api.getProfile();
   Future<void> updateProfile(Profile profile) => _api.updateProfile(profile);
-  Future<void> deleteProfile() => _api.deleteProfile();
-  Future<void> uploadProfilePicture(File file) async {
-    final formData = FormData.fromMap({"file": file});
+  Future<void> deleteProfile() async {
+    await _api.deleteProfile().catchError((e) {
+      print("Delete failed: $e");
+    });
+  }
 
-    await _api.uploadProfilePicture(formData);
+  Future<void> uploadProfilePicture(File file) async {
+    final multipartFile = await MultipartFile.fromFile(
+      file.path,
+      filename: file.uri.pathSegments.last,
+    );
+    await _api.uploadProfilePicture(multipartFile);
   }
 
   Future<void> deleteProfilePicture() => _api.deleteProfilePicture();

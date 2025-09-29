@@ -34,7 +34,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(const ProfileState.loading());
     try {
       await repository.deleteProfile();
-      emit(const ProfileState.initial());
+      emit(const ProfileState.deleted());
     } catch (e) {
       emit(ProfileState.error(e.toString()));
     }

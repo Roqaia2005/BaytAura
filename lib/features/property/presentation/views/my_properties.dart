@@ -89,7 +89,7 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
 
                     if (result is Property) {
                       await context.read<PropertyCubit>().fetchMyProperties();
-                    }
+                    } // ignore: use_build_context_synchronously
                   },
 
                   onDelete: () => context

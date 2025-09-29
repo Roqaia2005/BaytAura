@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bayt_aura/core/theming/text_styles.dart';
 
 class ProviderNavBar extends StatelessWidget {
   final int currentPageIndex;
@@ -15,6 +15,11 @@ class ProviderNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      labelPadding: EdgeInsets.only(left: 2),
+
+      labelTextStyle: WidgetStateProperty.all(
+        TextStyles.font14DarkBeigeBold.copyWith(),
+      ),
       selectedIndex: currentPageIndex,
       backgroundColor: Colors.white,
       indicatorShape: CircleBorder(),

@@ -208,7 +208,7 @@ class _ApiService implements ApiService {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'q': query,
+      r'searchQuery': query,
       r'type': type,
       r'minPrice': minPrice,
       r'maxPrice': maxPrice,
@@ -396,25 +396,6 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> deleteProperty(int propertyId) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(
-      Options(method: 'DELETE', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            'admin/properties/${propertyId}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    await _dio.fetch<void>(_options);
-  }
-
-  @override
   Future<void> deleteMyProperty(int propertyId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -588,6 +569,25 @@ class _ApiService implements ApiService {
           .compose(
             _dio.options,
             'admin/requests/${id}/status',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<void> deleteProperty(int propertyId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<void>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'admin/properties/${propertyId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -818,14 +818,15 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> uploadProfilePicture(FormData formData) async {
+  Future<void> uploadProfilePicture(MultipartFile file) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = formData;
+    final _data = FormData();
+    _data.files.add(MapEntry('file', file));
     final _options = _setStreamType<void>(
       Options(
-            method: 'POST',
+            method: 'PUT',
             headers: _headers,
             extra: _extra,
             contentType: 'multipart/form-data',

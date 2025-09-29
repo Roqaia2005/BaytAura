@@ -11,7 +11,6 @@ import 'package:bayt_aura/features/admin/presentation/views/admin_properties_vie
 import 'package:bayt_aura/features/admin/presentation/views/provider_requests.view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/customer_requests_view.dart';
 
-
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
 
@@ -23,9 +22,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
   int currentPageIndex = 0;
 
   final List<Widget> screens = const [
+    AdminPropertiesView(),
     ProviderRequestsView(),
     CustomerRequestsView(),
-    AdminPropertiesView(),
+
     ProfileView(),
   ];
 

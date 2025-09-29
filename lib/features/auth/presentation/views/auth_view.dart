@@ -27,7 +27,6 @@ class _AuthViewState extends State<AuthView> {
 
           verticalSpace(20),
 
-          // --- blended toggle buttons ---
           AuthToggle(
             showLogin: showLogin,
             onLoginTap: () => setState(() => showLogin = true),
@@ -36,7 +35,6 @@ class _AuthViewState extends State<AuthView> {
 
           verticalSpace(20),
 
-          // --- form section (switchable) ---
           Expanded(
             child: SingleChildScrollView(
               child: AnimatedSwitcher(

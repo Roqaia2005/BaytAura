@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
@@ -34,37 +36,91 @@ class ProfileAppBar extends StatelessWidget {
                       vertical: 16.h,
                     ),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: AppColors.beige,
-                          radius: 60.r,
-                          child: GestureDetector(
-                            onTap: () async {
-                              // pick image
-                              final picker = ImagePicker();
-                              final file = await picker.pickImage(
-                                source: ImageSource.gallery,
-                              );
-                              if (file != null) {
-                                context
-                                    .read<ProfileCubit>()
-                                    .uploadProfilePicture(File(file.path));
-                              }
-                            },
-                            child: CircleAvatar(
-                              radius: 70.r,
+                        // Avatar with overlay + edit/delete options
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 60.r,
+                              backgroundColor: AppColors.beige,
                               backgroundImage: profile.profilePictureUrl != null
                                   ? NetworkImage(profile.profilePictureUrl!)
-                                  : const AssetImage(
-                                          "assets/images/profile.jpg",
-                                        )
-                                        as ImageProvider,
+                                  : const AssetImage("assets/images/profile.jpg")
+                                      as ImageProvider,
                             ),
-                          ),
+
+                            // Edit icon overlay
+                            Positioned(
+                              bottom: 0,
+                              right: 6,
+                              child: GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                    ),
+                                    builder: (_) => SafeArea(
+                                      child: Wrap(
+                                        children: [
+                                          ListTile(
+                                            leading: const Icon(Icons.photo_library),
+                                            title: const Text("Upload new photo"),
+                                            onTap: () async {
+                                              Navigator.pop(context);
+                                              final picker = ImagePicker();
+                                              final file = await picker.pickImage(
+                                                source: ImageSource.gallery,
+                                              );
+                                              if (file != null) {
+                                                context.read<ProfileCubit>().uploadProfilePicture(File(file.path));
+                                              }
+                                            },
+                                          ),
+                                          if (profile.profilePictureUrl != null)
+                                            ListTile(
+                                              leading: const Icon(Icons.delete, color: Colors.red),
+                                              title: const Text("Remove photo"),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                context.read<ProfileCubit>().deleteProfilePicture();
+                                              },
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 20.r,
+                                  backgroundColor: AppColors.blue,
+                                  child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                                ),
+                              ),
+                            ),
+
+                            // Loading overlay
+                            if (state.maybeWhen(loading: () => true, orElse: () => false))
+                              Container(
+                                width: 120.r,
+                                height: 120.r,
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(color: Colors.white),
+                                ),
+                              ),
+                          ],
                         ),
+
+                        // Profile info
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
+                            horizontal: 12.w,
                             vertical: 4.h,
                           ),
                           child: Column(
@@ -76,8 +132,7 @@ class ProfileAppBar extends StatelessWidget {
                               ),
                               verticalSpace(12),
                               Text(
-                                profile
-                                    .role, // show ADMIN / PROVIDER / CUSTOMER
+                                profile.role, // ADMIN / PROVIDER / CUSTOMER
                                 style: TextStyles.font16DarkBeigeRegular,
                               ),
                               verticalSpace(10),
@@ -91,10 +146,33 @@ class ProfileAppBar extends StatelessWidget {
               ),
             );
           },
+
+          // Loading state
           loading: () => const Center(child: AppCircularIndicator()),
-          orElse: () {
-            return Text("something went wrong");
+
+          // Deleted state
+          deleted: () {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Profile deleted successfully!')),
+              );
+              context.pushReplacementNamed(Routes.homeScreen);
+            });
+            return const SizedBox.shrink();
           },
+
+          // Error state
+          error: (message) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed: $message')),
+              );
+            });
+            return const SizedBox.shrink();
+          },
+
+          // Default
+          orElse: () => const SizedBox.shrink(),
         );
       },
     );

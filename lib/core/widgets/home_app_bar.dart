@@ -32,7 +32,7 @@ class HomeAppBar extends StatelessWidget {
           verticalSpace(16),
 
           // Search Bar
-          SearchContainer(searchController: SearchController()),
+          SearchContainer(searchController: searchController),
         ],
       ),
     );

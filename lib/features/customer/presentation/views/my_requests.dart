@@ -62,16 +62,15 @@ class CustomerRequestsScreen extends StatelessWidget {
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
-                          cubit.deleteRequest(request.id!).then((_) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Request deleted",
-                                  style: TextStyles.font14BlueBold,
-                                ),
+                          cubit.deleteRequest(request.id!);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Request deleted",
+                                style: TextStyles.font14BlueBold,
                               ),
-                            );
-                          });
+                            ),
+                          );
                         },
                       ),
                     ),

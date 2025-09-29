@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
@@ -15,6 +16,7 @@ import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/stat_card.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/property_card.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/property_header.dart';
+import 'package:bayt_aura/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/categories_header.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/categories_grid_view.dart';
 
@@ -33,6 +35,7 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
 
   String? _selectedType;
   String? _selectedPurpose;
+  Timer? _debounce;
 
   final List<String> propertyTypes = [
     "APARTMENT",
@@ -45,21 +48,23 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
   final List<String> purposes = ["RENT", "SALE"];
 
   // price slider values
-  RangeValues currentRange = const RangeValues(1000, 10000);
+  RangeValues currentRange = const RangeValues(0, 1000000);
 
   @override
   void initState() {
     super.initState();
 
-    // when user types in search field, call the cubit
+    // debounce search
     _searchController.addListener(() {
-      final query = _searchController.text.trim();
-      if (query.isNotEmpty) {
-        context.read<SearchCubit>().searchOrFilter(query: query);
-      } else {
-        // empty search -> load all (no filters)
-        context.read<SearchCubit>().searchOrFilter();
-      }
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), () {
+        final query = _searchController.text.trim();
+        if (query.isNotEmpty) {
+          context.read<SearchCubit>().searchOrFilter(query: query);
+        } else {
+          context.read<SearchCubit>().searchOrFilter();
+        }
+      });
     });
 
     // initial load (no filters)
@@ -74,6 +79,7 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
     _minAreaController.dispose();
     _maxAreaController.dispose();
     _ownerController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -93,21 +99,13 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Filter Properties",
-                      style: TextStyles.font14BlueRegular.copyWith(
-                        fontSize: 16.sp,
-                      ),
-                    ),
+                    Text("Filter Properties",
+                        style: TextStyles.font14BlueRegular.copyWith(fontSize: 16.sp)),
                     12.verticalSpace,
 
                     // Price Range
-                    Text(
-                      "Price Range",
-                      style: TextStyles.font14BlueRegular.copyWith(
-                        fontSize: 14.sp,
-                      ),
-                    ),
+                    Text("Price Range",
+                        style: TextStyles.font14BlueRegular.copyWith(fontSize: 14.sp)),
                     RangeSlider(
                       min: minPrice,
                       max: maxPrice,
@@ -128,14 +126,10 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Min: ${currentRange.start.toInt()}",
-                          style: TextStyle(fontSize: 12.sp),
-                        ),
-                        Text(
-                          "Max: ${currentRange.end.toInt()}",
-                          style: TextStyle(fontSize: 12.sp),
-                        ),
+                        Text("Min: ${currentRange.start.toInt()}",
+                            style: TextStyle(fontSize: 12.sp)),
+                        Text("Max: ${currentRange.end.toInt()}",
+                            style: TextStyle(fontSize: 12.sp)),
                       ],
                     ),
                     20.verticalSpace,
@@ -145,11 +139,7 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                       value: _selectedType,
                       itemsList: propertyTypes,
                       hintText: "Select Property Type",
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedType = value;
-                        });
-                      },
+                      onChanged: (value) => setState(() => _selectedType = value),
                     ),
                     20.verticalSpace,
 
@@ -158,11 +148,7 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                       value: _selectedPurpose,
                       itemsList: purposes,
                       hintText: "Select Purpose",
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedPurpose = value;
-                        });
-                      },
+                      onChanged: (value) => setState(() => _selectedPurpose = value),
                     ),
                     20.verticalSpace,
 
@@ -201,12 +187,12 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                           maxPrice: currentRange.end.toInt(),
                           minArea: int.tryParse(_minAreaController.text),
                           maxArea: int.tryParse(_maxAreaController.text),
-                          owner: _ownerController.text.trim().isNotEmpty
-                              ? _ownerController.text.trim()
+                          owner: _ownerController.text.isNotEmpty
+                              ? _ownerController.text
                               : null,
                           purpose: _selectedPurpose,
                         );
-                        context.pop(); // close drawer (uses your extension)
+                        context.pop(); // close drawer
                       },
                     ),
                     10.verticalSpace,
@@ -222,7 +208,7 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                           _minAreaController.clear();
                           _maxAreaController.clear();
                           _ownerController.clear();
-                          currentRange = const RangeValues(1000, 10000);
+                          currentRange = const RangeValues(minPrice, maxPrice);
                         });
                         context.read<SearchCubit>().searchOrFilter();
                         context.pop();
@@ -237,24 +223,18 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
       ),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: HomeAppBar(searchController: _searchController),
-          ),
+          SliverToBoxAdapter(child: HomeAppBar(searchController: _searchController)),
           SliverToBoxAdapter(child: SizedBox(height: 24.h)),
           SliverToBoxAdapter(child: const StatCard()),
           SliverToBoxAdapter(child: SizedBox(height: 24.h)),
           SliverToBoxAdapter(child: const CategoriesHeader()),
-
           SliverToBoxAdapter(child: const CategoriesGridView()),
           SliverToBoxAdapter(child: const PropertyHeader()),
           SliverToBoxAdapter(child: SizedBox(height: 12.h)),
 
           BlocBuilder<SearchCubit, SearchState>(
             builder: (context, state) {
-              return state.when(
-                initial: () => const SliverFillRemaining(
-                  child: Center(child: AppCircularIndicator()),
-                ),
+              return state.maybeWhen(
                 loading: () => const SliverFillRemaining(
                   child: Center(child: AppCircularIndicator()),
                 ),
@@ -271,17 +251,18 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                         key: ValueKey(property.id),
                         property: property,
                         onViewDetails: () {
-                          context.pushNamed(
-                            Routes.detailsScreen,
-                            arguments: property,
-                          );
+                          context.pushNamed(Routes.detailsScreen, arguments: property);
                         },
                       );
                     }, childCount: results.length),
                   );
                 },
-                error: (message) =>
-                    SliverFillRemaining(child: Center(child: Text(message))),
+                error: (message) => SliverFillRemaining(
+                  child: Center(child: Text(message)),
+                ),
+                orElse: () => const SliverFillRemaining(
+                  child: Center(child: AppCircularIndicator()),
+                ),
               );
             },
           ),

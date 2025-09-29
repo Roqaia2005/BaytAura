@@ -1,6 +1,8 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 
 class AIButton extends StatelessWidget {
   const AIButton({super.key});
@@ -10,7 +12,9 @@ class AIButton extends StatelessWidget {
     return FloatingActionButton(
       shape: CircleBorder(),
       backgroundColor: AppColors.blue,
-      onPressed: () {},
+      onPressed: () {
+        context.pushNamed(Routes.chatScreen);
+      },
       child: SvgPicture.asset("assets/svgs/ai.svg"),
     );
   }

@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:bayt_aura/core/networking/dio_factory.dart';
 import 'package:bayt_aura/core/networking/api_service.dart';
+import 'package:bayt_aura/core/networking/chat_service.dart';
+import 'package:bayt_aura/features/chat/logic/chat_cubit.dart';
 import 'package:bayt_aura/features/admin/data/admin_repo.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/search/logic/search_cubit.dart';
@@ -24,6 +26,7 @@ final getIt = GetIt.instance;
 Future<void> setUpGetIt() async {
   Dio dio = DioFactory.getDio();
   getIt.registerLazySingleton<ApiService>(() => ApiService(dio));
+  getIt.registerLazySingleton<ChatService>(() => ChatService(dio));
 
   // login
   getIt.registerLazySingleton<LoginRepo>(() => LoginRepo(getIt()));
@@ -71,5 +74,8 @@ Future<void> setUpGetIt() async {
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<ProfileRepository>()),
   );
+
+  getIt.registerFactory<ChatCubit>(() => ChatCubit(getIt<ChatService>()));
+
   getIt.registerFactory<MediaCubit>(() => MediaCubit(getIt<MediaRepository>()));
 }

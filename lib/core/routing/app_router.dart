@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/features/home/home_view.dart';
+import 'package:bayt_aura/core/networking/api_service.dart';
+import 'package:bayt_aura/features/chat/ui/chat_screen.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
+import 'package:bayt_aura/features/chat/logic/chat_cubit.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/search/logic/search_cubit.dart';
 import 'package:bayt_aura/features/property/logic/media_cubit.dart';
@@ -132,8 +135,13 @@ class AppRouter {
           builder: (_) => ProviderRequestSubmittedView(),
         );
       case Routes.homeScreen:
+        return MaterialPageRoute(builder: (_) => HomeView());
+      case Routes.chatScreen:
         return MaterialPageRoute(
-          builder: (_) => HomeView(),
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ChatCubit>(),
+            child: ChatScreen(),
+          ),
         );
 
       default:

@@ -57,7 +57,7 @@ abstract class ApiService {
   //***********SEARCH METHODS****************//
   @GET(ApiConstants.fetchProperties)
   Future<List<Property>> getProperties({
-    @Query("q") String? query,
+    @Query("searchQuery") String? query,
     @Query("type") String? type,
     @Query("minPrice") int? minPrice,
     @Query("maxPrice") int? maxPrice,
@@ -85,7 +85,6 @@ abstract class ApiService {
 
   @DELETE(ApiConstants.removeFavorite)
   Future<void> removeFavorite(@Path("id") int favoriteId);
-
 
   @DELETE(ApiConstants.deleteMyProperty)
   Future<void> deleteMyProperty(@Path("propertyId") int propertyId);
@@ -156,9 +155,9 @@ abstract class ApiService {
   @DELETE(ApiConstants.deleteProfile)
   Future<void> deleteProfile();
 
-  @POST(ApiConstants.uploadProfilePicture)
+  @PUT(ApiConstants.uploadProfilePicture)
   @MultiPart()
-  Future<void> uploadProfilePicture(@Body() FormData formData);
+  Future<void> uploadProfilePicture(@Part(name: "file") MultipartFile file);
 
   @DELETE(ApiConstants.deleteProfilePicture)
   Future<void> deleteProfilePicture();

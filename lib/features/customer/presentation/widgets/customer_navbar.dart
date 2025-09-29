@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/theming/text_styles.dart';
 
 class CustomerNavBar extends StatelessWidget {
   final int currentPageIndex;
@@ -14,6 +15,11 @@ class CustomerNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      labelPadding: EdgeInsets.only(left: 2),
+
+      labelTextStyle: WidgetStateProperty.all(
+        TextStyles.font14DarkBeigeBold.copyWith(),
+      ),
       selectedIndex: currentPageIndex,
       backgroundColor: Colors.white,
       indicatorShape: CircleBorder(),
@@ -26,27 +32,22 @@ class CustomerNavBar extends StatelessWidget {
           label: "Properties",
         ),
         NavigationDestination(
-          icon: CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.blue,
-            child: Icon(Icons.add, color: Colors.white),
-          ),
-          label: "New Post",
-        ),
-        NavigationDestination(
-          icon: CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.blue,
-            child: Icon(Icons.send, color: Colors.white),
-          ),
+          icon: Icon(Icons.receipt_long, color: AppColors.blue),
+
           label: "My Requests",
         ),
         NavigationDestination(
           icon: CircleAvatar(
             radius: 20,
             backgroundColor: AppColors.blue,
-            child: Icon(Icons.add_home_work_outlined, color: Colors.white),
+            child: Icon(Icons.add, color: Colors.white),
           ),
+          label: "Add Property",
+        ),
+
+        NavigationDestination(
+          icon: Icon(Icons.home_work, color: AppColors.blue),
+
           label: "My Properties",
         ),
 

@@ -21,8 +21,9 @@ class CustomerView extends StatefulWidget {
 class _CustomerViewState extends State<CustomerView> {
   final List<Widget> screens = [
     AllPropertiesView(),
-    AddPropertyView(),
     CustomerRequestsScreen(),
+    AddPropertyView(),
+
     MyPropertiesView(),
     ProfileView(),
   ];
