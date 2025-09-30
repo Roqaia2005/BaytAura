@@ -6,6 +6,7 @@ import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
+// ---------------------- AdminPropertyCard ----------------------
 
 class AdminPropertyCard extends StatelessWidget {
   final Property property;
@@ -23,82 +24,68 @@ class AdminPropertyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 12,
-              spreadRadius: 2,
-              offset: const Offset(2, 4),
-            ),
-          ],
-        ),
+      child: Material(
+        elevation: 3,
+        borderRadius: BorderRadius.circular(20.r),
+        color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // صورة العقار مع Gradient Overlay
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20.r),
-                  ),
-                  child: Image.network(
+            // Property image
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+              child: Stack(
+                children: [
+                  Image.network(
                     property.images != null && property.images!.isNotEmpty
                         ? property.images!.first.url ??
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s"
-                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3i7u-qKtMbAXynJmBf8ag-QB2voTrNt490A&s",
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzeOx66im4ySs9Zl0a3spwB6yhDRvHrIc4OQ&s"
+                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzeOx66im4ySs9Zl0a3spwB6yhDRvHrIc4OQ&s",
                     width: double.infinity,
+                    height: 180.h,
                     fit: BoxFit.cover,
                   ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20.r),
-                      ),
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.1),
-                          Colors.black.withOpacity(0.4),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black.withOpacity(0.1),
+                            Colors.black.withOpacity(0.5),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                // نوع العقار
-                Positioned(
-                  bottom: 12.h,
-                  left: 16.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 5.h,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AppColors.blue, AppColors.darkBeige],
+                  Positioned(
+                    bottom: 12.h,
+                    left: 16.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 5.h,
                       ),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Text(
-                      property.type ?? "",
-                      style: TextStyles.font14WhiteBold,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColors.blue, AppColors.darkBeige],
+                        ),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        property.type ?? "",
+                        style: TextStyles.font14WhiteBold,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
-            verticalSpace(14),
+            verticalSpace(12),
 
-            // العنوان + السعر
+            // Title + Price
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -126,9 +113,9 @@ class AdminPropertyCard extends StatelessWidget {
               ),
             ),
 
-            verticalSpace(8),
+            verticalSpace(6),
 
-            // العنوان
+            // Address
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -149,8 +136,9 @@ class AdminPropertyCard extends StatelessWidget {
               ),
             ),
 
-            verticalSpace(10),
+            verticalSpace(6),
 
+            // Area
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -169,9 +157,9 @@ class AdminPropertyCard extends StatelessWidget {
               ),
             ),
 
-            verticalSpace(10),
+            verticalSpace(8),
 
-            // الوصف
+            // Description
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
@@ -185,99 +173,91 @@ class AdminPropertyCard extends StatelessWidget {
               ),
             ),
 
-            verticalSpace(14),
+            verticalSpace(12),
             Divider(color: Colors.grey.shade300, height: 1),
 
+            // Actions
             Padding(
               padding: EdgeInsets.all(14.w),
-              child: Column(
+              child: Row(
                 children: [
-                  _AdminActionButton(
-                    label: "View Details",
-                    color: AppColors.blue,
-                    onPressed: onViewDetails,
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      onPressed: onViewDetails,
+                      child: Text(
+                        "View Details",
+                        style: TextStyles.font16WhiteBold,
+                      ),
+                    ),
                   ),
-                  verticalSpace(10),
+                  SizedBox(width: 10.w),
                   if (property.id != null)
-                    _AdminActionButton(
-                      label: "Delete",
-                      color: Colors.red,
-                      onPressed: () async {
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: const Text("Confirm Delete"),
-                            content: Text(
-                              style: TextStyles.font16BlueBold,
-                              "Are you sure you want to delete this property?",
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(ctx, false),
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyles.font14BlueRegular,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(ctx, true),
-                                child: const Text(
-                                  "Delete",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ],
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
-                        );
-
-                        if (confirm == true) {
-                          context.read<PropertyCubit>().deleteProperty(
-                            property.id!,
-                          );
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Property deleted successfully"),
+                        ),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: Text(
+                                "Confirm Delete",
+                                style: TextStyles.font20BlueBold,
+                              ),
+                              content: Text(
+                                style: TextStyles.font17BlueBold,
+                                "Are you sure you want to delete this property?",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(ctx, false),
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyles.font16BlueBold,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(ctx, true),
+                                  child: const Text(
+                                    "Delete",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           );
-                        }
-                      },
+
+                          if (confirm == true) {
+                            context.read<PropertyCubit>().deleteProperty(
+                              property.id!,
+                            );
+                          }
+                        },
+                        child: Text(
+                          "Delete",
+                          style: TextStyles.font16WhiteBold,
+                        ),
+                      ),
                     ),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _AdminActionButton extends StatelessWidget {
-  final String label;
-  final Color color;
-  final VoidCallback onPressed;
-
-  const _AdminActionButton({
-    required this.label,
-    required this.color,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 42.h,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.r),
-          ),
-        ),
-        onPressed: onPressed,
-        child: Text(label, style: TextStyles.font14WhiteBold),
       ),
     );
   }

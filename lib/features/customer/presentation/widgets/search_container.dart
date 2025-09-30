@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/features/search/presentation/widgets/custom_search_bar.dart';
+import 'package:bayt_aura/features/customer/presentation/widgets/custom_search_bar.dart';
 
 class SearchContainer extends StatelessWidget {
   const SearchContainer({super.key, required this.searchController});

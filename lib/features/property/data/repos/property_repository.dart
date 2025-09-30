@@ -32,15 +32,6 @@ class PropertyRepository {
     );
   }
 
-  Future<List<Property>> fetchProperties() async {
-    try {
-      final response = await _apiService.fetchProperties();
-      return response;
-    } catch (e) {
-      throw Exception('Failed to fetch properties: $e');
-    }
-  }
-
   Future<Property> fetchPropertyById(int id) async {
     try {
       final response = await _apiService.fetchPropertyById(id);
@@ -120,5 +111,29 @@ class PropertyRepository {
     } catch (e) {
       throw Exception('Failed to get properties: $e');
     }
+  }
+
+  Future<List<Property>> getProperties({
+    String? query,
+    String? type,
+    int? minPrice,
+    int? maxPrice,
+
+    int? minArea,
+    int? maxArea,
+    String? owner,
+    String? purpose,
+  }) async {
+    return await _apiService.getProperties(
+      query: query,
+      type: type,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+
+      minArea: minArea,
+      maxArea: maxArea,
+      owner: owner,
+      purpose: purpose,
+    );
   }
 }

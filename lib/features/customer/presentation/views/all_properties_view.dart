@@ -10,13 +10,12 @@ import 'package:bayt_aura/core/widgets/home_app_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/widgets/custom_drop_down.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
-import 'package:bayt_aura/features/search/logic/search_state.dart';
-import 'package:bayt_aura/features/search/logic/search_cubit.dart';
 import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/features/property/logic/property_cubit.dart';
+import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/stat_card.dart';
-import 'package:bayt_aura/features/property/presentation/widgets/property_card.dart';
+import 'package:bayt_aura/features/customer/presentation/widgets/property_card.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/property_header.dart';
-import 'package:bayt_aura/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/categories_header.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/categories_grid_view.dart';
 
@@ -47,29 +46,26 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
 
   final List<String> purposes = ["RENT", "SALE"];
 
-  // price slider values
   RangeValues currentRange = const RangeValues(0, 1000000);
 
   @override
   void initState() {
     super.initState();
 
-    // debounce search
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PropertyCubit>().loadProperties(withFavorites: true);
+    });
+
     _searchController.addListener(() {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       _debounce = Timer(const Duration(milliseconds: 500), () {
         final query = _searchController.text.trim();
-        if (query.isNotEmpty) {
-          context.read<SearchCubit>().searchOrFilter(query: query);
-        } else {
-          context.read<SearchCubit>().searchOrFilter();
-        }
-      });
-    });
 
-    // initial load (no filters)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SearchCubit>().searchOrFilter();
+        context.read<PropertyCubit>().loadProperties(
+          withFavorites: true,
+          query: query.isNotEmpty ? query : null,
+        );
+      });
     });
   }
 
@@ -93,19 +89,23 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
       endDrawer: StatefulBuilder(
         builder: (context, setState) {
           return Drawer(
+            width: 200.w,
             child: SafeArea(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(16.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Filter Properties",
-                        style: TextStyles.font14BlueRegular.copyWith(fontSize: 16.sp)),
-                    12.verticalSpace,
+                    Text(
+                      "Filter Properties",
+                      style: TextStyles.font16BlueBold.copyWith(
+                        fontSize: 18.sp,
+                      ),
+                    ),
+                    16.verticalSpace,
 
-                    // Price Range
-                    Text("Price Range",
-                        style: TextStyles.font14BlueRegular.copyWith(fontSize: 14.sp)),
+                    // Price Range Section
+                    _buildSectionTitle("Price Range"),
                     RangeSlider(
                       min: minPrice,
                       max: maxPrice,
@@ -118,67 +118,76 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                         currentRange.end.toInt().toString(),
                       ),
                       onChanged: (values) {
-                        setState(() {
-                          currentRange = values;
-                        });
+                        setState(() => currentRange = values);
                       },
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Min: ${currentRange.start.toInt()}",
-                            style: TextStyle(fontSize: 12.sp)),
-                        Text("Max: ${currentRange.end.toInt()}",
-                            style: TextStyle(fontSize: 12.sp)),
+                        Text(
+                          "Min: ${currentRange.start.toInt()}",
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
+                        Text(
+                          "Max: ${currentRange.end.toInt()}",
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
                       ],
                     ),
                     20.verticalSpace,
 
-                    // Type
+                    // Property Type
+                    _buildSectionTitle("Property Type"),
                     CustomDropDown(
                       value: _selectedType,
                       itemsList: propertyTypes,
                       hintText: "Select Property Type",
-                      onChanged: (value) => setState(() => _selectedType = value),
+                      onChanged: (value) =>
+                          setState(() => _selectedType = value),
                     ),
                     20.verticalSpace,
 
                     // Purpose
+                    _buildSectionTitle("Purpose"),
                     CustomDropDown(
                       value: _selectedPurpose,
                       itemsList: purposes,
                       hintText: "Select Purpose",
-                      onChanged: (value) => setState(() => _selectedPurpose = value),
+                      onChanged: (value) =>
+                          setState(() => _selectedPurpose = value),
                     ),
                     20.verticalSpace,
 
-                    // Min / Max Area
+                    // Area
+                    _buildSectionTitle("Area (m²)"),
                     AppTextFormField(
-                      hintText: "Min Area (m²)",
+                      hintText: "Min Area",
                       controller: _minAreaController,
                       keyboardType: TextInputType.number,
                     ),
                     10.verticalSpace,
                     AppTextFormField(
-                      hintText: "Max Area (m²)",
+                      hintText: "Max Area",
                       controller: _maxAreaController,
                       keyboardType: TextInputType.number,
                     ),
                     20.verticalSpace,
 
                     // Owner
+                    _buildSectionTitle("Owner"),
                     AppTextFormField(
-                      hintText: "Owner",
+                      hintText: "Owner Name",
                       controller: _ownerController,
                     ),
-                    20.verticalSpace,
+                    30.verticalSpace,
 
                     // Apply button
                     AppTextButton(
                       buttonText: "Apply Filters",
                       textStyle: TextStyles.font14WhiteBold,
                       onPressed: () {
-                        context.read<SearchCubit>().searchOrFilter(
+                        context.read<PropertyCubit>().loadProperties(
+                          withFavorites: true,
                           query: _searchController.text.trim().isNotEmpty
                               ? _searchController.text.trim()
                               : null,
@@ -192,15 +201,23 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                               : null,
                           purpose: _selectedPurpose,
                         );
-                        context.pop(); // close drawer
+                        context.pop();
                       },
                     ),
-                    10.verticalSpace,
+                    12.verticalSpace,
 
                     // Reset
-                    AppTextButton(
-                      buttonText: "Reset Filters",
-                      textStyle: TextStyles.font14WhiteBold,
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppColors.blue, width: 1.5.w),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.h,
+                          horizontal: 20.w,
+                        ),
+                      ),
                       onPressed: () {
                         setState(() {
                           _selectedType = null;
@@ -210,9 +227,19 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
                           _ownerController.clear();
                           currentRange = const RangeValues(minPrice, maxPrice);
                         });
-                        context.read<SearchCubit>().searchOrFilter();
+
+                        context.read<PropertyCubit>().loadProperties(
+                          withFavorites: true,
+                        );
                         context.pop();
                       },
+                      child: Text(
+                        "Reset Filters",
+                        style: TextStyles.font14BlueRegular.copyWith(
+                          color: AppColors.blue,
+                          fontSize: 14.sp,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -223,8 +250,10 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
       ),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: HomeAppBar(searchController: _searchController)),
-          SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+          SliverToBoxAdapter(
+            child: HomeAppBar(searchController: _searchController),
+          ),
+          SliverToBoxAdapter(child: SizedBox(height: 20.h)),
           SliverToBoxAdapter(child: const StatCard()),
           SliverToBoxAdapter(child: SizedBox(height: 24.h)),
           SliverToBoxAdapter(child: const CategoriesHeader()),
@@ -232,33 +261,50 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
           SliverToBoxAdapter(child: const PropertyHeader()),
           SliverToBoxAdapter(child: SizedBox(height: 12.h)),
 
-          BlocBuilder<SearchCubit, SearchState>(
+          BlocBuilder<PropertyCubit, PropertyState>(
             builder: (context, state) {
               return state.maybeWhen(
                 loading: () => const SliverFillRemaining(
                   child: Center(child: AppCircularIndicator()),
                 ),
-                loaded: (results) {
-                  if (results.isEmpty) {
+                loaded: (properties, favorites) {
+                  if (properties.isEmpty) {
                     return const SliverFillRemaining(
                       child: Center(child: Text("No properties found")),
                     );
                   }
                   return SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
-                      final property = results[index];
-                      return PropertyCard(
-                        key: ValueKey(property.id),
-                        property: property,
-                        onViewDetails: () {
-                          context.pushNamed(Routes.detailsScreen, arguments: property);
-                        },
+                      final property = properties[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.h,
+                          horizontal: 12.w,
+                        ),
+                        child: PropertyCard(
+                          key: ValueKey(property.id),
+                          property: property,
+                          onViewDetails: () {
+                            context.pushNamed(
+                              Routes.detailsScreen,
+                              arguments: property,
+                            );
+                          },
+                        ),
                       );
-                    }, childCount: results.length),
+                    }, childCount: properties.length),
                   );
                 },
                 error: (message) => SliverFillRemaining(
-                  child: Center(child: Text(message)),
+                  child: Center(
+                    child: Text(
+                      message,
+                      style: TextStyles.font14BlueRegular.copyWith(
+                        color: Colors.red,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ),
                 ),
                 orElse: () => const SliverFillRemaining(
                   child: Center(child: AppCircularIndicator()),
@@ -267,6 +313,16 @@ class _AllPropertiesViewState extends State<AllPropertiesView> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Text(
+        title,
+        style: TextStyles.font16BlueBold.copyWith(fontSize: 15.sp),
       ),
     );
   }

@@ -1,87 +1,136 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
-import 'package:bayt_aura/core/di/dependency_injection.dart';
 import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/customer/logic/customer_state.dart';
-import 'package:bayt_aura/features/property/data/repos/media_repo.dart';
-import 'package:bayt_aura/features/customer/data/repo/customer_repo.dart';
 
-class CustomerRequestsScreen extends StatelessWidget {
-  const CustomerRequestsScreen({super.key});
+class MyRequestsView extends StatefulWidget {
+  const MyRequestsView({super.key});
+
+  @override
+  State<MyRequestsView> createState() => _MyRequestsViewState();
+}
+
+class _MyRequestsViewState extends State<MyRequestsView>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  final List<String> tabs = ["All", "Pending", "Accepted", "Rejected"];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: tabs.length, vsync: this);
+    context.read<CustomerRequestCubit>().getMyRequests();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          CustomerRequestCubit(getIt<CustomerRepo>(), getIt<MediaRepository>())
-            ..getMyRequests(),
-      child: BlocBuilder<CustomerRequestCubit, CustomerRequestState>(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.blue,
+        title: Text("My Requests", style: TextStyles.font24WhiteBold),
+        centerTitle: true,
+        elevation: 2,
+        bottom: TabBar(
+          controller: _tabController,
+          labelStyle: TextStyles.font16WhiteBold,
+          indicatorColor: AppColors.beige,
+          labelColor: AppColors.beige,
+          unselectedLabelColor: Colors.grey,
+          tabs: tabs.map((t) => Tab(text: t)).toList(),
+        ),
+      ),
+      body: BlocBuilder<CustomerRequestCubit, CustomerRequestState>(
         builder: (context, state) {
-          final cubit = context.read<CustomerRequestCubit>();
-
           if (state is CustomerRequestLoading) {
             return const Center(child: AppCircularIndicator());
-          } else if (state is CustomerRequestsLoaded) {
-            final requests = state.requests;
-            if (requests.isEmpty) {
-              return Center(
-                child: Text(
-                  "No requests yet.",
-                  style: TextStyles.font16BlueBold,
-                ),
-              );
-            }
-            return Scaffold(
-              backgroundColor: Colors.white,
+          }
+          if (state is CustomerRequestsLoaded) {
+            final allRequests = state.requests;
 
-              appBar: AppBar(
-                centerTitle: true,
-                title: Text("My Requests", style: TextStyles.font24WhiteBold),
-                backgroundColor: AppColors.blue,
-              ),
-              body: ListView.builder(
-                itemCount: requests.length,
-                itemBuilder: (context, index) {
-                  final request = requests[index];
-                  return Card(
-                    color: Colors.white,
+            return TabBarView(
+              controller: _tabController,
+              children: tabs.map((status) {
+                var filtered = allRequests;
+                if (status != "ALL") {
+                  filtered = allRequests
+                      .where((r) => r.status == status)
+                      .toList();
+                }
 
-                    margin: const EdgeInsets.all(8),
-                    child: ListTile(
-                      title: Text(
-                        request.title,
-                        style: TextStyles.font14BlueBold,
+                if (filtered.isEmpty) {
+                  return const Center(child: Text("No requests found"));
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final req = filtered[index];
+                    return Card(
+                      elevation: 3,
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      subtitle: Text(
-                        style: TextStyles.font12DarkBeigeRegular,
-                        "${request.type} - ${request.purpose} - ${request.status}",
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          cubit.deleteRequest(request.id!);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Request deleted",
-                                style: TextStyles.font14BlueBold,
-                              ),
-                            ),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () {
+                          context.pushNamed(
+                            Routes.customerRequestDetails,
+                            arguments: req,
                           );
                         },
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(
+                                Icons.home,
+                                color: AppColors.blue,
+                                size: 32,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      req.title,
+                                      style: TextStyles.font14BlueBold,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "${req.type} - ${req.purpose} - ${req.status}",
+                                      style: TextStyles.font12DarkBeigeRegular,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+              }).toList(),
             );
-          } else if (state is CustomerRequestError) {
-            return Center(child: Text("Error: ${state.message}"));
           }
-          return const SizedBox.shrink();
+          return const Center(child: Text("Loading requests..."));
         },
       ),
     );

@@ -17,6 +17,7 @@ class Property {
   String? createdAt;
   String? updatedAt;
   String? ownerName;
+  bool? isFavorite;
 
   Property({
     this.id,

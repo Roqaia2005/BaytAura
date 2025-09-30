@@ -1,6 +1,6 @@
 class ApiConstants {
   static const String baseUrl = "http://192.168.1.8:8080/api/";
-  static const String chatbaseUrl = "http://127.0.0.1:8000/api/";
+  static const String chatBaseUrl = "http://192.168.1.8:8000/api/";
   static const String login = 'auth/login';
   static const String registerCustomer = 'auth/register/customer';
   static const String registerAdmin = 'auth/register/admin';

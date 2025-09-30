@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
-import 'package:bayt_aura/features/search/logic/search_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
 import 'package:bayt_aura/features/property/presentation/views/my_properties.dart';
 import 'package:bayt_aura/features/provider/presentation/widgets/provider_navbar.dart';
 import 'package:bayt_aura/features/provider/presentation/views/add_property_view.dart';
-
-// import 'package:bayt_aura/features/provider/presentation/views/provider_properties_view.dart';
 
 class ProviderDashboard extends StatefulWidget {
   const ProviderDashboard({super.key});
@@ -24,14 +21,13 @@ class _ProviderDashboardState extends State<ProviderDashboard> {
     MyPropertiesView(),
     AddPostView(),
 
-    ProfileView(), 
+    ProfileView(),
   ];
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => getIt<SearchCubit>()),
         BlocProvider(
           create: (_) => getIt<PropertyCubit>()..fetchMyProperties(),
         ),

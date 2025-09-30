@@ -12,7 +12,6 @@ class BaytAura extends StatelessWidget {
       minTextAdapt: true,
       designSize: const Size(375, 812),
       child: MaterialApp(
-
         debugShowCheckedModeBanner: false,
         initialRoute: Routes.homeScreen,
         onGenerateRoute: AppRouter.generateRoute,

@@ -19,7 +19,7 @@ class _CustomerRequestsViewState extends State<CustomerRequestsView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<String> tabs = ["ALL", "PENDING", "ACCEPTED", "REJECTED"];
+  final List<String> tabs = ["All", "Pending", "Accepted", "Rejected"];
 
   @override
   void initState() {
@@ -39,15 +39,18 @@ class _CustomerRequestsViewState extends State<CustomerRequestsView>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Customer Requests", style: TextStyles.font17BlueBold),
+          backgroundColor: AppColors.blue,
+
+        title: Text("Customer Requests", style: TextStyles.font24WhiteBold),
         centerTitle: true,
         elevation: 2,
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: AppColors.blue,
-          labelColor: AppColors.blue,
+          labelStyle: TextStyles.font16WhiteBold,
+          indicatorColor: AppColors.beige,
+          labelColor: AppColors.beige,
           unselectedLabelColor: Colors.grey,
-          labelStyle: TextStyles.font14BlueBold, // أصغر شوية
+
           tabs: tabs
               .map(
                 (t) => Tab(
@@ -73,7 +76,7 @@ class _CustomerRequestsViewState extends State<CustomerRequestsView>
         },
         builder: (context, state) {
           if (state is AdminLoading) {
-            return const Center(child:  AppCircularIndicator());
+            return const Center(child: AppCircularIndicator());
           }
           if (state is CustomerRequestsLoaded) {
             final allRequests = state.requests;

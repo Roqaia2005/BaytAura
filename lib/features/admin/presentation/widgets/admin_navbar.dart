@@ -14,37 +14,55 @@ class AdminNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      labelPadding: EdgeInsets.only(left: 2),
-
-      labelTextStyle: WidgetStateProperty.all(
-        TextStyles.font14DarkBeigeBold.copyWith(),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            spreadRadius: 1,
+            blurRadius: 12,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
-      selectedIndex: currentPageIndex,
-      backgroundColor: Colors.white,
-      indicatorShape: CircleBorder(),
-      indicatorColor: AppColors.beige,
-      onDestinationSelected: onDestinationSelected,
-      destinations: [
-        NavigationDestination(
-          icon: Icon(Icons.home, color: AppColors.blue),
+      child: NavigationBar(
+        height: 70,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        indicatorColor: AppColors.beige.withOpacity(0.3),
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        labelTextStyle: WidgetStateProperty.all(
+          TextStyles.font14DarkBeigeBold,
+        ),
+        selectedIndex: currentPageIndex,
+        onDestinationSelected: onDestinationSelected,
+        destinations: [
+          _buildDestination(Icons.home, "Properties", 0),
+          _buildDestination(Icons.how_to_reg, "Provider Requests", 1),
+          _buildDestination(Icons.add_home, "Customer Requests", 2),
+          _buildDestination(Icons.person_outline, "Profile", 3),
+        ],
+      ),
+    );
+  }
 
-          label: "Properties",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.how_to_reg, color: AppColors.blue),
-          label: "Provider Requests",
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.add_home, color: AppColors.blue),
-          label: "Customer Requests",
-        ),
-
-        NavigationDestination(
-          icon: Icon(Icons.person_outline, color: AppColors.blue),
-          label: "Profile",
-        ),
-      ],
+  NavigationDestination _buildDestination(IconData icon, String label, int index) {
+    final bool isSelected = currentPageIndex == index;
+    return NavigationDestination(
+      icon: Icon(
+        icon,
+        size: isSelected ? 28 : 24,
+        color: isSelected ? AppColors.blue : Colors.grey,
+      ),
+      label: label,
     );
   }
 }

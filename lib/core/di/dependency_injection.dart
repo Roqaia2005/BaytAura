@@ -6,13 +6,11 @@ import 'package:bayt_aura/core/networking/chat_service.dart';
 import 'package:bayt_aura/features/chat/logic/chat_cubit.dart';
 import 'package:bayt_aura/features/admin/data/admin_repo.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
-import 'package:bayt_aura/features/search/logic/search_cubit.dart';
 import 'package:bayt_aura/features/property/logic/media_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/login_repo.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/signup_repo.dart';
 import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
-import 'package:bayt_aura/features/search/data/repos/search_repo.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
 import 'package:bayt_aura/features/profile/data/repo/profile_repo.dart';
@@ -47,12 +45,6 @@ Future<void> setUpGetIt() async {
   // admin
   getIt.registerLazySingleton<AdminRepository>(() => AdminRepository(getIt()));
   getIt.registerFactory<AdminCubit>(() => AdminCubit(getIt()));
-
-  // search
-  getIt.registerLazySingleton<SearchRepo>(
-    () => SearchRepo(apiService: getIt<ApiService>()),
-  );
-  getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt()));
 
   getIt.registerLazySingleton<MediaRepository>(
     () => MediaRepository(getIt<ApiService>()),

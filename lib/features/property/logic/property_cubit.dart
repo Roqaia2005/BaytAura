@@ -20,49 +20,64 @@ class PropertyCubit extends Cubit<PropertyState> {
   // ------------------------------
   // Fetch all properties
   // ------------------------------
-  Future<void> fetchProperties() async {
-    emit(const PropertyState.loading());
-    try {
-      final fetchedProperties = await propertyRepository.fetchProperties();
-      _allProperties
-        ..clear()
-        ..addAll(fetchedProperties);
 
-      emit(
-        PropertyLoaded(
-          properties: List.from(_allProperties),
-          favorites: List.from(_favorites),
-        ),
-      );
-    } catch (error) {
-      emit(PropertyError(message: error.toString()));
-    }
-  }
 
-  // ------------------------------
-  // Fetch properties with favorites
-  // ------------------------------
-  Future<void> fetchPropertiesWithFavorites() async {
-    emit(const PropertyState.loading());
-    try {
-      final fetchedProperties = await propertyRepository.fetchProperties();
-      _allProperties
-        ..clear()
-        ..addAll(fetchedProperties);
+Future<void> loadProperties({
+  bool withFavorites = false,
+  String? query,
+  String? type,
+  int? minPrice,
+  int? maxPrice,
+  int? minArea,
+  int? maxArea,
+  String? owner,
+  String? purpose,
+}) async {
+  emit(const PropertyState.loading());
 
+  try {
+    // Fetch properties with filters
+    final fetchedProperties = await propertyRepository.getProperties(
+      query: query,
+      type: type,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      minArea: minArea,
+      maxArea: maxArea,
+      owner: owner,
+      purpose: purpose,
+    );
+
+    _allProperties
+      ..clear()
+      ..addAll(fetchedProperties);
+
+    // Initialize favorites list
+    _favorites.clear();
+
+    if (withFavorites) {
+      // Fetch favorites
       final fetchedFavorites = await propertyRepository.fetchFavorites();
-      _updateFavorites(fetchedFavorites);
+      _favorites.addAll(fetchedFavorites);
 
-      emit(
-        PropertyLoaded(
-          properties: List.from(_allProperties),
-          favorites: List.from(_favorites),
-        ),
-      );
-    } catch (error) {
-      emit(PropertyError(message: error.toString()));
+      // Mark properties as favorite without overwriting other fields
+      for (var property in _allProperties) {
+        final isFav = _favorites.any((f) => f.property.id == property.id);
+        property.isFavorite = isFav; // Add this field in your Property model if not exists
+      }
     }
+
+    emit(
+      PropertyLoaded(
+        properties: List.from(_allProperties),
+        favorites: List.from(_favorites),
+      ),
+    );
+  } catch (error) {
+    emit(PropertyError(message: error.toString()));
   }
+}
+
 
   // ------------------------------
   // Fetch my properties (customer/provider)

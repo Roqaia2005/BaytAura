@@ -5,9 +5,8 @@ import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/info_widget.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/signout_button.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/profile_app_bar.dart';
-import 'package:bayt_aura/features/profile/presentation/widgets/support_container.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/account_container.dart';
-import 'package:bayt_aura/features/profile/presentation/widgets/quick_actions_container.dart';
+// import 'package:bayt_aura/features/profile/presentation/widgets/support_container.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -15,8 +14,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-        getIt<ProfileCubit>()..loadProfile(),
+      create: (context) => getIt<ProfileCubit>()..loadProfile(),
 
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -24,9 +22,9 @@ class ProfileView extends StatelessWidget {
           child: Column(
             children: const [
               ProfileAppBar(),
-              QuickActionsContainer(),
+
               AccountContainer(),
-              SupportContainer(),
+              // SupportContainer(),
               InfoWidget(),
               SignoutButton(),
             ],

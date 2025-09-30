@@ -41,7 +41,6 @@ class PropertyCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // صورة العقار مع Gradient Overlay
             Stack(
               children: [
                 ClipRRect(
@@ -74,7 +73,6 @@ class PropertyCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // نوع العقار
                 Positioned(
                   bottom: 12.h,
                   left: 16.w,
@@ -95,7 +93,7 @@ class PropertyCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // زرار المفضلة
+
                 Positioned(
                   top: 12.h,
                   right: 14.w,
@@ -157,7 +155,6 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(14),
 
-            // عنوان العقار و السعر
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -187,7 +184,6 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(8),
 
-            // العنوان
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -210,7 +206,6 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(10),
 
-            // المساحة
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -231,7 +226,6 @@ class PropertyCard extends StatelessWidget {
 
             verticalSpace(10),
 
-            // الوصف
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
@@ -248,7 +242,6 @@ class PropertyCard extends StatelessWidget {
             verticalSpace(14),
             Divider(color: Colors.grey.shade300, height: 1),
 
-            // زرار عرض التفاصيل
             Padding(
               padding: EdgeInsets.all(14.w),
               child: SizedBox(

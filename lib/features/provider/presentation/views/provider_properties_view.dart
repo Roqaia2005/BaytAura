@@ -6,7 +6,7 @@ import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
-import 'package:bayt_aura/features/property/presentation/widgets/property_card.dart';
+import 'package:bayt_aura/features/customer/presentation/widgets/property_card.dart';
 
 class PostsView extends StatelessWidget {
   const PostsView({super.key});

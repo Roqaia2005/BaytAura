@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
-import 'package:bayt_aura/features/search/logic/search_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/admin/presentation/widgets/admin_navbar.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/admin_properties_view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/provider_requests.view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/customer_requests_view.dart';
+
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -31,11 +31,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => getIt<SearchCubit>()),
-        BlocProvider(create: (_) => getIt<PropertyCubit>()..fetchProperties()),
-      ],
+    return BlocProvider(
+      create: (_) => getIt<PropertyCubit>(),
+
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           shape: const CircleBorder(),

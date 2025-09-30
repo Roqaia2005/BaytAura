@@ -7,8 +7,7 @@ import 'package:bayt_aura/features/chat/model/chat_response.dart';
 
 part 'chat_service.g.dart';
 
-@RestApi(baseUrl: ApiConstants.chatbaseUrl)
-@RestApi(baseUrl: ApiConstants.chatbaseUrl)
+@RestApi(baseUrl: ApiConstants.chatBaseUrl)
 abstract class ChatService {
   factory ChatService(Dio dio, {String baseUrl}) = _ChatService;
 

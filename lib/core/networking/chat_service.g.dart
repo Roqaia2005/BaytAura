@@ -12,7 +12,7 @@ part of 'chat_service.dart';
 
 class _ChatService implements ChatService {
   _ChatService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://127.0.0.1:8000/api/';
+    baseUrl ??= 'http://192.168.1.8:8000/api/';
   }
 
   final Dio _dio;

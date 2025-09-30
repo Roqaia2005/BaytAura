@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomerNavBar extends StatelessWidget {
   final int currentPageIndex;
@@ -14,48 +16,66 @@ class CustomerNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      labelPadding: EdgeInsets.only(left: 2),
-
-      labelTextStyle: WidgetStateProperty.all(
-        TextStyles.font14DarkBeigeBold.copyWith(),
-      ),
-      selectedIndex: currentPageIndex,
-      backgroundColor: Colors.white,
-      indicatorShape: CircleBorder(),
-      indicatorColor: AppColors.beige,
-      onDestinationSelected: onDestinationSelected,
-      destinations: [
-        NavigationDestination(
-          icon: Icon(Icons.home, color: AppColors.blue),
-
-          label: "Properties",
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
-        NavigationDestination(
-          icon: Icon(Icons.receipt_long, color: AppColors.blue),
-
-          label: "My Requests",
-        ),
-        NavigationDestination(
-          icon: CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.blue,
-            child: Icon(Icons.add, color: Colors.white),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            spreadRadius: 1,
+            blurRadius: 12,
+            offset: const Offset(0, -2),
           ),
-          label: "Add Property",
+        ],
+      ),
+      child: NavigationBar(
+        height: 70.h,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        indicatorColor: AppColors.beige.withOpacity(0.3),
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
+        labelTextStyle: WidgetStateProperty.all(TextStyles.font14DarkBeigeBold),
+        selectedIndex: currentPageIndex,
+        onDestinationSelected: onDestinationSelected,
+        destinations: [
+          _buildDestination(Icons.home, "Properties", 0),
+          _buildDestination(Icons.receipt_long, "My Requests", 1),
+          _buildDestination(Icons.home_work, "My Properties", 2),
+          NavigationDestination(
+            icon: CircleAvatar(
+              radius: 25,
+              backgroundColor: AppColors.blue,
+              child: const Icon(Icons.add, color: Colors.white, size: 28),
+            ),
+            label: "Add",
+          ),
+          _buildDestination(FontAwesomeIcons.heart, "Favorites", 4),
+          _buildDestination(Icons.person_outline, "Profile", 5),
+        ],
+      ),
+    );
+  }
 
-        NavigationDestination(
-          icon: Icon(Icons.home_work, color: AppColors.blue),
-
-          label: "My Properties",
-        ),
-
-        NavigationDestination(
-          icon: Icon(Icons.person_outline, color: AppColors.blue),
-          label: "Profile",
-        ),
-      ],
+  NavigationDestination _buildDestination(
+    IconData icon,
+    String label,
+    int index,
+  ) {
+    final bool isSelected = currentPageIndex == index;
+    return NavigationDestination(
+      icon: Icon(
+        icon,
+        size: isSelected ? 28 : 24,
+        color: isSelected ? AppColors.blue : Colors.grey,
+      ),
+      label: label,
     );
   }
 }
