@@ -1,57 +1,26 @@
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/features/customer/logic/customer_state.dart';
-import 'package:bayt_aura/features/property/data/repos/media_repo.dart';
 import 'package:bayt_aura/features/customer/data/repo/customer_repo.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 
 class CustomerRequestCubit extends Cubit<CustomerRequestState> {
   final CustomerRepo _customerRepo;
-  final MediaRepository _mediaRepo;
 
-  CustomerRequestCubit(this._customerRepo, this._mediaRepo)
-    : super(CustomerRequestInitial());
+  CustomerRequestCubit(this._customerRepo) : super(CustomerRequestInitial());
 
   /// Create a new request
-  Future<int?> createRequest(
-    CustomerRequest request, {
-    List<String>? imagePaths,
-  }) async {
+  Future<int?> createRequest(CustomerRequest request) async {
     emit(CustomerRequestLoading());
     try {
       final createdRequest = await _customerRepo.createRequest(request);
 
-      if (createdRequest.id == null) {
-        emit(CustomerRequestError("Failed to create request: missing ID"));
-        return null;
-      }
+      // Emit the added request state once
+      emit(CustomerRequestAdded(request: createdRequest));
 
-      final requestId = createdRequest.id!;
-      List<String> uploadErrors = [];
+      // Refresh my requests to update the UI
+      await getMyRequests();
 
-      if (imagePaths != null && imagePaths.isNotEmpty) {
-        for (final path in imagePaths) {
-          final file = File(path);
-          if (!file.existsSync()) continue;
-          try {
-            await _mediaRepo.uploadMedia(requestId, file);
-          } catch (e) {
-            uploadErrors.add(file.path);
-          }
-        }
-      }
-
-      if (uploadErrors.isNotEmpty) {
-        emit(
-          CustomerRequestSuccess(
-            "Request created, but some images failed: ${uploadErrors.length}",
-          ),
-        );
-      } else {
-        emit(CustomerRequestSuccess("Request created successfully"));
-      }
-
-      return requestId;
+      return createdRequest.id;
     } catch (e) {
       emit(CustomerRequestError(e.toString()));
       return null;
@@ -59,10 +28,31 @@ class CustomerRequestCubit extends Cubit<CustomerRequestState> {
   }
 
   /// Get current user's requests
+  /// Get current user's requests
+  List<CustomerRequest> _previousRequests = [];
+
   Future<void> getMyRequests() async {
     emit(CustomerRequestLoading());
     try {
       final requests = await _customerRepo.getMyRequests();
+
+      // Compare old vs new for status changes
+      for (var newReq in requests) {
+        final oldReq = _previousRequests.firstWhere(
+          (r) => r.id == newReq.id,
+          orElse: () => newReq,
+        );
+
+        if (oldReq.status != newReq.status) {
+          emit(
+            RequestStatusChanged(
+              "Your request '${newReq.title}' status changed to ${newReq.status}",
+            ),
+          );
+        }
+      }
+
+      _previousRequests = requests;
       emit(CustomerRequestsLoaded(requests));
     } catch (e) {
       emit(CustomerRequestError(e.toString()));

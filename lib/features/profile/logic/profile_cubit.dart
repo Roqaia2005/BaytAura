@@ -19,16 +19,24 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> updateProfile(Profile profile) async {
-    emit(const ProfileState.loading());
-    try {
-      await repository.updateProfile(profile);
-      final refreshed = await repository.getProfile();
-      emit(ProfileState.loaded(refreshed));
-    } catch (e) {
-      emit(ProfileState.error(e.toString()));
-    }
+Future<void> updateProfile(Profile profile) async {
+  emit(const ProfileState.loading());
+  try {
+    await repository.updateProfile(profile);
+
+    // fetch updated profile immediately
+    final refreshed = await repository.getProfile();
+
+    // emit loaded with new data
+    emit(ProfileState.loaded(refreshed));
+
+    // then emit success to trigger snackbar / navigation
+    emit(ProfileState.updateSuccess(refreshed));
+  } catch (e) {
+    emit(ProfileState.error(e.toString()));
   }
+}
+
 
   Future<void> deleteProfile() async {
     emit(const ProfileState.loading());

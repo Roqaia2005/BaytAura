@@ -59,12 +59,10 @@ class _AddPropertyViewState extends State<AddPropertyView> {
       address: _addressController.text.trim(),
       latitude: double.tryParse(_latitudeController.text.trim()) ?? 0,
       longitude: double.tryParse(_longitudeController.text.trim()) ?? 0,
+      files: selectedImages,
     );
 
-    await context.read<CustomerRequestCubit>().createRequest(
-      newRequest,
-      imagePaths: selectedImages.map((f) => f.path).toList(),
-    );
+    await context.read<CustomerRequestCubit>().createRequest(newRequest);
   }
 
   @override
@@ -120,7 +118,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
             if (state is CustomerRequestLoading)
               Container(
                 color: Colors.black38,
-                child: const Center(child:  AppCircularIndicator()),
+                child: const Center(child: AppCircularIndicator()),
               ),
           ],
         );

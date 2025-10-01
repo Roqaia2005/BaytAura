@@ -59,6 +59,7 @@ class _AddPostViewState extends State<AddPostView> {
       purpose: _selectedPurpose!,
       latitude: double.tryParse(_latitudeController.text.trim()) ?? 0,
       longitude: double.tryParse(_longitudeController.text.trim()) ?? 0,
+      files: selectedImages,
     );
 
     context.read<PropertyCubit>().addProperty(
@@ -120,7 +121,7 @@ class _AddPostViewState extends State<AddPostView> {
             if (state is PropertyLoading)
               Container(
                 color: Colors.black38,
-                child: const Center(child:  AppCircularIndicator()),
+                child: const Center(child: AppCircularIndicator()),
               ),
           ],
         );

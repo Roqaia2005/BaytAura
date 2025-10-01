@@ -133,7 +133,6 @@ abstract class ApiService {
     @Part(name: "address") String address,
     @Part(name: "latitude") double latitude,
     @Part(name: "longitude") double longitude,
-    @Part(name: "customerName") String? customerName,
     @Part(name: "files") List<MultipartFile>? files,
   );
 
@@ -150,7 +149,7 @@ abstract class ApiService {
   @GET(ApiConstants.getProfile)
   Future<Profile> getProfile();
   @PUT(ApiConstants.updateProfile)
-  Future<void> updateProfile(Profile profile);
+  Future<Profile> updateProfile(@Body() Map<String, dynamic> body);
 
   @DELETE(ApiConstants.deleteProfile)
   Future<void> deleteProfile();

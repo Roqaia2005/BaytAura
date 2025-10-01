@@ -9,11 +9,22 @@ class ProfileRepository {
   ProfileRepository(this._api);
 
   Future<Profile> getProfile() => _api.getProfile();
-  Future<void> updateProfile(Profile profile) => _api.updateProfile(profile);
+  Future<Profile> updateProfile(Profile profile) {
+    final body = {
+      'username': profile.username,
+      'firstName': profile.firstName,
+      'lastName': profile.lastName,
+      'phone': profile.phone,
+      if (profile.companyName != null) 'companyName': profile.companyName!,
+      if (profile.companyAddress != null)
+        'companyAddress': profile.companyAddress!,
+    };
+
+    return _api.updateProfile(body);
+  }
+
   Future<void> deleteProfile() async {
-    await _api.deleteProfile().catchError((e) {
-      print("Delete failed: $e");
-    });
+    await _api.deleteProfile().catchError((e) {});
   }
 
   Future<void> uploadProfilePicture(File file) async {

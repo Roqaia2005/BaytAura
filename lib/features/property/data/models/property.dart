@@ -72,6 +72,7 @@ class Property {
     data['area'] = area;
     data['address'] = address;
     data['latitude'] = latitude;
+
     data['longitude'] = longitude;
     if (images != null) {
       data['media'] = images!.map((e) => e.url ?? "").toList();

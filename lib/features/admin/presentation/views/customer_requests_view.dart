@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
@@ -15,183 +16,215 @@ class CustomerRequestsView extends StatefulWidget {
   State<CustomerRequestsView> createState() => _CustomerRequestsViewState();
 }
 
-class _CustomerRequestsViewState extends State<CustomerRequestsView>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  final List<String> tabs = ["All", "Pending", "Accepted", "Rejected"];
-
+class _CustomerRequestsViewState extends State<CustomerRequestsView> {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
     context.read<AdminCubit>().getCustomerRequests();
   }
 
   @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        backgroundColor: AppColors.whiteColor,
+        appBar: AppBar(
           backgroundColor: AppColors.blue,
-
-        title: Text("Customer Requests", style: TextStyles.font24WhiteBold),
-        centerTitle: true,
-        elevation: 2,
-        bottom: TabBar(
-          controller: _tabController,
-          labelStyle: TextStyles.font16WhiteBold,
-          indicatorColor: AppColors.beige,
-          labelColor: AppColors.beige,
-          unselectedLabelColor: Colors.grey,
-
-          tabs: tabs
-              .map(
-                (t) => Tab(
-                  child: Text(t, maxLines: 1, overflow: TextOverflow.ellipsis),
-                ),
-              )
-              .toList(),
+          elevation: 0,
+          centerTitle: true,
+          title: Text("Customer Requests", style: TextStyles.font24WhiteBold),
+          bottom: TabBar(
+            labelStyle: TextStyles.font16WhiteBold,
+            indicatorColor: AppColors.beige,
+            labelColor: AppColors.beige,
+            unselectedLabelColor: Colors.grey,
+            tabs: const [
+              Tab(text: "All"),
+              Tab(text: "Pending"),
+              Tab(text: "Accepted"),
+              Tab(text: "Rejected"),
+            ],
+          ),
         ),
-      ),
-      body: BlocConsumer<AdminCubit, AdminState>(
-        listener: (context, state) {
-          if (state is RequestStatusChanged) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-            context.read<AdminCubit>().getCustomerRequests();
-          }
-          if (state is AdminError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Error: ${state.message}")));
-          }
-        },
-        builder: (context, state) {
-          if (state is AdminLoading) {
-            return const Center(child: AppCircularIndicator());
-          }
-          if (state is CustomerRequestsLoaded) {
-            final allRequests = state.requests;
+        body: BlocConsumer<AdminCubit, AdminState>(
+          listener: (context, state) {
+            if (state is RequestStatusChanged) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              context.read<AdminCubit>().getCustomerRequests();
+            }
+            if (state is AdminError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Error: ${state.message}"),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is AdminLoading) {
+              return const Center(child: AppCircularIndicator());
+            }
 
-            return TabBarView(
-              controller: _tabController,
-              children: tabs.map((status) {
-                var filtered = allRequests;
-                if (status != "ALL") {
-                  filtered = allRequests
-                      .where((req) => req.status == status)
-                      .toList();
-                }
+            if (state is CustomerRequestsLoaded) {
+              final requests = state.requests;
 
-                if (filtered.isEmpty) {
-                  return const Center(child: Text("No requests found"));
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) {
-                    final req = filtered[index];
-                    return Card(
-                      elevation: 3,
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () {
-                          context.pushNamed(
-                            Routes.customerRequestDetails,
-                            arguments: req,
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.home,
-                                color: AppColors.blue,
-                                size: 32,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      req.title,
-                                      style: TextStyles.font14BlueBold,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "${req.type} - ${req.purpose} - ${req.status}",
-                                      style: TextStyles.font12DarkBeigeRegular,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "Customer: ${req.customerName}",
-                                      style: TextStyles.font12DarkBeigeRegular,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              _buildActions(context, req.id, req.status),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+              if (requests.isEmpty) {
+                return Center(
+                  child: Text(
+                    "No customer requests found",
+                    style: TextStyles.font16DarkBeigeRegular,
+                  ),
                 );
-              }).toList(),
-            );
-          }
-          return const Center(child: Text("Loading requests..."));
-        },
+              }
+
+              return TabBarView(
+                children: [
+                  _buildList(requests), // All
+                  _buildList(
+                    requests.where((r) => r.status == "PENDING").toList(),
+                  ),
+                  _buildList(
+                    requests.where((r) => r.status == "ACCEPTED").toList(),
+                  ),
+                  _buildList(
+                    requests.where((r) => r.status == "REJECTED").toList(),
+                  ),
+                ],
+              );
+            }
+
+            return const Center(child: AppCircularIndicator());
+          },
+        ),
       ),
     );
   }
 
-  /// Actions for pending requests
-  Widget _buildActions(BuildContext context, int? id, String? status) {
-    if (status == "PENDING") {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            tooltip: "Accept",
-            icon: const Icon(Icons.check_circle, color: Colors.green),
-            onPressed: () {
-              context.read<AdminCubit>().changeRequestStatus(
-                id ?? 0,
-                "ACCEPTED",
-              );
-            },
-          ),
-          IconButton(
-            tooltip: "Reject",
-            icon: const Icon(Icons.cancel, color: Colors.red),
-            onPressed: () {
-              context.read<AdminCubit>().changeRequestStatus(
-                id ?? 0,
-                "REJECTED",
-              );
-            },
-          ),
-        ],
+  Widget _buildList(List requests) {
+    if (requests.isEmpty) {
+      return Center(
+        child: Text("No requests", style: TextStyles.font16DarkBeigeRegular),
       );
     }
-    return const SizedBox();
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(12),
+      itemCount: requests.length,
+      itemBuilder: (context, index) {
+        final req = requests[index];
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            context.pushNamed(Routes.customerRequestDetails, arguments: req);
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            elevation: 3,
+            color: Colors.white,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, top: 16),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.home, color: AppColors.blue, size: 36),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                req.title ?? "",
+                                style: TextStyles.font16BlueBold,
+                              ),
+                              verticalSpace(6),
+                              Text(
+                                "${req.type} - ${req.purpose}",
+                                style: TextStyles.font14DarkBeigeBold,
+                              ),
+                              verticalSpace(6),
+                              Text(
+                                "Customer: ${req.customerName ?? ""}",
+                                style: TextStyles.font14DarkBeigeBold,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  verticalSpace(12),
+
+                  req.status == "PENDING"
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _actionButton(
+                              text: "Accept",
+                              color: Colors.green,
+                              onPressed: () {
+                                context.read<AdminCubit>().changeRequestStatus(
+                                  req.id!,
+                                  "ACCEPTED",
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            _actionButton(
+                              text: "Reject",
+                              color: Colors.red,
+                              onPressed: () {
+                                context.read<AdminCubit>().changeRequestStatus(
+                                  req.id!,
+                                  "REJECTED",
+                                );
+                              },
+                            ),
+                          ],
+                        )
+                      : Text(
+                          req.status == "ACCEPTED"
+                              ? "Accepted ✅"
+                              : "Rejected ❌",
+                          style: TextStyles.font14BlueBold,
+                        ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _actionButton({
+    required String text,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        minimumSize: const Size(90, 40),
+        elevation: 2,
+      ),
+      onPressed: onPressed,
+      child: Text(text, style: TextStyles.font14WhiteBold),
+    );
   }
 }

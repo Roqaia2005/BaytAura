@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/profile/data/models/profile.dart';
@@ -20,6 +21,15 @@ class _EditProfileViewState extends State<EditProfileView> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _companyNameController = TextEditingController();
+  final _companyAddressController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // استدعاء API عند فتح الشاشة
+    context.read<ProfileCubit>().loadProfile();
+  }
 
   @override
   void dispose() {
@@ -27,28 +37,42 @@ class _EditProfileViewState extends State<EditProfileView> {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _phoneController.dispose();
+    _companyNameController.dispose();
+    _companyAddressController.dispose();
     super.dispose();
+  }
+
+  void _fillControllers(Profile profile) {
+    _usernameController.text = profile.username;
+    _firstNameController.text = profile.firstName;
+    _lastNameController.text = profile.lastName;
+    _phoneController.text = profile.phone;
+    _companyNameController.text = profile.companyName ?? '';
+    _companyAddressController.text = profile.companyAddress ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         title: Text("Edit Profile", style: TextStyles.font16WhiteBold),
         centerTitle: true,
         backgroundColor: AppColors.blue,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           state.maybeWhen(
-            loaded: (_) {
+            loaded: (profile) {
+              _fillControllers(profile);
+            },
+            updateSuccess: (profile) {
+              _fillControllers(profile);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Profile updated successfully")),
               );
-              Navigator.pop(context);
+              context.pop();
             },
             error: (message) {
               ScaffoldMessenger.of(
@@ -60,81 +84,105 @@ class _EditProfileViewState extends State<EditProfileView> {
         },
         builder: (context, state) {
           return state.maybeWhen(
-            loaded: (profile) {
-              // prefill controllers when profile is loaded
-              _usernameController.text = profile.username;
-              _firstNameController.text = profile.firstName;
-              _lastNameController.text = profile.lastName;
-              _phoneController.text = profile.phone;
-
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      const SizedBox(height: 20),
-                      _buildTextField(
-                        controller: _usernameController,
-                        label: "Username",
-                        icon: Icons.person,
-                      ),
-                      _buildTextField(
-                        controller: _firstNameController,
-                        label: "First Name",
-                        icon: Icons.badge,
-                      ),
-                      _buildTextField(
-                        controller: _lastNameController,
-                        label: "Last Name",
-                        icon: Icons.badge_outlined,
-                      ),
-                      _buildTextField(
-                        controller: _phoneController,
-                        label: "Phone",
-                        icon: Icons.phone,
-                        keyboard: TextInputType.phone,
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          backgroundColor: AppColors.blue,
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            final updated = Profile(
-                              username: _usernameController.text,
-                              firstName: _firstNameController.text,
-                              lastName: _lastNameController.text,
-                              phone: _phoneController.text,
-                              email: profile.email, // keep old email
-                              role: profile.role, // keep old role
-                              profilePictureUrl: profile.profilePictureUrl,
-                            );
-                            context.read<ProfileCubit>().updateProfile(updated);
-                          }
-                        },
-                        child: state.maybeWhen(
-                          loading: () =>  AppCircularIndicator(),
-                          orElse: () => const Text(
-                            "Save Changes",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            orElse: () => const Center(child: Text("Something went wrong")),
+            loading: () => const Center(child: AppCircularIndicator()),
+            loaded: (profile) => _buildForm(profile, state),
+            updateSuccess: (profile) => _buildForm(profile, state),
+            error: (message) => Center(child: Text(message)),
+            orElse: () => const SizedBox(),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildForm(Profile profile, ProfileState state) {
+    List<Widget> fields = [
+      _buildTextField(
+        controller: _usernameController,
+        label: "Username",
+        icon: Icons.person,
+      ),
+      _buildTextField(
+        controller: _firstNameController,
+        label: "First Name",
+        icon: Icons.badge,
+      ),
+      _buildTextField(
+        controller: _lastNameController,
+        label: "Last Name",
+        icon: Icons.badge_outlined,
+      ),
+      _buildTextField(
+        controller: _phoneController,
+        label: "Phone",
+        icon: Icons.phone,
+        keyboard: TextInputType.phone,
+      ),
+    ];
+
+    if (profile.role.toLowerCase() == 'provider') {
+      fields.addAll([
+        _buildTextField(
+          controller: _companyNameController,
+          label: "Company Name",
+          icon: Icons.business,
+        ),
+        _buildTextField(
+          controller: _companyAddressController,
+          label: "Company Address",
+          icon: Icons.location_on,
+        ),
+      ]);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          children: [
+            const SizedBox(height: 20),
+            ...fields,
+            const SizedBox(height: 24),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                backgroundColor: AppColors.blue,
+              ),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  final updatedProfile = Profile(
+                    username: _usernameController.text,
+                    firstName: _firstNameController.text,
+                    lastName: _lastNameController.text,
+                    phone: _phoneController.text,
+                    email: profile.email,
+                    role: profile.role,
+                    profilePictureUrl: profile.profilePictureUrl,
+                    companyName: profile.role.toLowerCase() == 'provider'
+                        ? _companyNameController.text
+                        : null,
+                    companyAddress: profile.role.toLowerCase() == 'provider'
+                        ? _companyAddressController.text
+                        : null,
+                  );
+
+                  context.read<ProfileCubit>().updateProfile(updatedProfile);
+                }
+              },
+              child: state.maybeWhen(
+                loading: () => const AppCircularIndicator(),
+                orElse: () => const Text(
+                  "Save Changes",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

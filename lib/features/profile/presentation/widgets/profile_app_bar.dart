@@ -47,8 +47,10 @@ class ProfileAppBar extends StatelessWidget {
                               backgroundColor: AppColors.beige,
                               backgroundImage: profile.profilePictureUrl != null
                                   ? NetworkImage(profile.profilePictureUrl!)
-                                  : const AssetImage("assets/images/profile.jpg")
-                                      as ImageProvider,
+                                  : const AssetImage(
+                                          "assets/images/profile.jpg",
+                                        )
+                                        as ImageProvider,
                             ),
 
                             // Edit icon overlay
@@ -60,32 +62,48 @@ class ProfileAppBar extends StatelessWidget {
                                   showModalBottomSheet(
                                     context: context,
                                     shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(16),
+                                      ),
                                     ),
                                     builder: (_) => SafeArea(
                                       child: Wrap(
                                         children: [
                                           ListTile(
-                                            leading: const Icon(Icons.photo_library),
-                                            title: const Text("Upload new photo"),
+                                            leading: const Icon(
+                                              Icons.photo_library,
+                                            ),
+                                            title: const Text(
+                                              "Upload new photo",
+                                            ),
                                             onTap: () async {
                                               Navigator.pop(context);
                                               final picker = ImagePicker();
-                                              final file = await picker.pickImage(
-                                                source: ImageSource.gallery,
-                                              );
+                                              final file = await picker
+                                                  .pickImage(
+                                                    source: ImageSource.gallery,
+                                                  );
                                               if (file != null) {
-                                                context.read<ProfileCubit>().uploadProfilePicture(File(file.path));
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .uploadProfilePicture(
+                                                      File(file.path),
+                                                    );
                                               }
                                             },
                                           ),
                                           if (profile.profilePictureUrl != null)
                                             ListTile(
-                                              leading: const Icon(Icons.delete, color: Colors.red),
+                                              leading: const Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
                                               title: const Text("Remove photo"),
                                               onTap: () {
                                                 Navigator.pop(context);
-                                                context.read<ProfileCubit>().deleteProfilePicture();
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .deleteProfilePicture();
                                               },
                                             ),
                                         ],
@@ -96,13 +114,20 @@ class ProfileAppBar extends StatelessWidget {
                                 child: CircleAvatar(
                                   radius: 20.r,
                                   backgroundColor: AppColors.blue,
-                                  child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ),
 
                             // Loading overlay
-                            if (state.maybeWhen(loading: () => true, orElse: () => false))
+                            if (state.maybeWhen(
+                              loading: () => true,
+                              orElse: () => false,
+                            ))
                               Container(
                                 width: 120.r,
                                 height: 120.r,
@@ -111,7 +136,9 @@ class ProfileAppBar extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Center(
-                                  child: CircularProgressIndicator(color: Colors.white),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                           ],
@@ -164,9 +191,9 @@ class ProfileAppBar extends StatelessWidget {
           // Error state
           error: (message) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed: $message')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Failed: $message')));
             });
             return const SizedBox.shrink();
           },

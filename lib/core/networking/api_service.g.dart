@@ -626,7 +626,6 @@ class _ApiService implements ApiService {
     String address,
     double latitude,
     double longitude,
-    String? customerName,
     List<MultipartFile>? files,
   ) async {
     final _extra = <String, dynamic>{};
@@ -643,9 +642,6 @@ class _ApiService implements ApiService {
     _data.fields.add(MapEntry('address', address));
     _data.fields.add(MapEntry('latitude', latitude.toString()));
     _data.fields.add(MapEntry('longitude', longitude.toString()));
-    if (customerName != null) {
-      _data.fields.add(MapEntry('customerName', customerName));
-    }
     if (files != null) {
       _data.files.addAll(files.map((i) => MapEntry('files', i)));
     }
@@ -780,12 +776,13 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> updateProfile(Profile profile) async {
+  Future<Profile> updateProfile(Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<Profile>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -795,7 +792,15 @@ class _ApiService implements ApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late Profile _value;
+    try {
+      _value = Profile.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override

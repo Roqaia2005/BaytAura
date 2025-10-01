@@ -37,13 +37,20 @@ class CustomerRequestDetailsView extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: 16 / 9,
                     child: PageView.builder(
-                      itemCount: customerRequest.images?.length ?? 1,
+                      itemCount: customerRequest.images?.isNotEmpty == true
+                          ? customerRequest.images!.length
+                          : 1,
                       itemBuilder: (context, index) {
                         final image =
                             (customerRequest.images != null &&
                                 customerRequest.images!.isNotEmpty)
                             ? customerRequest.images![index].url
-                            : "https://cf.bstatic.com/xdata/images/hotel/max1024x768/295090917.jpg?k=d17621b71b0eaa0c7a37d8d8d02d33896cef75145f61e7d96d296d88375a7d39&o=&hp=1";
+                            : null;
+                        debugPrint("Image URL: $image");
+
+                        final displayUrl = (image != null && image.isNotEmpty)
+                            ? image
+                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzeOx66im4ySs9Zl0a3spwB6yhDRvHrIc4OQ&s";
 
                         return ClipRRect(
                           borderRadius: BorderRadius.only(
@@ -51,9 +58,21 @@ class CustomerRequestDetailsView extends StatelessWidget {
                             bottomRight: Radius.circular(24.r),
                           ),
                           child: Image.network(
-                            image ?? "",
+                            displayUrl,
                             width: double.infinity,
                             fit: BoxFit.cover,
+                            loadingBuilder: (context, child, progress) {
+                              if (progress == null) return child;
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              debugPrint("Image failed to load: $displayUrl");
+                              return const Center(
+                                child: Icon(Icons.broken_image, size: 50),
+                              );
+                            },
                           ),
                         );
                       },

@@ -45,6 +45,8 @@ class CustomerRequest {
       "address": address,
       "latitude": latitude,
       "longitude": longitude,
+
+
     };
   }
 

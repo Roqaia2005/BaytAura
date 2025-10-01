@@ -56,7 +56,7 @@ Future<void> setUpGetIt() async {
   );
 
   getIt.registerFactory<CustomerRequestCubit>(
-    () => CustomerRequestCubit(getIt<CustomerRepo>(), getIt<MediaRepository>()),
+    () => CustomerRequestCubit(getIt<CustomerRepo>()),
   );
 
   // profile

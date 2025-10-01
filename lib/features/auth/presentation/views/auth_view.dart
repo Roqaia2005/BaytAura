@@ -19,7 +19,7 @@ class _AuthViewState extends State<AuthView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: ListView(
         children: [
           verticalSpace(40),
 

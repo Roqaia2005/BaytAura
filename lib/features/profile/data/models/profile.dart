@@ -6,6 +6,8 @@ class Profile {
   final String phone;
   final String? profilePictureUrl;
   final String role;
+  final String? companyName;
+  final String? companyAddress;
 
   Profile({
     required this.username,
@@ -14,6 +16,8 @@ class Profile {
     required this.lastName,
     required this.phone,
     this.profilePictureUrl,
+    this.companyName,
+    this.companyAddress,
     required this.role,
   });
 
@@ -26,6 +30,8 @@ class Profile {
       phone: json['phone'],
       profilePictureUrl: json['profilePictureUrl'],
       role: json['role'],
+      companyName: json['companyName'],
+      companyAddress: json['companyAddress'],
     );
   }
 
@@ -38,6 +44,8 @@ class Profile {
       "phone": phone,
       "profilePictureUrl": profilePictureUrl,
       "role": role,
+      "companyName": companyName,
+      "companyAddress": companyAddress,
     };
   }
 }

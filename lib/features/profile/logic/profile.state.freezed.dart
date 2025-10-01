@@ -55,7 +55,7 @@ extension ProfileStatePatterns on ProfileState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Error value)?  error,TResult Function( _Deleted value)?  deleted,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Error value)?  error,TResult Function( _Deleted value)?  deleted,TResult Function( _UpdateSuccess value)?  updateSuccess,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -63,7 +63,8 @@ return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _Loaded() when loaded != null:
 return loaded(_that);case _Error() when error != null:
 return error(_that);case _Deleted() when deleted != null:
-return deleted(_that);case _:
+return deleted(_that);case _UpdateSuccess() when updateSuccess != null:
+return updateSuccess(_that);case _:
   return orElse();
 
 }
@@ -81,7 +82,7 @@ return deleted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Error value)  error,required TResult Function( _Deleted value)  deleted,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Error value)  error,required TResult Function( _Deleted value)  deleted,required TResult Function( _UpdateSuccess value)  updateSuccess,}){
 final _that = this;
 switch (_that) {
 case _Initial():
@@ -89,7 +90,8 @@ return initial(_that);case _Loading():
 return loading(_that);case _Loaded():
 return loaded(_that);case _Error():
 return error(_that);case _Deleted():
-return deleted(_that);case _:
+return deleted(_that);case _UpdateSuccess():
+return updateSuccess(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -106,7 +108,7 @@ return deleted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Error value)?  error,TResult? Function( _Deleted value)?  deleted,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Error value)?  error,TResult? Function( _Deleted value)?  deleted,TResult? Function( _UpdateSuccess value)?  updateSuccess,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -114,7 +116,8 @@ return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _Loaded() when loaded != null:
 return loaded(_that);case _Error() when error != null:
 return error(_that);case _Deleted() when deleted != null:
-return deleted(_that);case _:
+return deleted(_that);case _UpdateSuccess() when updateSuccess != null:
+return updateSuccess(_that);case _:
   return null;
 
 }
@@ -131,14 +134,15 @@ return deleted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Profile profile)?  loaded,TResult Function( String message)?  error,TResult Function()?  deleted,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Profile profile)?  loaded,TResult Function( String message)?  error,TResult Function()?  deleted,TResult Function( Profile profile)?  updateSuccess,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
 return loaded(_that.profile);case _Error() when error != null:
 return error(_that.message);case _Deleted() when deleted != null:
-return deleted();case _:
+return deleted();case _UpdateSuccess() when updateSuccess != null:
+return updateSuccess(_that.profile);case _:
   return orElse();
 
 }
@@ -156,14 +160,15 @@ return deleted();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Profile profile)  loaded,required TResult Function( String message)  error,required TResult Function()  deleted,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Profile profile)  loaded,required TResult Function( String message)  error,required TResult Function()  deleted,required TResult Function( Profile profile)  updateSuccess,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _Loaded():
 return loaded(_that.profile);case _Error():
 return error(_that.message);case _Deleted():
-return deleted();case _:
+return deleted();case _UpdateSuccess():
+return updateSuccess(_that.profile);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -180,14 +185,15 @@ return deleted();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Profile profile)?  loaded,TResult? Function( String message)?  error,TResult? Function()?  deleted,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Profile profile)?  loaded,TResult? Function( String message)?  error,TResult? Function()?  deleted,TResult? Function( Profile profile)?  updateSuccess,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
 return loaded(_that.profile);case _Error() when error != null:
 return error(_that.message);case _Deleted() when deleted != null:
-return deleted();case _:
+return deleted();case _UpdateSuccess() when updateSuccess != null:
+return updateSuccess(_that.profile);case _:
   return null;
 
 }
@@ -422,5 +428,71 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _UpdateSuccess implements ProfileState {
+  const _UpdateSuccess(this.profile);
+  
+
+ final  Profile profile;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateSuccessCopyWith<_UpdateSuccess> get copyWith => __$UpdateSuccessCopyWithImpl<_UpdateSuccess>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateSuccess&&(identical(other.profile, profile) || other.profile == profile));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,profile);
+
+@override
+String toString() {
+  return 'ProfileState.updateSuccess(profile: $profile)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdateSuccessCopyWith<$Res> implements $ProfileStateCopyWith<$Res> {
+  factory _$UpdateSuccessCopyWith(_UpdateSuccess value, $Res Function(_UpdateSuccess) _then) = __$UpdateSuccessCopyWithImpl;
+@useResult
+$Res call({
+ Profile profile
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateSuccessCopyWithImpl<$Res>
+    implements _$UpdateSuccessCopyWith<$Res> {
+  __$UpdateSuccessCopyWithImpl(this._self, this._then);
+
+  final _UpdateSuccess _self;
+  final $Res Function(_UpdateSuccess) _then;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? profile = null,}) {
+  return _then(_UpdateSuccess(
+null == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
+as Profile,
+  ));
+}
+
+
+}
 
 // dart format on

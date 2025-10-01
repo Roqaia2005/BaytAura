@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
+import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
@@ -31,10 +33,10 @@ class _AdminPropertiesViewState extends State<AdminPropertiesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Admin Dashboard"),
-        backgroundColor: Colors.white,
-        elevation: 2,
-        foregroundColor: Colors.black87,
+          backgroundColor: AppColors.blue,
+          elevation: 0,
+          centerTitle: true,
+          title: Text("Admin Dashboard", style: TextStyles.font24WhiteBold),
       ),
       backgroundColor: Colors.grey.shade100,
       body: RefreshIndicator(

@@ -31,9 +31,11 @@ dependencies:
   build_runner: ^2.7.1
   cupertino_icons: ^1.0.8
   dio: ^5.9.0
+  firebase_messaging: ^16.0.2
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_local_notifications: ^19.4.2
   flutter_native_splash: ^2.4.6
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^9.2.4

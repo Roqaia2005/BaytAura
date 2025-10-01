@@ -7,15 +7,15 @@ class CustomerRepo {
 
   CustomerRepo({required this.apiService});
 
-  Future<CustomerRequest> createRequest(CustomerRequest request) {
+  Future<CustomerRequest> createRequest(CustomerRequest request) async {
     List<MultipartFile>? files;
-    if (request.files != null) {
+    if (request.files != null && request.files!.isNotEmpty) {
       files = request.files!
           .map((f) => MultipartFile.fromFileSync(f.path))
           .toList();
     }
 
-    return apiService.createRequest(
+    final createdRequest = await apiService.createRequest(
       request.title,
       request.type,
       request.purpose,
@@ -25,9 +25,10 @@ class CustomerRepo {
       request.address,
       request.latitude,
       request.longitude,
-      request.customerName,
       files,
     );
+
+    return createdRequest;
   }
 
   Future<List<CustomerRequest>> getMyRequests() {

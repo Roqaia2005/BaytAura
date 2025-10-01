@@ -46,22 +46,18 @@ class _AccountContainerState extends State<AccountContainer> {
                 color: AppColors.darkBeige,
               ),
               title: Text("Edit profile", style: TextStyles.font14BlueRegular),
-              trailing: IconButton(
-                onPressed: () {
-                  context.pushNamed(Routes.editProfile);
-                },
-                icon: Icon(
-                  size: 20,
-                  Icons.arrow_forward_ios,
-                  color: AppColors.darkBeige,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                FontAwesomeIcons.trash,
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 20,
                 color: AppColors.darkBeige,
               ),
+              onTap: () {
+                context.pushNamed(Routes.editProfile);
+              },
+            ),
+
+            ListTile(
+              leading: Icon(FontAwesomeIcons.trash, color: AppColors.darkBeige),
               title: Text(
                 "Delete profile",
                 style: TextStyles.font14BlueRegular,
@@ -107,11 +103,7 @@ class _AccountContainerState extends State<AccountContainer> {
                     },
                   );
                 },
-                icon: Icon(
-                  size: 20,
-                  Icons.delete,
-                  color: Colors.red,
-                ),
+                icon: Icon(size: 20, Icons.delete, color: Colors.red),
               ),
             ),
 
