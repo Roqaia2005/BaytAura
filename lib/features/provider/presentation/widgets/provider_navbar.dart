@@ -24,6 +24,7 @@ class ProviderNavBar extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.08),
             spreadRadius: 1,
             blurRadius: 12,
@@ -36,6 +37,7 @@ class ProviderNavBar extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        // ignore: deprecated_member_use
         indicatorColor: AppColors.beige.withOpacity(0.3),
         indicatorShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

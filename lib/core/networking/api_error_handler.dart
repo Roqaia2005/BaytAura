@@ -1,5 +1,9 @@
 import 'package:dio/dio.dart';
 import 'api_error_model.dart';
+// ignore_for_file: non_constant_identifier_names
+
+// ignore_for_file: constant_identifier_names
+
 
 
 

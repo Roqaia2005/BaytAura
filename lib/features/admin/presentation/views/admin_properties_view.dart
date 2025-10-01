@@ -5,7 +5,7 @@ import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/stat_card.dart';

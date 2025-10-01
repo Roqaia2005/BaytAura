@@ -6,8 +6,8 @@ import 'package:bayt_aura/core/di/dependency_injection.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
 import 'package:bayt_aura/features/property/presentation/views/my_properties.dart';
+import 'package:bayt_aura/features/provider/presentation/views/add_post_view.dart';
 import 'package:bayt_aura/features/provider/presentation/widgets/provider_navbar.dart';
-import 'package:bayt_aura/features/provider/presentation/views/add_property_view.dart';
 
 class ProviderDashboard extends StatefulWidget {
   const ProviderDashboard({super.key});

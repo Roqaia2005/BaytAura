@@ -45,7 +45,6 @@ class MyPropertyCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Property Image with Gradient Overlay
             Stack(
               children: [
                 ClipRRect(
@@ -102,7 +101,7 @@ class MyPropertyCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Edit & Delete buttons instead of favorite
+
                 Positioned(
                   top: 12.h,
                   right: 14.w,

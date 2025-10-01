@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/widgets/app_button.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/core/helpers/image_picker.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/logic/media_cubit.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';

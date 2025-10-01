@@ -4,7 +4,7 @@ import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/widgets/custom_drop_down.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
 
-/// 🔹 Property form fields
+
 class PropertyFormFields extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
@@ -20,7 +20,8 @@ class PropertyFormFields extends StatelessWidget {
   final ValueChanged<String?> onTypeChanged;
   final ValueChanged<String?> onPurposeChanged;
 
-  const PropertyFormFields({super.key, 
+  const PropertyFormFields({
+    super.key,
     required this.titleController,
     required this.descriptionController,
     required this.priceController,
@@ -72,7 +73,10 @@ class PropertyFormFields extends StatelessWidget {
           controller: priceController,
           hintText: "Price",
           keyboardType: TextInputType.number,
-          prefixIcon: const Icon(Icons.attach_money, color: AppColors.darkBeige),
+          prefixIcon: const Icon(
+            Icons.attach_money,
+            color: AppColors.darkBeige,
+          ),
           validator: (v) => v == null || v.isEmpty ? "Enter price" : null,
         ),
         verticalSpace(12),
@@ -94,7 +98,7 @@ class PropertyFormFields extends StatelessWidget {
         AppTextFormField(
           controller: latitudeController,
           hintText: "Latitude",
-          keyboardType: TextInputType.number,
+
           prefixIcon: const Icon(Icons.explore, color: AppColors.darkBeige),
           validator: (v) => v == null || double.tryParse(v) == null
               ? "Enter valid latitude"
@@ -104,8 +108,11 @@ class PropertyFormFields extends StatelessWidget {
         AppTextFormField(
           controller: longitudeController,
           hintText: "Longitude",
-          keyboardType: TextInputType.number,
-          prefixIcon: const Icon(Icons.explore_outlined, color: AppColors.darkBeige),
+
+          prefixIcon: const Icon(
+            Icons.explore_outlined,
+            color: AppColors.darkBeige,
+          ),
           validator: (v) => v == null || double.tryParse(v) == null
               ? "Enter valid longitude"
               : null,

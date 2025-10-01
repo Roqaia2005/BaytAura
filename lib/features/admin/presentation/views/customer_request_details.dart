@@ -4,6 +4,7 @@ import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 
 class CustomerRequestDetailsView extends StatelessWidget {
@@ -64,7 +65,7 @@ class CustomerRequestDetailsView extends StatelessWidget {
                             loadingBuilder: (context, child, progress) {
                               if (progress == null) return child;
                               return const Center(
-                                child: CircularProgressIndicator(),
+                                child: AppCircularIndicator(),
                               );
                             },
                             errorBuilder: (context, error, stackTrace) {

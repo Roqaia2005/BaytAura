@@ -10,7 +10,7 @@ import 'package:bayt_aura/core/widgets/home_app_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/widgets/custom_drop_down.dart';
 import 'package:bayt_aura/core/widgets/app_text_form_field.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/presentation/widgets/stat_card.dart';

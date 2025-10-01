@@ -7,7 +7,7 @@ import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/admin/logic/admin_state.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 
 class CustomerRequestsView extends StatefulWidget {
   const CustomerRequestsView({super.key});

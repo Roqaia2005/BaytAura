@@ -4,10 +4,11 @@ import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
-import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
-import 'package:bayt_aura/features/customer/logic/customer_state.dart';
+import 'package:bayt_aura/core/widgets/custom_alert_dialog.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/core/networking/local_notification_service.dart';
+import 'package:bayt_aura/features/customer/logic/customer_request_state.dart';
+import 'package:bayt_aura/features/customer/logic/customer_request_cubit.dart';
 
 class MyRequestsView extends StatefulWidget {
   const MyRequestsView({super.key});
@@ -50,14 +51,11 @@ class _MyRequestsViewState extends State<MyRequestsView> {
         body: BlocConsumer<CustomerRequestCubit, CustomerRequestState>(
           listener: (context, state) {
             if (state is RequestStatusChanged) {
-              // Show local notification
               LocalNotificationService.showBasicNotification(
                 title: "Request Status Updated",
-                body: state
-                    .message, // you can customize with request title or status
+                body: state.message,
               );
 
-              // Optional: refresh the request list
               context.read<CustomerRequestCubit>().getMyRequests();
             }
             if (state is CustomerRequestAdded) {
@@ -71,17 +69,22 @@ class _MyRequestsViewState extends State<MyRequestsView> {
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Request created successfully")),
+                  const SnackBar(
+                    backgroundColor: Colors.green,
+                    content: Text("Request created successfully"),
+                  ),
                 );
               }
 
-              // تحديث القائمة تلقائيًا
               context.read<CustomerRequestCubit>().getMyRequests();
             }
 
             if (state is CustomerRequestError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error: ${state.message}")),
+                SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text("Error: ${state.message}"),
+                ),
               );
             }
           },
@@ -147,34 +150,10 @@ class _MyRequestsViewState extends State<MyRequestsView> {
               onPressed: () async {
                 final confirm = await showDialog<bool>(
                   context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: Text(
-                      "Confirm Deletion",
-                      style: TextStyles.font16BlueBold,
-                    ),
-                    content: Text(
-                      "Are you sure you want to delete this request permanently?",
-                      style: TextStyles.font14BlueRegular,
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(ctx).pop(false);
-                        },
-                        child: Text("Cancel", style: TextStyles.font14BlueBold),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(ctx).pop(true);
-                        },
-                        child: Text(
-                          'Yes, Delete',
-                          style: TextStyles.font14BlueBold.copyWith(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                    ],
+                  builder: (ctx) => CustomAlertDialog(
+                    title: "Confirm Deletion",
+                    confirmMessage:
+                        "Are you sure you want to delete this request?",
                   ),
                 );
 

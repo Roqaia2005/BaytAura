@@ -17,9 +17,7 @@ class PropertyCubit extends Cubit<PropertyState> {
   final List<Property> _userProperties = [];
   final List<Favorite> _favorites = [];
 
-  // ------------------------------
   // Fetch all properties
-  // ------------------------------
 
   Future<void> loadProperties({
     bool withFavorites = false,
@@ -35,7 +33,6 @@ class PropertyCubit extends Cubit<PropertyState> {
     emit(const PropertyState.loading());
 
     try {
-      // Fetch properties with filters
       final fetchedProperties = await propertyRepository.getProperties(
         query: query,
         type: type,
@@ -51,19 +48,15 @@ class PropertyCubit extends Cubit<PropertyState> {
         ..clear()
         ..addAll(fetchedProperties);
 
-      // Initialize favorites list
       _favorites.clear();
 
       if (withFavorites) {
-        // Fetch favorites
         final fetchedFavorites = await propertyRepository.fetchFavorites();
         _favorites.addAll(fetchedFavorites);
 
-        // Mark properties as favorite without overwriting other fields
         for (var property in _allProperties) {
           final isFav = _favorites.any((f) => f.property.id == property.id);
-          property.isFavorite =
-              isFav; // Add this field in your Property model if not exists
+          property.isFavorite = isFav;
         }
       }
 
@@ -78,9 +71,8 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  // ------------------------------
   // Fetch my properties (customer/provider)
-  // ------------------------------
+
   Future<void> fetchMyProperties() async {
     emit(const PropertyState.loading());
     try {
@@ -100,9 +92,8 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  // ------------------------------
   // Add new property
-  // ------------------------------
+
   Future<void> addProperty(Property property, List<String>? imagePaths) async {
     emit(const PropertyState.loading());
     try {
@@ -124,9 +115,8 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  // ------------------------------
   // Favorites
-  // ------------------------------
+
   Future<void> fetchFavorites() async {
     try {
       final fetchedFavorites = await propertyRepository.fetchFavorites();

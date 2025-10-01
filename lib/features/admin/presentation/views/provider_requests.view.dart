@@ -5,7 +5,7 @@ import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/features/admin/logic/admin_cubit.dart';
 import 'package:bayt_aura/features/admin/logic/admin_state.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 
 class ProviderRequestsView extends StatefulWidget {
   const ProviderRequestsView({super.key});

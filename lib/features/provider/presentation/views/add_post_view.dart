@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/widgets/app_button.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:bayt_aura/core/helpers/image_picker.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
@@ -40,8 +40,9 @@ class _AddPostViewState extends State<AddPostView> {
   }
 
   void _submitPost() {
-    if (_formKey.currentState == null || !_formKey.currentState!.validate())
+    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
       return;
+    }
     if (_selectedType == null || _selectedPurpose == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select type and purpose")),

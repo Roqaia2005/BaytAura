@@ -4,6 +4,7 @@ import 'package:bayt_aura/core/theming/colors.dart';
 import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bayt_aura/core/widgets/custom_alert_dialog.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 // ---------------------- AdminPropertyCard ----------------------
@@ -209,36 +210,7 @@ class AdminPropertyCard extends StatelessWidget {
                         onPressed: () async {
                           final confirm = await showDialog<bool>(
                             context: context,
-                            builder: (ctx) => AlertDialog(
-                              title: Text(
-                                "Confirm Delete",
-                                style: TextStyles.font20BlueBold,
-                              ),
-                              content: Text(
-                                style: TextStyles.font17BlueBold,
-                                "Are you sure you want to delete this property?",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(ctx, false),
-                                  child: Text(
-                                    "Cancel",
-                                    style: TextStyles.font16BlueBold,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(ctx, true),
-                                  child: const Text(
-                                    "Delete",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            builder: (ctx) => CustomAlertDialog(title: "Confirm Deletion", confirmMessage: "Are you sure you want to delete this property?",),
                           );
 
                           if (confirm == true) {
@@ -262,3 +234,5 @@ class AdminPropertyCard extends StatelessWidget {
     );
   }
 }
+
+

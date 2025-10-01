@@ -9,7 +9,7 @@ class PropertyFormScaffold extends StatelessWidget {
   final Widget imagesSection;
   final Widget submitButton;
   final PreferredSizeWidget? appBar;
-  final GlobalKey<FormState> formKey; // 👈 add this
+  final GlobalKey<FormState> formKey; 
 
   const PropertyFormScaffold({
     super.key,
@@ -17,7 +17,7 @@ class PropertyFormScaffold extends StatelessWidget {
     required this.formFields,
     required this.imagesSection,
     required this.submitButton,
-    required this.formKey, // 👈 require it
+    required this.formKey,
     this.appBar,
   });
 

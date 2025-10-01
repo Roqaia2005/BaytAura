@@ -5,7 +5,8 @@ import 'package:bayt_aura/core/routing/routes.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/custom_alert_dialog.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_state.dart';
@@ -92,9 +93,21 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
                     } // ignore: use_build_context_synchronously
                   },
 
-                  onDelete: () => context
-                      .read<PropertyCubit>()
-                      .deleteMyProperty(property.id!),
+                  onDelete: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => CustomAlertDialog(
+                        title: "Confirm Deletion",
+                        confirmMessage:
+                            "Are you sure you want to delete this property?",
+                      ),
+                    );
+                    if (confirm == true) {
+                      context.read<PropertyCubit>().deleteMyProperty(
+                        property.id!,
+                      );
+                    }
+                  },
                 );
               },
             );

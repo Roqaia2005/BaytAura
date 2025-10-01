@@ -7,6 +7,7 @@ import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bayt_aura/core/widgets/custom_alert_dialog.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 
 class AccountContainer extends StatefulWidget {
@@ -63,45 +64,20 @@ class _AccountContainerState extends State<AccountContainer> {
                 style: TextStyles.font14BlueRegular,
               ),
               trailing: IconButton(
-                onPressed: () {
-                  showDialog(
+                onPressed: () async {
+                  final confirm = await showDialog<bool>(
                     context: context,
                     builder: (ctx) {
-                      return AlertDialog(
-                        title: Text(
-                          "Confirm Deletion",
-                          style: TextStyles.font16BlueBold,
-                        ),
-                        content: Text(
-                          "Are you sure you want to delete your profile permanently?",
-                          style: TextStyles.font14BlueRegular,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(ctx).pop(false);
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: TextStyles.font14BlueBold,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              context.read<ProfileCubit>().deleteProfile();
-                              Navigator.of(ctx).pop(true);
-                            },
-                            child: Text(
-                              'Yes, Delete',
-                              style: TextStyles.font14BlueBold.copyWith(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                        ],
+                      return CustomAlertDialog(
+                        title: "Confirm Deletion",
+                        confirmMessage:
+                            "Are you sure you want to delete your profile permanently",
                       );
                     },
                   );
+                  if (confirm == true) {
+                    context.read<ProfileCubit>().deleteProfile();
+                  }
                 },
                 icon: Icon(size: 20, Icons.delete, color: Colors.red),
               ),

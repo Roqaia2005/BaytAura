@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bayt_aura/features/customer/logic/customer_state.dart';
 import 'package:bayt_aura/features/customer/data/repo/customer_repo.dart';
+import 'package:bayt_aura/features/customer/logic/customer_request_state.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 
 class CustomerRequestCubit extends Cubit<CustomerRequestState> {

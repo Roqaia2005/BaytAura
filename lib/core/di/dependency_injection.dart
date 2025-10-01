@@ -10,13 +10,13 @@ import 'package:bayt_aura/features/property/logic/media_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/login_repo.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/signup_repo.dart';
-import 'package:bayt_aura/features/customer/logic/customer_cubit.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
 import 'package:bayt_aura/features/profile/data/repo/profile_repo.dart';
 import 'package:bayt_aura/features/property/data/repos/media_repo.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/customer/data/repo/customer_repo.dart';
+import 'package:bayt_aura/features/customer/logic/customer_request_cubit.dart';
 import 'package:bayt_aura/features/property/data/repos/property_repository.dart';
 
 final getIt = GetIt.instance;

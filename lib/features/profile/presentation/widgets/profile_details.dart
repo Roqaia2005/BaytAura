@@ -6,7 +6,7 @@ import 'package:bayt_aura/features/profile/data/models/profile.dart';
 class ProfileDetails extends StatelessWidget {
   const ProfileDetails({super.key, required this.profile});
 
-  final Profile profile; // or your Profile model type
+  final Profile profile;
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +25,7 @@ class ProfileDetails extends StatelessWidget {
       ]);
     }
 
-    if (profile.role.toLowerCase() == "admin") {
-      // Admin sees customer info
-      // Could show same as customer or add extra if needed
-    }
+    if (profile.role.toLowerCase() == "admin") {}
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),

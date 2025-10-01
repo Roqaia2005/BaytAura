@@ -8,7 +8,7 @@ import 'package:bayt_aura/core/helpers/spacing.dart';
 import 'package:bayt_aura/core/helpers/extensions.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bayt_aura/core/helpers/app_circular_indicator.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/profile/logic/profile.state.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 
@@ -136,9 +136,7 @@ class ProfileAppBar extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
+                                  child: AppCircularIndicator()
                                 ),
                               ),
                           ],
