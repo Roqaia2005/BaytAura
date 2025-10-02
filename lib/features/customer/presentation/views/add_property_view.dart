@@ -14,7 +14,8 @@ import 'package:bayt_aura/features/property/presentation/widgets/property_form_s
 import 'package:bayt_aura/features/property/presentation/widgets/property_images_section.dart';
 
 class AddPropertyView extends StatefulWidget {
-  const AddPropertyView({super.key});
+  final VoidCallback? onRequestSubmitted; // new callback
+  const AddPropertyView({super.key, this.onRequestSubmitted});
 
   @override
   State<AddPropertyView> createState() => _AddPropertyViewState();
@@ -42,6 +43,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
   Future<void> _submitRequest() async {
     if (_formKey.currentState == null || !_formKey.currentState!.validate())
       return;
+
     if (_selectedType == null || _selectedPurpose == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select type and purpose")),
@@ -70,12 +72,7 @@ class _AddPropertyViewState extends State<AddPropertyView> {
     return BlocConsumer<CustomerRequestCubit, CustomerRequestState>(
       listener: (context, state) {
         if (state is CustomerRequestSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Your request has been submitted"),
-              backgroundColor: Colors.green,
-            ),
-          );
+          widget.onRequestSubmitted?.call();
         } else if (state is CustomerRequestError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message), backgroundColor: Colors.red),

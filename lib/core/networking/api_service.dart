@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:bayt_aura/core/networking/api_constants.dart';
+import 'package:bayt_aura/core/networking/properties_response.dart';
 import 'package:bayt_aura/features/profile/data/models/profile.dart';
 import 'package:bayt_aura/features/property/data/models/favorite.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
@@ -55,18 +56,20 @@ abstract class ApiService {
   );
 
   //***********SEARCH METHODS****************//
-  @GET(ApiConstants.fetchProperties)
-  Future<List<Property>> getProperties({
-    @Query("searchQuery") String? query,
-    @Query("type") String? type,
-    @Query("minPrice") int? minPrice,
-    @Query("maxPrice") int? maxPrice,
-    @Query("minArea") int? minArea,
-    @Query("maxArea") int? maxArea,
+@GET(ApiConstants.fetchProperties)
+Future<PropertiesResponse> getProperties({
+  @Query("searchQuery") String? query,
+  @Query("type") String? type,
+  @Query("minPrice") int? minPrice,
+  @Query("maxPrice") int? maxPrice,
+  @Query("minArea") int? minArea,
+  @Query("maxArea") int? maxArea,
+  @Query("owner") String? owner,
+  @Query("purpose") String? purpose,
+  @Query("page") int page = 1,
+  @Query("size") int size = 20,
+});
 
-    @Query("owner") String? owner,
-    @Query("purpose") String? purpose,
-  });
 
   //PROPERTY METHODS
   @GET(ApiConstants.fetchProperties)

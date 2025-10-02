@@ -60,6 +60,7 @@ class ProfileAppBar extends StatelessWidget {
                               child: GestureDetector(
                                 onTap: () {
                                   showModalBottomSheet(
+                                    backgroundColor: Colors.white,
                                     context: context,
                                     shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.vertical(
@@ -71,10 +72,12 @@ class ProfileAppBar extends StatelessWidget {
                                         children: [
                                           ListTile(
                                             leading: const Icon(
+                                              color: AppColors.darkBeige,
                                               Icons.photo_library,
                                             ),
-                                            title: const Text(
+                                            title: Text(
                                               "Upload new photo",
+                                              style: TextStyles.font14BlueBold,
                                             ),
                                             onTap: () async {
                                               Navigator.pop(context);
@@ -98,7 +101,11 @@ class ProfileAppBar extends StatelessWidget {
                                                 Icons.delete,
                                                 color: Colors.red,
                                               ),
-                                              title: const Text("Remove photo"),
+                                              title: Text(
+                                                "Remove photo",
+                                                style:
+                                                    TextStyles.font14BlueBold,
+                                              ),
                                               onTap: () {
                                                 Navigator.pop(context);
                                                 context
@@ -136,7 +143,7 @@ class ProfileAppBar extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Center(
-                                  child: AppCircularIndicator()
+                                  child: AppCircularIndicator(),
                                 ),
                               ),
                           ],
@@ -151,9 +158,12 @@ class ProfileAppBar extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "${profile.firstName} ${profile.lastName}",
-                                style: TextStyles.font24WhiteBold,
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16),
+                                child: Text(
+                                  "${profile.firstName} ${profile.lastName}",
+                                  style: TextStyles.font16WhiteBold,
+                                ),
                               ),
                               verticalSpace(12),
                               Text(

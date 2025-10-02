@@ -77,6 +77,7 @@ class _AccountContainerState extends State<AccountContainer> {
                   );
                   if (confirm == true) {
                     context.read<ProfileCubit>().deleteProfile();
+                    context.pushNamedAndRemoveUntil(Routes.homeScreen);
                   }
                 },
                 icon: Icon(size: 20, Icons.delete, color: Colors.red),

@@ -13,9 +13,11 @@ import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/property/data/models/property.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/auth/presentation/views/auth_view.dart';
+import 'package:bayt_aura/features/recommendation/ui/recommendation_view.dart';
 import 'package:bayt_aura/features/customer/logic/customer_request_cubit.dart';
 import 'package:bayt_aura/features/customer/data/models/customer_request.dart';
 import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart';
+import 'package:bayt_aura/features/recommendation/logic/recommendation_cubit.dart';
 import 'package:bayt_aura/features/customer/presentation/views/customer_view.dart';
 import 'package:bayt_aura/features/property/presentation/views/favorites_view.dart';
 import 'package:bayt_aura/features/property/presentation/views/property_details.dart';
@@ -26,8 +28,6 @@ import 'package:bayt_aura/features/provider/presentation/views/provider_dashboar
 import 'package:bayt_aura/features/customer/presentation/views/all_properties_view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/customer_request_details.dart';
 import 'package:bayt_aura/features/provider/presentation/views/provider_request_submitted_view.dart';
-
-
 
 class AppRouter {
   static MaterialPageRoute generateRoute(RouteSettings settings) {
@@ -65,7 +65,7 @@ class AppRouter {
       case Routes.profileScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => getIt<ProfileCubit>(),
+            create: (_) => getIt<ProfileCubit>()..loadProfile(),
             child: ProfileView(),
           ),
         );
@@ -130,6 +130,26 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => ProviderRequestSubmittedView(),
         );
+      case Routes.recommendedProperties:
+        final args = settings.arguments as Map<String, dynamic>;
+        final int? entityId = args['propertyId'] ?? args['userId'] as int?;
+        final String? mode = args["mode"] as String?;
+
+        if (entityId == null || mode == null) {
+          return MaterialPageRoute(
+            builder: (_) => Scaffold(
+              body: Center(child: Text("Missing required arguments")),
+            ),
+          );
+        }
+
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<RecommendationCubit>(),
+            child: RecommendationsScreen(entityId: entityId, mode: mode),
+          ),
+        );
+
       case Routes.homeScreen:
         return MaterialPageRoute(builder: (_) => HomeView());
       case Routes.chatScreen:

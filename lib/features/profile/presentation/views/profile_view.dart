@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
+import 'package:bayt_aura/core/widgets/app_circular_indicator.dart';
 import 'package:bayt_aura/features/profile/logic/profile.state.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/profile/presentation/widgets/info_widget.dart';
@@ -33,7 +34,7 @@ class ProfileView extends StatelessWidget {
                   ],
                 ),
               ),
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: AppCircularIndicator()),
               error: (msg) => Center(child: Text("Error: $msg")),
               orElse: () => const SizedBox.shrink(),
             );

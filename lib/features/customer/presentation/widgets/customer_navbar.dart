@@ -33,7 +33,7 @@ class CustomerNavBar extends StatelessWidget {
         ],
       ),
       child: NavigationBar(
-        height: 70.h,
+        height: 80.h,
         elevation: 0,
         backgroundColor: Colors.transparent,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
@@ -41,7 +41,7 @@ class CustomerNavBar extends StatelessWidget {
         indicatorShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        labelTextStyle: WidgetStateProperty.all(TextStyles.font14DarkBeigeBold),
+        labelTextStyle: WidgetStateProperty.all(TextStyles.font12DarkBeigeBold),
         selectedIndex: currentPageIndex,
         onDestinationSelected: onDestinationSelected,
         destinations: [

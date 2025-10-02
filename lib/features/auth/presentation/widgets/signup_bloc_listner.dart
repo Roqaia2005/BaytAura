@@ -47,7 +47,6 @@ class SignupBlocListener extends StatelessWidget {
     if (signupResponse.role == 'CUSTOMER') {
       message = 'Congratulations, you have signed up successfully!';
     } else if (signupResponse.role == 'PROVIDER') {
-      context.pushNamed(Routes.providerRequestSubmittedView);
       message =
           'Account created! An admin will review your request before you can login.';
     } else {
@@ -69,9 +68,17 @@ class SignupBlocListener extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                disabledForegroundColor: Colors.grey.withOpacity(0.38),
+              ),
               onPressed: () {
-                if (signupResponse.role == 'customer') {
+                if (signupResponse.role == 'CUSTOMER') {
                   context.pushNamedAndRemoveUntil(Routes.customerScreen);
+                } else if (signupResponse.role == 'PROVIDER') {
+                  context.pushNamedAndRemoveUntil(
+                    Routes.providerRequestSubmittedView,
+                  );
                 } else {
                   context.pop();
                 }

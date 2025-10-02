@@ -94,6 +94,21 @@ class Property {
       description: description ?? this.description,
     );
   }
+
+  factory Property.fromRecommendationJson(Map<String, dynamic> json) {
+    return Property(
+      id: json['property_details_id'],
+      title: json['title'],
+      type: json['type'],
+      purpose: json['purpose'],
+      description: json['description'],
+      price: (json['price'] as num?)?.toDouble(),
+      area: (json['area'] as num?)?.toDouble(),
+      address: json['address'],
+      propertyStatus: json['property_status'],
+      images: json['image_url'] != null ? [Images(url: json['image_url'])] : [],
+    );
+  }
 }
 
 class Images {

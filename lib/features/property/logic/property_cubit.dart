@@ -18,6 +18,7 @@ class PropertyCubit extends Cubit<PropertyState> {
   final List<Favorite> _favorites = [];
 
   // Fetch all properties
+  int currentPage = 1;
 
   Future<void> loadProperties({
     bool withFavorites = false,
@@ -29,8 +30,13 @@ class PropertyCubit extends Cubit<PropertyState> {
     int? maxArea,
     String? owner,
     String? purpose,
+    int page = 1,
+    int limit = 20,
   }) async {
-    emit(const PropertyState.loading());
+    if (page == 1) {
+      currentPage = 1;
+      emit(const PropertyState.loading());
+    }
 
     try {
       final fetchedProperties = await propertyRepository.getProperties(
@@ -42,23 +48,19 @@ class PropertyCubit extends Cubit<PropertyState> {
         maxArea: maxArea,
         owner: owner,
         purpose: purpose,
+        page: page,
+        size: limit,
       );
 
-      _allProperties
-        ..clear()
-        ..addAll(fetchedProperties);
-
-      _favorites.clear();
-
-      if (withFavorites) {
-        final fetchedFavorites = await propertyRepository.fetchFavorites();
-        _favorites.addAll(fetchedFavorites);
-
-        for (var property in _allProperties) {
-          final isFav = _favorites.any((f) => f.property.id == property.id);
-          property.isFavorite = isFav;
-        }
+      if (page == 1) {
+        _allProperties
+          ..clear()
+          ..addAll(fetchedProperties);
+      } else {
+        _allProperties.addAll(fetchedProperties);
       }
+
+      currentPage = page;
 
       emit(
         PropertyLoaded(
@@ -119,6 +121,7 @@ class PropertyCubit extends Cubit<PropertyState> {
 
   Future<void> fetchFavorites() async {
     try {
+      emit(PropertyState.loading());
       final fetchedFavorites = await propertyRepository.fetchFavorites();
       _updateFavorites(fetchedFavorites);
 

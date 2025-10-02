@@ -202,6 +202,92 @@ class PropertyDetailsView extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ...images, title, info, description
+                      verticalSpace(24),
+
+                      /// Recommendations Section
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Similar Properties",
+                              style: TextStyles.font16BlueBold.copyWith(
+                                fontSize: 18.sp,
+                              ),
+                            ),
+                            verticalSpace(12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 12.h,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (property.id != null) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        "/recommendedProperties",
+                                        arguments: {
+                                          "propertyId": property.id,
+                                          "mode": "location",
+                                        },
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    "By Location",
+                                    style: TextStyles.font14WhiteBold,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 12.h,
+                                    ),
+                                  ),
+                                  onPressed: property.id != null
+                                      ? () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            "/recommendedProperties",
+                                            arguments: {
+                                              "propertyId": property.id!,
+                                              "mode": "price",
+                                            },
+                                          );
+                                        }
+                                      : null, // disables the button if null
+
+                                  child: Text(
+                                    "By Price",
+                                    style: TextStyles.font14WhiteBold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

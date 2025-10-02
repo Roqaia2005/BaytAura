@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bayt_aura/core/theming/text_styles.dart';
 
 class AdminNavBar extends StatelessWidget {
@@ -31,7 +32,7 @@ class AdminNavBar extends StatelessWidget {
         ],
       ),
       child: NavigationBar(
-        height: 70,
+       height: 80.h,
         elevation: 0,
         backgroundColor: Colors.transparent,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
@@ -40,7 +41,7 @@ class AdminNavBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         labelTextStyle: WidgetStateProperty.all(
-          TextStyles.font14DarkBeigeBold,
+          TextStyles.font12DarkBeigeBold,
         ),
         selectedIndex: currentPageIndex,
         onDestinationSelected: onDestinationSelected,

@@ -10,6 +10,7 @@ import 'package:bayt_aura/features/property/logic/media_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/login_repo.dart';
 import 'package:bayt_aura/features/profile/logic/profile_cubit.dart';
 import 'package:bayt_aura/features/auth/data/repos/signup_repo.dart';
+import 'package:bayt_aura/core/networking/recommendation_system.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_cubit.dart';
 import 'package:bayt_aura/features/profile/data/repo/profile_repo.dart';
@@ -18,6 +19,8 @@ import 'package:bayt_aura/features/auth/logic/cubits/sign_up_cubit.dart';
 import 'package:bayt_aura/features/customer/data/repo/customer_repo.dart';
 import 'package:bayt_aura/features/customer/logic/customer_request_cubit.dart';
 import 'package:bayt_aura/features/property/data/repos/property_repository.dart';
+import 'package:bayt_aura/features/recommendation/logic/recommendation_cubit.dart';
+
 
 final getIt = GetIt.instance;
 
@@ -25,7 +28,9 @@ Future<void> setUpGetIt() async {
   Dio dio = DioFactory.getDio();
   getIt.registerLazySingleton<ApiService>(() => ApiService(dio));
   getIt.registerLazySingleton<ChatService>(() => ChatService(dio));
-
+  getIt.registerLazySingleton<RecommendationService>(
+    () => RecommendationService(dio),
+  );
   // login
   getIt.registerLazySingleton<LoginRepo>(() => LoginRepo(getIt()));
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt()));
@@ -68,6 +73,9 @@ Future<void> setUpGetIt() async {
   );
 
   getIt.registerFactory<ChatCubit>(() => ChatCubit(getIt<ChatService>()));
+  getIt.registerFactory<RecommendationCubit>(
+    () => RecommendationCubit(getIt<RecommendationService>()),
+  );
 
   getIt.registerFactory<MediaCubit>(() => MediaCubit(getIt<MediaRepository>()));
 }

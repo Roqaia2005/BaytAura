@@ -196,7 +196,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<Property>> getProperties({
+  Future<PropertiesResponse> getProperties({
     String? query,
     String? type,
     int? minPrice,
@@ -205,6 +205,8 @@ class _ApiService implements ApiService {
     int? maxArea,
     String? owner,
     String? purpose,
+    int page = 1,
+    int size = 20,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -216,11 +218,13 @@ class _ApiService implements ApiService {
       r'maxArea': maxArea,
       r'owner': owner,
       r'purpose': purpose,
+      r'page': page,
+      r'size': size,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<Property>>(
+    final _options = _setStreamType<PropertiesResponse>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -230,12 +234,10 @@ class _ApiService implements ApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<Property> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late PropertiesResponse _value;
     try {
-      _value = _result.data!
-          .map((dynamic i) => Property.fromJson(i as Map<String, dynamic>))
-          .toList();
+      _value = PropertiesResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

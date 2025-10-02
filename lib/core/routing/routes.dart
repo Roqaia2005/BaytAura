@@ -18,6 +18,8 @@ class Routes {
   static const String customerRequestDetails = '/customerRequestDetails';
   static const String editCustomerRequest = '/editCustomerRequest';
   static const String chatScreen = '/chatScreen';
+  static const String recommendedProperties = '/recommendedProperties';
+
   static const String providerRequestSubmittedView =
       '/providerRequestSubmittedView';
 }

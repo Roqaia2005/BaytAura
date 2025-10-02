@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/networking/api_result.dart';
-import 'package:bayt_aura/core/networking/dio_factory.dart'; 
+import 'package:bayt_aura/core/networking/dio_factory.dart';
 import 'package:bayt_aura/core/helpers/shared_pref_helper.dart';
 import 'package:bayt_aura/features/auth/data/repos/login_repo.dart';
 import 'package:bayt_aura/features/auth/logic/cubits/login_state.dart';
@@ -32,6 +32,12 @@ class LoginCubit extends Cubit<LoginState> {
           "auth_token",
           loginResponse.token!,
         );
+        if (loginResponse.userId != null) {
+          await SharedPrefHelper.setSecuredString(
+            "user_id",
+            loginResponse.userId.toString(),
+          );
+        }
 
         DioFactory.setTokenIntoHeaderAfterLogin(loginResponse.token!);
       },

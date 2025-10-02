@@ -118,22 +118,26 @@ class PropertyRepository {
     String? type,
     int? minPrice,
     int? maxPrice,
-
     int? minArea,
     int? maxArea,
     String? owner,
     String? purpose,
+    int page = 1,
+    int size = 20,
   }) async {
-    return await _apiService.getProperties(
+    final response = await _apiService.getProperties(
       query: query,
       type: type,
       minPrice: minPrice,
       maxPrice: maxPrice,
-
       minArea: minArea,
       maxArea: maxArea,
       owner: owner,
       purpose: purpose,
+      page: page,
+      size: size,
     );
+
+    return response.data;
   }
 }

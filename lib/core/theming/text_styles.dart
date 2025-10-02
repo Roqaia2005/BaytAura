@@ -54,6 +54,11 @@ class TextStyles {
     fontSize: 12,
     fontWeight: FontWeight.bold,
   );
+  static final font18DarkBeigeBold = GoogleFonts.inriaSans(
+    color: AppColors.darkBeige,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   static final font24WhiteBold = GoogleFonts.inriaSans(
     color: Colors.white,
@@ -68,6 +73,11 @@ class TextStyles {
   static final font16WhiteBold = GoogleFonts.inriaSans(
     color: Colors.white,
     fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
+  static final font20WhiteBold = GoogleFonts.inriaSans(
+    color: Colors.white,
+    fontSize: 20,
     fontWeight: FontWeight.bold,
   );
   //signout style

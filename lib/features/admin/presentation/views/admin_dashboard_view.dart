@@ -2,6 +2,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bayt_aura/core/theming/colors.dart';
+import 'package:bayt_aura/core/widgets/ai_button.dart';
 import 'package:bayt_aura/core/di/dependency_injection.dart';
 import 'package:bayt_aura/features/property/logic/property_cubit.dart';
 import 'package:bayt_aura/features/admin/presentation/widgets/admin_navbar.dart';
@@ -9,7 +10,6 @@ import 'package:bayt_aura/features/profile/presentation/views/profile_view.dart'
 import 'package:bayt_aura/features/admin/presentation/views/admin_properties_view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/provider_requests.view.dart';
 import 'package:bayt_aura/features/admin/presentation/views/customer_requests_view.dart';
-
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -35,12 +35,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       create: (_) => getIt<PropertyCubit>(),
 
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          shape: const CircleBorder(),
-          backgroundColor: AppColors.blue,
-          onPressed: () {},
-          child: SvgPicture.asset("assets/svgs/ai.svg"),
-        ),
+        floatingActionButton: AIButton(),
         backgroundColor: Colors.white,
         bottomNavigationBar: AdminNavBar(
           currentPageIndex: currentPageIndex,

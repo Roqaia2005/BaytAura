@@ -19,30 +19,36 @@ class CustomerView extends StatefulWidget {
 }
 
 class _CustomerViewState extends State<CustomerView> {
-  final List<Widget> screens = [
-    AllPropertiesView(),
-    MyRequestsView(),
-    MyPropertiesView(),
-
-    AddPropertyView(),
-
-    FavoritesView(),
-    ProfileView(),
-  ];
   int currentPageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      AllPropertiesView(),
+      MyRequestsView(),
+      MyPropertiesView(),
+      AddPropertyView(
+        onRequestSubmitted: () {
+          setState(() {
+            currentPageIndex = 0; // switch to Properties tab
+          });
+        },
+      ),
+      FavoritesView(),
+      ProfileView(),
+    ];
+
     return BlocProvider(
       create: (_) => getIt<PropertyCubit>(),
-
       child: Scaffold(
         floatingActionButton: AIButton(),
         backgroundColor: Colors.white,
         bottomNavigationBar: CustomerNavBar(
           currentPageIndex: currentPageIndex,
           onDestinationSelected: (int index) {
-            currentPageIndex = index;
-            setState(() {});
+            setState(() {
+              currentPageIndex = index;
+            });
           },
         ),
         body: screens[currentPageIndex],
