@@ -1,24 +1,12 @@
 # bayt_aura
+![WhatsApp Image 2025-10-03 at 02 03 28_141c0884](https://github.com/user-attachments/assets/bc3854fa-d3b6-463d-9061-5de9715aeae6)
 
-finished screens untill now
+![WhatsApp Image 2025-10-03 at 02 03 26_cc808a16](https://github.com/user-attachments/assets/bdb05805-2919-4f8e-bcac-ad1521df1b63)
+![WhatsApp Image 2025-10-03 at 02 03 27_7d3c5b14](https://github.com/user-attachments/assets/7177111e-0688-46b8-9add-d3d42f557b9d)
+![WhatsApp Image 2025-10-03 at 02 03 27_8589769b](https://github.com/user-attachments/assets/614c9789-87b8-4ea1-ae40-ad63b085a452)
 
-
-
-Auth Screen (login && sinup) 
-
-
-
-<img width="615" height="905" alt="Screenshot 2025-09-03 233230" src="https://github.com/user-attachments/assets/af9a4863-58f6-4375-9b70-7935093eb034" />
-<img width="600" height="888" alt="Screenshot 2025-09-03 233245" src="https://github.com/user-attachments/assets/e86d20c5-f5e6-4e78-9d96-621c8aed1790" />
+![WhatsApp Image 2025-10-03 at 02 03 28_c37549c7](https://github.com/user-attachments/assets/d5641c08-3a24-47ce-b08c-1c5080ff0193)
 
 
 
-Home Screen 
-
-
-
-<img width="621" height="897" alt="Screenshot 2025-09-03 233450" src="https://github.com/user-attachments/assets/82c381cf-2e3c-4c01-ae58-dddf89f91526" />
-
-<img width="610" height="867" alt="Screenshot 2025-09-03 233506" src="https://github.com/user-attachments/assets/d10780ab-b92d-406b-a41c-d045564c9a82" />
-
-<img width="604" height="886" alt="Screenshot 2025-09-03 233523" src="https://github.com/user-attachments/assets/8c62bb97-99ff-43eb-9fe9-942cec0e8f6f" />
+![WhatsApp Image 2025-10-03 at 02 13 46_9b6faae4](https://github.com/user-attachments/assets/6a5f737f-62cd-491e-b268-7bed5ec4a7f2)
